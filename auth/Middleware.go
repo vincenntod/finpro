@@ -2,11 +2,10 @@ package auth
 
 import (
 	"fmt"
+	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt/v4"
 	"golang/model"
 	"time"
-
-	"github.com/gin-gonic/gin"
-	"github.com/golang-jwt/jwt"
 )
 
 func MiddlewareAdmin(c *gin.Context) {
@@ -25,7 +24,7 @@ func MiddlewareAdmin(c *gin.Context) {
 	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
 		if float64(time.Now().Unix()) > claims["exp"].(float64) {
 			c.AbortWithStatus(401)
-			c.JSON(401, gin.H{"message": "Silahkan Login Kembali "})
+			c.JSON(401, gin.H{"message": "Silahkan Login Kembali"})
 		}
 		var account Account
 		model.DB.First(&account, claims["Id"])

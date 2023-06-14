@@ -2,6 +2,7 @@ package main
 
 import (
 	"golang/model"
+	"golang/module/transaction"
 
 	"github.com/gin-gonic/gin"
 )
@@ -9,9 +10,8 @@ import (
 func main() {
 	model.ConnectDatabase()
 	r := gin.Default()
-	// Admin := r.Group("/api", auth.MiddlewareAdmin)
-	{
-	}
-
-	r.Run(":8080")
+	r.GET("/get-transactions", transaction.GetAllTransactions)
+	r.GET("/get-transactions/:id/:end", transaction.GetAllTransactionsByParam)
+	r.GET("/getTransactions/:status", transaction.GetTransactionByStatus)
+	r.Run()
 }
