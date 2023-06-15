@@ -62,3 +62,18 @@ func GetTransactionByStatus(c *gin.Context) {
 		"data":    &transactions,
 	})
 }
+
+func FindByDate(c *gin.Context) {
+	var transactions []auth.Transaction
+	date := c.Param("date")
+	if err := model.DB.Where("created_at = ?", date).Find(&transactions).Error; err != nil {
+		c.JSON(500, gin.H{"message": "Error"})
+		return
+	}
+	c.JSON(200, gin.H{
+		"code":    200,
+		"message": "Success",
+		"error":   "Tidak Ada Error",
+		"data":    &transactions,
+	})
+}
