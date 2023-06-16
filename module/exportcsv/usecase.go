@@ -1,6 +1,7 @@
 package exportcsv
 
 import (
+	"errors"
 	"fmt"
 	"strconv"
 )
@@ -48,9 +49,12 @@ func (u UseCase) ExportCSV(req *ExportCSVRequest) ([][]string, error) {
 		if err != nil {
 			return nil, err
 		}
+
 		resultGetTransaction = data
 	}
-
+	if len(resultGetTransaction) == 0 {
+		return nil, errors.New("Not Found")
+	}
 	for _, transaction := range resultGetTransaction {
 		record := []string{strconv.Itoa(transaction.Id), transaction.Oda_number, transaction.Bank_account_no, transaction.Billing_cycle_date,
 			transaction.Payment_due_date.GoString(), strconv.FormatFloat(transaction.Overflow_amount, 'f', 6, 64), strconv.FormatFloat(transaction.Bill_amount, 'f', 6, 64),

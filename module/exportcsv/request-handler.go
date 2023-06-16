@@ -49,6 +49,8 @@ func (h ExpoertCSVRequestHandler) ExportCSVHandler(c *gin.Context) {
 
 	exportData, err := h.ctrl.ExportCSV(&req)
 	switch {
+	case err != nil && err.Error() == "Not Found":
+		c.JSON(http.StatusNotFound, ErrorResponse{Error: err.Error()})
 	case err != nil && err.Error() == "invalid field status":
 		c.JSON(http.StatusNotAcceptable, ErrorResponse{Error: err.Error()})
 	case err != nil:
