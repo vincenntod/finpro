@@ -1,6 +1,9 @@
 package exportcsv
 
 import (
+	"fmt"
+	"golang/model"
+
 	"gorm.io/gorm"
 )
 
@@ -12,155 +15,41 @@ func NewRepository(db *gorm.DB) *Repository {
 	return &Repository{db: db}
 }
 
-// dumy(
-type Transaction struct {
-	Id         int
-	Oda_number string
-	Status     string
-	Price      float64
-	Total_data int
-	Created_at string
-}
-
 func (r Repository) GetAllTransaction() ([]Transaction, error) {
-	//dumy(
-	data := []Transaction{
-		Transaction{Id: 1,
-			Oda_number: "123412341234",
-			Status:     "success",
-			Price:      17000,
-			Total_data: 12,
-			Created_at: "2023-06-09 07:51:14",
-		},
-		
-		{Id: 2,
-			Oda_number: "2023-06-09 07:51:00",
-			Status:     "pending",
-			Price:      14000,
-			Total_data: 12,
-			Created_at: "2023-06-09 07:50:14",
-		},
-		Transaction{Id: 3,
-			Oda_number: "123412341234",
-			Status:     "success",
-			Price:      16000,
-			Total_data: 12,
-			Created_at: "2023-06-09 06:51:14",
-		},
-		Transaction{Id: 4,
-			Oda_number: "123412341234",
-			Status:     "pending",
-			Price:      19000,
-			Total_data: 12,
-			Created_at: "2023-06-09 05:51:14",
-		},
+	fmt.Println("im hire1")
+	var transactions []Transaction
+	if err := model.DB.Find(&transactions).Error; err != nil {
+		fmt.Println("im hire2")
+		fmt.Println(err)
+		return nil, err
+
 	}
-	//)
-	return data, nil
+	return transactions, nil
 }
 func (r Repository) GetTransactionByStatus(req *ExportCSVRequest) ([]Transaction, error) {
-	//dumy(
-	dataSucces := []Transaction{
-		Transaction{Id: 1,
-			Oda_number: "123412341234",
-			Status:     "success",
-			Price:      17000,
-			Total_data: 12,
-			Created_at: "2023-06-09 07:51:14",
-		},
-		Transaction{Id: 2,
-			Oda_number: "2023-06-09 07:51:00",
-			Status:     "success",
-			Price:      14000,
-			Total_data: 12,
-			Created_at: "2023-06-09 07:50:14",
-		},
-		Transaction{Id: 3,
-			Oda_number: "123412341234",
-			Status:     "success",
-			Price:      16000,
-			Total_data: 12,
-			Created_at: "2023-06-09 06:51:14",
-		},
-		Transaction{Id: 4,
-			Oda_number: "123412341234",
-			Status:     "success",
-			Price:      19000,
-			Total_data: 12,
-			Created_at: "2023-06-09 05:51:14",
-		},
+	var transactions []Transaction
+	if err := r.db.Where("status = ?", req.Status).Find(&transactions).Error; err != nil {
+		fmt.Println("status")
+		fmt.Println(err)
+		return nil, err
+
 	}
 
-	dataPending := []Transaction{
-		Transaction{Id: 1,
-			Oda_number: "123412341234",
-			Status:     "pending",
-			Price:      17000,
-			Total_data: 12,
-			Created_at: "2023-06-09 07:51:14",
-		},
-		Transaction{Id: 2,
-			Oda_number: "2023-06-09 07:51:00",
-			Status:     "pending",
-			Price:      14000,
-			Total_data: 12,
-			Created_at: "2023-06-09 07:50:14",
-		},
-		Transaction{Id: 3,
-			Oda_number: "123412341234",
-			Status:     "pending",
-			Price:      16000,
-			Total_data: 12,
-			Created_at: "2023-06-09 06:51:14",
-		},
-		Transaction{Id: 4,
-			Oda_number: "123412341234",
-			Status:     "pending",
-			Price:      19000,
-			Total_data: 12,
-			Created_at: "2023-06-09 05:51:14",
-		},
+	return transactions, nil
+}
+func (r Repository) GetAllTransactionByStartAndEndDate(startDate string, endDate string) ([]Transaction, error) {
+	fmt.Println(startDate, endDate)
+	var transactions []Transaction
+	if err := model.DB.Where("created_at BETWEEN  ? AND  ?", startDate, endDate).Find(&transactions).Error; err != nil {
+		return nil, err
 	}
-	dataReject := []Transaction{
-		Transaction{Id: 1,
-			Oda_number: "123412341234",
-			Status:     "rejected",
-			Price:      17000,
-			Total_data: 12,
-			Created_at: "2023-06-09 07:51:14",
-		},
-		Transaction{Id: 2,
-			Oda_number: "2023-06-09 07:51:00",
-			Status:     "rejected",
-			Price:      14000,
-			Total_data: 12,
-			Created_at: "2023-06-09 07:50:14",
-		},
-		Transaction{Id: 3,
-			Oda_number: "123412341234",
-			Status:     "rejected",
-			Price:      16000,
-			Total_data: 12,
-			Created_at: "2023-06-09 06:51:14",
-		},
-		Transaction{Id: 4,
-			Oda_number: "123412341234",
-			Status:     "rejected",
-			Price:      19000,
-			Total_data: 12,
-			Created_at: "2023-06-09 05:51:14",
-		},
-	}
-	//)
-	switch req.Status {
-	case "success":
-		return dataSucces, nil
+	return transactions, nil
+}
+func (r Repository) GetTransactionByStatusAndStartAndEndDate(status string, startDate string, endDate string) ([]Transaction, error) {
+	var transactions []Transaction
+	if err := r.db.Where("status =? AND(created_at  BETWEEN ? AND ?)", status, startDate, endDate).Find(&transactions).Error; err != nil {
+		return nil, err
 
-	case "pending":
-		return dataPending, nil
-	case "reject":
-		return dataReject, nil
 	}
-	return nil, nil
-
+	return transactions, nil
 }

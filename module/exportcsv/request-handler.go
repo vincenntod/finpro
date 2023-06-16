@@ -2,6 +2,7 @@ package exportcsv
 
 import (
 	"encoding/csv"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -30,7 +31,9 @@ func DefaultRequestHandler(db *gorm.DB) *ExpoertCSVRequestHandler {
 }
 
 type ExportCSVRequest struct {
-	Status string `json:"status"`
+	Status    string `json:"status"`
+	StartDate string `json:"start_date"`
+	EndDate   string `json:"end_date"`
 }
 type ErrorResponse struct {
 	Error string `json:"error"`
@@ -51,6 +54,7 @@ func (h ExpoertCSVRequestHandler) ExportCSVHandler(c *gin.Context) {
 	case err != nil:
 		c.JSON(http.StatusInternalServerError, ErrorResponse{Error: err.Error()})
 	}
+	fmt.Println("hire header")
 	c.Writer.Header().Set("Content-Type", "text/csv")
 	c.Writer.Header().Set("Content-Disposition", "attachment;filename=transaction-export.csv")
 	writer := csv.NewWriter(c.Writer)

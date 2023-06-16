@@ -26,7 +26,7 @@ type TransactionCollection struct {
 func (c ExportCSVController) ExportCSV(req *ExportCSVRequest) ([][]string, error) {
 	fmt.Println(req.Status)
 	switch req.Status {
-	case "success", "pending", "reject", "":
+	case "SUCCESS", "WAITING_FOR_DEBITTED", "":
 		exportData, err := c.useCase.ExportCSV(req)
 		if err != nil {
 			return nil, err
