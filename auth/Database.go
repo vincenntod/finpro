@@ -6,5 +6,4 @@ type Account struct {
 	Phone    string `json:"phone"`
 	Role     string `json:"role"`
 	Password string `json:"password"`
-	Email    string `json:"email"`
 }
