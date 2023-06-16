@@ -11,18 +11,18 @@ import (
 func main() {
 	model.ConnectDatabase()
 	r := gin.Default()
-	usersHandler := account.DefaultRequestHandler(model.DB)
+	accountHandler := account.DefaultRequestHandler(model.DB)
 
 	Admin := r.Group("/api", auth.MiddlewareAdmin)
 
 	{
-		Admin.GET("/data-user", usersHandler.GetDataUser)
-		Admin.GET("/data-user/:id", usersHandler.GetDataUserById)
-		Admin.PUT("/data-user/:id", usersHandler.EditDataUser)
-		Admin.POST("/create-user", usersHandler.CreateAccount)
-		Admin.DELETE("/data-user/:id", usersHandler.DeleteDataUser)
-		Admin.GET("/logout", usersHandler.Logout)
+		Admin.GET("/data-user", accountHandler.GetDataUser)
+		Admin.GET("/data-user/:id", accountHandler.GetDataUserById)
+		Admin.PUT("/data-user/:id", accountHandler.EditDataUser)
+		Admin.POST("/create-user", accountHandler.CreateAccount)
+		Admin.DELETE("/data-user/:id", accountHandler.DeleteDataUser)
+		Admin.GET("/logout", accountHandler.Logout)
 	}
-	r.POST("/login", usersHandler.Login)
+	r.POST("/login", accountHandler.Login)
 	r.Run(":8080")
 }

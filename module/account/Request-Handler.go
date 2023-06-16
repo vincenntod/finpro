@@ -51,23 +51,6 @@ type EditDataUserRequest struct {
 	Email    string `json:"email"`
 }
 
-// func (h RequestHandler) Create(c *gin.Context) {
-// 	var req CreateRequest
-
-// 	if err := c.BindJSON(&req); err != nil {
-// 		c.JSON(http.StatusBadRequest, ErrorResponse{Error: err.Error()})
-// 		return
-// 	}
-
-// 	res, err := h.ctrl.Create(&req)
-// 	if err != nil {
-// 		c.JSON(http.StatusInternalServerError, ErrorResponse{Error: err.Error()})
-// 		return
-// 	}
-
-// 	c.JSON(200, res)
-// }
-
 func (h RequestHandler) GetDataUser(c *gin.Context) {
 	res, err := h.ctrl.GetDataUser()
 	if err != nil {

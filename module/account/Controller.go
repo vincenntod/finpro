@@ -45,24 +45,6 @@ type LoginResponseWithToken struct {
 	Token string `json:"token"`
 }
 
-// func (c Controller) Create(req *CreateRequest) (*CreateResponse, error) {
-// 	user := User{Name: req.Name}
-// 	err := c.useCase.Create(&user)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-
-// 	res := &CreateResponse{
-// 		Message: "Success",
-// 		Data: UserItemResponse{
-// 			ID:   user.ID,
-// 			Name: user.Name,
-// 		},
-// 	}
-
-// 	return res, nil
-// }
-
 func (c Controller) GetDataUser() (*ReadResponse, error) {
 	account, err := c.useCase.GetDataUser()
 	if err != nil {
