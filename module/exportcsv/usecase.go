@@ -2,7 +2,6 @@ package exportcsv
 
 import (
 	"errors"
-	"fmt"
 	"strconv"
 )
 
@@ -17,7 +16,6 @@ func NewUseCase(repo *Repository) *UseCase {
 }
 
 func (u UseCase) ExportCSV(req *ExportCSVRequest) ([][]string, error) {
-	fmt.Println("case", req)
 	exportData := [][]string{[]string{"id", "od_number", "bank_acount_no", "billing_cycle_date", "payment_due_date",
 		"overflow_amount", "bill_amount", "principal_amount", "interest_amount", "total_fee_amount", "status", "payment_method",
 		"auto_debet_counter", "created_at", "updated_at", "is_hold", "is_fstl_pending", "is_hstl_pending", "is_laa_positif", "payment_amount",

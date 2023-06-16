@@ -2,7 +2,6 @@ package exportcsv
 
 import (
 	"encoding/csv"
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -56,7 +55,7 @@ func (h ExpoertCSVRequestHandler) ExportCSVHandler(c *gin.Context) {
 	case err != nil:
 		c.JSON(http.StatusInternalServerError, ErrorResponse{Error: err.Error()})
 	}
-	fmt.Println("hire header")
+
 	c.Writer.Header().Set("Content-Type", "text/csv")
 	c.Writer.Header().Set("Content-Disposition", "attachment;filename=transaction-export.csv")
 	writer := csv.NewWriter(c.Writer)
