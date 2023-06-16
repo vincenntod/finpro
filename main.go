@@ -5,7 +5,7 @@ import (
 	"golang/model"
 	"golang/module/account"
 	"golang/module/exportcsv"
-	"golang/module/transaction"
+	"golang/module/transactions"
 
 	"github.com/gin-gonic/gin"
 )
@@ -18,15 +18,6 @@ func main() {
 
 	Admin := r.Group("/api", auth.MiddlewareAdmin)
 	{
-		//table transaction
-		Admin.GET("/get-transactions", transaction.GetAllTransactions)
-		Admin.GET("/get-transactions/:id/:end", transaction.GetAllTransactionsByParam)
-		Admin.GET("/getTransactions/:status", transaction.GetTransactionByStatus)
-		Admin.GET("/getTransactions2/:date", transaction.FindByDate)
-
-		//export CSV
-		Admin.GET("/export-transaction", export.ExportCSVHandler)
-
 		//account
 		Admin.GET("/data-user", accountHandler.GetDataUser)
 		Admin.GET("/data-user/:id", accountHandler.GetDataUserById)
@@ -34,8 +25,18 @@ func main() {
 		Admin.POST("/create-user", accountHandler.CreateAccount)
 		Admin.DELETE("/data-user/:id", accountHandler.DeleteDataUser)
 		Admin.GET("/logout", accountHandler.Logout)
+
+		//export csv file
+		Admin.GET("/export-transaction", export.ExportCSVHandler)
+
+		//transaction table
+		Admin.GET("/get-transactions", transactions.GetAllTransactions)
+		Admin.GET("/get-transactions-limit/:id", transactions.GetAllTransactionsLimit)
+		Admin.GET("/getTransactions/:status", transactions.GetAllTransactionByStatus)
+		Admin.GET("/get-transaction-date/:id", transactions.GetTransactionByDate)
+		Admin.GET("/get-transaction-status-date/:id", transactions.GetTransactionByStatusDate)
+
 	}
 	r.POST("/login", accountHandler.Login)
 	r.Run(":8081")
-
 }
