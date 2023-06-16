@@ -11,9 +11,9 @@ import (
 
 func main() {
 	model.ConnectDatabase()
+	r := gin.Default()
 	export := exportcsv.DefaultRequestHandler(model.DB)
 	accountHandler := account.DefaultRequestHandler(model.DB)
-	r := gin.Default()
 
 	Admin := r.Group("/api", auth.MiddlewareAdmin)
 	{
