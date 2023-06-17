@@ -24,8 +24,8 @@ func MiddlewareAdmin(c *gin.Context) {
 
 	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
 		if float64(time.Now().Unix()) > claims["exp"].(float64) {
-			c.AbortWithStatus(401)
 			c.JSON(401, gin.H{"message": "Silahkan Login Kembali "})
+			c.AbortWithStatus(401)
 		}
 		var account Account
 		model.DB.First(&account, claims["Id"])
