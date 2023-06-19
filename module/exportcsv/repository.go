@@ -24,7 +24,7 @@ func (r Repository) GetAllTransaction() ([]Transaction, error) {
 	}
 	return transactions, nil
 }
-func (r Repository) GetTransactionByStatus(req *ExportCSVRequest) ([]Transaction, error) {
+func (r Repository) GetTransactionByStatusFilter(req *ExportCSVRequest) ([]Transaction, error) {
 	var transactions []Transaction
 	if err := r.db.Where("status = ?", req.Status).Find(&transactions).Error; err != nil {
 		return nil, err
@@ -33,7 +33,7 @@ func (r Repository) GetTransactionByStatus(req *ExportCSVRequest) ([]Transaction
 
 	return transactions, nil
 }
-func (r Repository) GetAllTransactionByStartAndEndDate(startDate string, endDate string) ([]Transaction, error) {
+func (r Repository) GetAllTransactionByRangeDateFilter(startDate string, endDate string) ([]Transaction, error) {
 	fmt.Println(startDate, endDate)
 	var transactions []Transaction
 	if err := model.DB.Where("created_at BETWEEN  ? AND  ?", startDate, endDate).Find(&transactions).Error; err != nil {
@@ -41,7 +41,7 @@ func (r Repository) GetAllTransactionByStartAndEndDate(startDate string, endDate
 	}
 	return transactions, nil
 }
-func (r Repository) GetTransactionByStatusAndStartAndEndDate(status string, startDate string, endDate string) ([]Transaction, error) {
+func (r Repository) GetTransactionByStatusAndRangeDateFilter(status string, startDate string, endDate string) ([]Transaction, error) {
 	var transactions []Transaction
 	err := r.db.Where("status =? AND(created_at  BETWEEN ? AND ?)", status, startDate, endDate).Find(&transactions).Error
 	if err != nil {

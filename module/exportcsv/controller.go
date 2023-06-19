@@ -2,7 +2,6 @@ package exportcsv
 
 import (
 	"errors"
-	"fmt"
 )
 
 type ExportCSVController struct {
@@ -24,9 +23,8 @@ type TransactionCollection struct {
 }
 
 func (c ExportCSVController) ExportCSV(req *ExportCSVRequest) ([][]string, error) {
-	fmt.Println(req.Status)
 	switch req.Status {
-	case "SUCCESS", "WAITING_FOR_DEBITTED", "":
+	case "SUCCESS", "WAITING_FOR_DEBITTED", "": //validate request.status
 		exportData, err := c.useCase.ExportCSV(req)
 		if err != nil {
 			return nil, err
@@ -34,8 +32,7 @@ func (c ExportCSVController) ExportCSV(req *ExportCSVRequest) ([][]string, error
 		return exportData, nil
 
 	default:
-		//kurang set error
-		return nil, errors.New("invalid field status")
+		return nil, errors.New("Invalid field status")
 	}
 
 }

@@ -42,20 +42,23 @@ func (h ExpoertCSVRequestHandler) ExportCSVHandler(c *gin.Context) {
 
 	var req ExportCSVRequest
 	if err := c.BindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, ErrorResponse{Error: err.Error()})
+		c.JSON(http.StatusBadRequest, ErrorResponse{Error: "Invalid JSON Request"})
 		return
 	}
 
 	exportData, err := h.ctrl.ExportCSV(&req)
-	switch {
-	case err != nil && err.Error() == "Not Found":
-		c.JSON(http.StatusNotFound, ErrorResponse{Error: err.Error()})
-	case err != nil && err.Error() == "invalid field status":
-		c.JSON(http.StatusNotAcceptable, ErrorResponse{Error: err.Error()})
-	case err != nil:
-		c.JSON(http.StatusInternalServerError, ErrorResponse{Error: err.Error()})
+	if err != nil {
+		switch {
+		case err.Error() == "Not Found":
+			c.JSON(http.StatusNotFound, ErrorResponse{Error: err.Error()})
+		case err.Error() == "Invalid field status":
+			c.JSON(http.StatusNotAcceptable, ErrorResponse{Error: err.Error()})
+		case err.Error() == "Failed to generate CSV file":
+			c.JSON(http.StatusInternalServerError, ErrorResponse{Error: err.Error()})
+		default:
+			c.JSON(http.StatusInternalServerError, ErrorResponse{Error: err.Error()})
+		}
 	}
-
 	c.Writer.Header().Set("Content-Type", "text/csv")
 	c.Writer.Header().Set("Content-Disposition", "attachment;filename=transaction-export.csv")
 	writer := csv.NewWriter(c.Writer)

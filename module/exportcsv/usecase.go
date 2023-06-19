@@ -2,6 +2,7 @@ package exportcsv
 
 import (
 	"errors"
+	
 	"strconv"
 )
 
@@ -19,6 +20,7 @@ func (u UseCase) ExportCSV(req *ExportCSVRequest) ([][]string, error) {
 
 	var resultGetTransaction []Transaction
 	var err error
+	//switching type of request
 	switch {
 	case req.Status == "" && req.StartDate == "" && req.EndDate == "": //without filter
 		resultGetTransaction, err = u.repo.GetAllTransaction()
@@ -41,13 +43,14 @@ func (u UseCase) ExportCSV(req *ExportCSVRequest) ([][]string, error) {
 	return transactionStringData, nil
 
 }
+
 func TransactionStringConverter(transactions []Transaction) ([][]string, error) {
-	//set name field transaction in first record
+	//this define [][] string data and insert header data
 	stringData := [][]string{[]string{"id", "od_number", "bank_acount_no", "billing_cycle_date", "payment_due_date",
 		"overflow_amount", "bill_amount", "principal_amount", "interest_amount", "total_fee_amount", "status", "payment_method",
 		"auto_debet_counter", "created_at", "updated_at", "is_hold", "is_fstl_pending", "is_hstl_pending", "is_laa_positif", "payment_amount",
 		"billing_gen_date", "is_oda_positif"}}
-	//converting some data from transaction to string
+	//converting [][] data from transaction to be string to be item data
 	for _, transaction := range transactions {
 		record := []string{strconv.Itoa(transaction.Id), transaction.Oda_number, transaction.Bank_account_no, transaction.Billing_cycle_date,
 			transaction.Payment_due_date.GoString(), strconv.FormatFloat(transaction.Overflow_amount, 'f', 6, 64), strconv.FormatFloat(transaction.Bill_amount, 'f', 6, 64),
