@@ -2,6 +2,15 @@ package account
 
 import "golang.org/x/crypto/bcrypt"
 
+type ControllerInterface interface {
+	GetDataUser() (*ReadResponse, error)
+	GetDataUserById(id string) (*ReadResponse, error)
+	CreateAccount(req *CreateRequest) (*CreateResponse, error)
+	EditDataUser(id string, req *EditDataUserRequest) (*CreateResponse, error)
+	DeleteDataUser(id string) (*CreateResponse, error)
+	Login(req *LoginResponseRequest) (string, *LoginResponse, error)
+}
+
 type Controller struct {
 	useCase *UseCase
 }

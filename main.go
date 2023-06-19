@@ -13,6 +13,7 @@ import (
 func main() {
 	model.ConnectDatabase()
 	r := gin.Default()
+	r.Use(auth.CORSMiddleware())
 	export := exportcsv.DefaultRequestHandler(model.DB)
 	accountHandler := account.DefaultRequestHandler(model.DB)
 
