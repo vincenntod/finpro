@@ -1,6 +1,7 @@
 package transaction
 
 import (
+	"net/http"
 	"time"
 )
 
@@ -13,6 +14,7 @@ type ControllerInterface interface {
 	GetTransactionByStatus(status string) (*GetAllResponseDataTransaction, error)
 	GetTransactionByStatusAndDate(req FilterByStatusDate, input FilterLimit) (*GetAllResponseDataTransaction, error)
 	GetTransactionByDate(req FilterByDate, input FilterLimit) (*GetAllResponseDataTransaction, error)
+	GetAllTransactionByDate(start string, end string) (*GetAllResponseDataTransaction, error)
 }
 
 type TransactionItemResponse struct {
@@ -139,6 +141,48 @@ func (c Controller) GetTransactionByStatus(status string) (*GetAllResponseDataTr
 	return res, nil
 }
 
+func (c Controller) GetAllTransactionByDate(start string, end string) (*GetAllResponseDataTransaction, error) {
+	transaction, err := c.useCase.GetAllTransactionByDate(start, end)
+	if err != nil {
+		return nil, err
+	}
+
+	res := &GetAllResponseDataTransaction{
+		Code:    http.StatusOK,
+		Message: "Success",
+		Error:   " ",
+	}
+
+	for _, v := range transaction {
+		res.Data = append(res.Data, TransactionItemResponse{
+			Id:               v.Id,
+			OdaNumber:        v.OdaNumber,
+			BankAccountNo:    v.BankAccountNo,
+			BillingCycleDate: v.BillingCycleDate,
+			PaymentDueDate:   v.PaymentDueDate,
+			OverflowAmount:   v.OverflowAmount,
+			BillAmount:       v.BillAmount,
+			PrincipalAmount:  v.PrincipalAmount,
+			InterestAmount:   v.InterestAmount,
+			TotalFeeAmount:   v.TotalFeeAmount,
+			Status:           v.Status,
+			PaymentMethod:    v.PaymentMethod,
+			AutoDebetCounter: v.AutoDebetCounter,
+			CreatedAt:        v.CreatedAt,
+			UpdatedAt:        v.UpdatedAt,
+			IsHold:           v.IsHold,
+			IsFstlPending:    v.IsFstlPending,
+			IsHstlPending:    v.IsHstlPending,
+			IsLaaPositif:     v.IsLaaPositif,
+			PaymentAmount:    v.PaymentAmount,
+			BillingGenDate:   v.BillingGenDate,
+			IsOdaPositif:     v.IsOdaPositif,
+		})
+	}
+	return res, nil
+
+}
+
 func (c Controller) GetTransactionByStatusAndDate(req FilterByStatusDate, input FilterLimit) (*GetAllResponseDataTransaction, error) {
 
 	transaction, err := c.useCase.GetTransactionByStatusAndDate(req, input)
@@ -188,9 +232,9 @@ func (c Controller) GetTransactionByDate(req FilterByDate, input FilterLimit) (*
 	}
 
 	res := &GetAllResponseDataTransaction{
-		Code:    200,
+		Code:    http.StatusOK,
 		Message: "Success",
-		Error:   "Not Found",
+		Error:   " ",
 	}
 
 	for _, v := range transaction {

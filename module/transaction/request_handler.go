@@ -17,6 +17,7 @@ type RequestHandlerinterface interface {
 	GetTransactionByStatus(c *gin.Context)
 	GetTransactionByStatusAndDate(c *gin.Context)
 	GetTransactionByDate(c *gin.Context)
+	GetAllTransactionByDate(c *gin.Context)
 }
 
 type GetAllResponseDataTransaction struct {
@@ -78,6 +79,24 @@ func (h RequestHandler) GetTransactionByStatus(c *gin.Context) {
 	}
 
 	res, err := h.ctrl.GetTransactionByStatus(status)
+	if err != nil {
+		c.JSON(500, gin.H{"message": err.Error()})
+		return
+	}
+	c.JSON(200, res)
+
+}
+
+func (h RequestHandler) GetAllTransactionByDate(c *gin.Context) {
+	start := c.Param("start")
+	end := c.Param("end")
+
+	if start == "" || end == "" {
+		c.JSON(http.StatusNotFound, gin.H{"message": "status not found"})
+		return
+	}
+
+	res, err := h.ctrl.GetAllTransactionByDate(start, end)
 	if err != nil {
 		c.JSON(500, gin.H{"message": err.Error()})
 		return

@@ -9,6 +9,7 @@ type UseCaseInterface interface {
 	GetTransactionByStatus(status string) ([]Transaction, error)
 	GetTransactionByStatusAndDate(req FilterByStatusDate, input FilterLimit) ([]Transaction, error)
 	GetTransactionByDate(req FilterByDate, input FilterLimit) ([]Transaction, error)
+	GetAllTransactionByDate(start string, end string) ([]Transaction, error)
 }
 
 func NewUseCase(repo RepositoryInterface) UseCaseInterface {
@@ -32,5 +33,9 @@ func (u UseCase) GetTransactionByStatusAndDate(req FilterByStatusDate, input Fil
 
 func (u UseCase) GetTransactionByDate(req FilterByDate, input FilterLimit) ([]Transaction, error) {
 	return u.repo.GetTransactionByDate(req, input)
+}
+
+func (u UseCase) GetAllTransactionByDate(start string, end string) ([]Transaction, error) {
+	return u.repo.GetAllTransactionByDate(start, end)
 
 }
