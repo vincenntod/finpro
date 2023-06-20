@@ -41,6 +41,7 @@ func (u UseCase) ExportCSVRangeDateFilter(startDate string, endDate string) ([][
 	return transactionStringData, nil
 
 }
+
 func (u UseCase) ExportCSVStatusFilter(status string) ([][]string, error) {
 	resultGetTransaction, err := u.repo.GetTransactionByStatusFilter(status)
 	if len(resultGetTransaction) == 0 {
