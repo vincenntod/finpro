@@ -2,6 +2,7 @@ package exportcsv
 
 import (
 	"encoding/csv"
+	"golang/module/transactions"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -86,8 +87,8 @@ func (h ExpoertCSVRequestHandler) ExportCSVHandlerStatusfilter(c *gin.Context) {
 
 func (h ExpoertCSVRequestHandler) ExportCSVHandlerRangeDateFilter(c *gin.Context) {
 
-	startDate := c.Param("start_date")
-	endDate := c.Param("end_date")
+	startDate := transactions.FormatDate(c.Param("start_date"))
+	endDate := transactions.FormatDate(c.Param("end_date"))
 	exportData, err := h.ctrl.ExportCSVRangeDateFilter(startDate, endDate)
 	if err != nil {
 		switch {
@@ -112,8 +113,8 @@ func (h ExpoertCSVRequestHandler) ExportCSVHandlerRangeDateFilter(c *gin.Context
 
 func (h ExpoertCSVRequestHandler) ExportCSVHandlerStatusAndRangeDateFilter(c *gin.Context) {
 	status := c.Param("status")
-	startDate := c.Param("start_date")
-	endDate := c.Param("end_date")
+	startDate := transactions.FormatDate(c.Param("start_date"))
+	endDate := transactions.FormatDate(c.Param("end_date"))
 	exportData, err := h.ctrl.ExportCSVStatusAndRangeDate(status, startDate, endDate)
 	if err != nil {
 		switch {

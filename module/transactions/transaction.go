@@ -142,11 +142,20 @@ type FilterByStatusDate struct {
 	EndDate   string `json:"end_date"`
 }
 
+func FormatDate(date string) string {
+	day := string(date[:2])
+	month := string(date[3:5])
+	year := string(date[6:10])
+
+	parseDate := year + "-" + month + "-" + day
+	return parseDate
+}
+
 func GetAllTransactionByStatusDate(c *gin.Context) {
 	var transactions []Transaction
 	status := c.Param("status")
-	start := c.Param("start")
-	end := c.Param("end")
+	start := FormatDate(c.Param("start"))
+	end := FormatDate(c.Param("end"))
 
 	if err := model.DB.Where("status =? AND(created_at BETWEEN ? AND ?)", status, start, end).Find(&transactions).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
