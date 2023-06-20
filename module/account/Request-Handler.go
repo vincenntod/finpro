@@ -112,8 +112,7 @@ func (h RequestHandler) Login(c *gin.Context) {
 	}
 	token, res, err := h.ctrl.Login(&account)
 	if err != nil {
-		c.JSON(401, gin.H{"code": 401,
-			"message": "Username atau Password salah"})
+		c.JSON(401, res)
 		return
 	}
 	c.SetCookie("gin_cookie", token, 3600, "/", "localhost", false, true)

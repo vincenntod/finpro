@@ -41,10 +41,10 @@ type AccountItemResponse struct {
 	Email string `json:"email"`
 }
 type LoginResponse struct {
-	Message string                 `json:"message"`
-	Code    int                    `json:"code"`
-	Error   string                 `json:"error"`
-	Data    LoginResponseWithToken `json:"data"`
+	Message string                   `json:"message"`
+	Code    int                      `json:"code"`
+	Status  string                   `json:"status"`
+	Data    []LoginResponseWithToken `json:"data"`
 }
 type LoginResponseWithToken struct {
 	Id    int    `json:"id"`
@@ -197,26 +197,35 @@ func (c Controller) Login(req *LoginResponseRequest) (string, *LoginResponse, er
 	}
 	token, data, err := c.useCase.Login(&request)
 	if err != nil {
-		return "", nil, err
+		res := &LoginResponse{
+			Code:    401,
+			Status:  "Unauthorized",
+			Message: "Username atau Password Salah",
+			Data:    nil,
+		}
+		return "", res, err
 	}
 	if err := bcrypt.CompareHashAndPassword([]byte(data.Password), []byte(request.Password)); err != nil {
 		res := &LoginResponse{
 			Code:    401,
-			Error:   data.Password,
-			Message: request.Password,
+			Status:  "Unauthorized",
+			Message: "Username atau Password Salah",
+			Data:    nil,
 		}
 		return "", res, nil
 	}
 
 	res := &LoginResponse{
 		Code:    200,
+		Status:  "OK",
 		Message: "Login Berhasil",
-		Data: LoginResponseWithToken{
+		Data: []LoginResponseWithToken{{
 			Id:    data.Id,
 			Name:  data.Name,
 			Email: data.Email,
 			Role:  data.Role,
-			Token: "Bearer " + token,
+			Token: token,
+		},
 		},
 	}
 	return token, res, nil
