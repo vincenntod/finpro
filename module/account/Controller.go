@@ -121,7 +121,13 @@ func (c Controller) CreateAccount(req *CreateRequest) (*CreateResponse, error) {
 	}
 	_, err := c.useCase.CreateAccount(&request)
 	if err != nil {
-		return nil, err
+		res := &CreateResponse{
+			Code:    400,
+			Status:  "Failed",
+			Message: "Duplicate account name",
+			Data:    nil,
+		}
+		return res, err
 	}
 
 	res := &CreateResponse{

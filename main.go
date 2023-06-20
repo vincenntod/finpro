@@ -23,7 +23,6 @@ func main() {
 		Admin.GET("/data-user", accountHandler.GetDataUser)
 		Admin.GET("/data-user/:id", accountHandler.GetDataUserById)
 		Admin.PUT("/data-user/:id", accountHandler.EditDataUser)
-		Admin.POST("/create-user", accountHandler.CreateAccount)
 		Admin.DELETE("/data-user/:id", accountHandler.DeleteDataUser)
 		Admin.GET("/logout", accountHandler.Logout)
 
@@ -34,10 +33,11 @@ func main() {
 		Admin.GET("/get-transactions", transactions.GetAllTransactions)
 		Admin.GET("/get-transactions-limit/:id", transactions.GetAllTransactionsLimit)
 		Admin.GET("/getTransactions/:status", transactions.GetAllTransactionByStatus)
-		Admin.GET("/get-transaction-date/:id", transactions.GetTransactionByDate)
+		Admin.GET("/getTransactionsDate/:start/:end", transactions.GetAllTransactionByDate)
 		Admin.GET("/get-transaction-status-date/:id", transactions.GetTransactionByStatusDate)
 
 	}
+	r.POST("/create-user", accountHandler.CreateAccount)
 	r.POST("/login", accountHandler.Login)
 	r.Run(":8081")
 }

@@ -2,6 +2,7 @@ package transactions
 
 import (
 	"golang/model"
+	"net/http"
 	"strconv"
 	"time"
 
@@ -116,30 +117,23 @@ type FilterByDate struct {
 	EndDate   string `json:"end_date"`
 }
 
-func GetTransactionByDate(c *gin.Context) {
+func GetAllTransactionByDate(c *gin.Context) {
 	var transactions []Transaction
-	var filterByDate FilterByDate
+	start := c.Param("start")
+	end := c.Param("end")
 
-	parameterPage := c.Param("page")
-	page, _ := strconv.Atoi(c.DefaultQuery("page", parameterPage))
-	pageSize, _ := strconv.Atoi(c.DefaultQuery("pageSize", "100"))
-
-	if err := c.ShouldBindJSON(&filterByDate); err != nil {
-		c.JSON(500, gin.H{"message": err.Error()})
-	}
-
-	if err := model.DB.Offset((page-1)*pageSize).Limit(pageSize).Order("created_at desc").Where("created_at BETWEEN ? AND ?", filterByDate.StartDate, filterByDate.EndDate).Find(&transactions).Error; err != nil {
-		c.JSON(500, gin.H{"message": err.Error()})
+	if err := model.DB.Where("created_at BETWEEN ? AND ?", start, end).Find(&transactions).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
+
 	}
 
 	c.JSON(200, gin.H{
 		"code":    200,
-		"status":  "Success",
-		"page":    &parameterPage,
-		"message": "Success Get Transaction",
-		"data":    &transactions})
-
+		"message": "Success",
+		"error":   "Tidak Ada Error",
+		"data":    &transactions,
+	})
 }
 
 type FilterByStatusDate struct {
