@@ -5,7 +5,14 @@ import (
 )
 
 type Controller struct {
-	useCase *UseCase
+	useCase UseCaseInterface
+}
+
+type ControllerInterface interface {
+	GetAllTransaction() (*GetAllResponseDataTransaction, error)
+	GetTransactionByStatus(status string) (*GetAllResponseDataTransaction, error)
+	GetTransactionByStatusAndDate(req FilterByStatusDate, input FilterLimit) (*GetAllResponseDataTransaction, error)
+	GetTransactionByDate(req FilterByDate, input FilterLimit) (*GetAllResponseDataTransaction, error)
 }
 
 type TransactionItemResponse struct {
@@ -42,57 +49,176 @@ type TransactionItemResponse struct {
 	IsOdaPositif     bool      `json:"is_oda_positif"`
 }
 
-type GetAllResponseByStatus struct {
-	Code    int                     `json:"code"`
-	Message string                  `json:"message"`
-	Error   string                  `json:"error"`
-	Data    TransactionItemResponse `json:"data"`
-}
-
-func NewController(useCase *UseCase) *Controller {
-	return &Controller{
+func NewController(useCase UseCaseInterface) ControllerInterface {
+	return Controller{
 		useCase: useCase,
 	}
 }
 
-// func (c Controller) GetAllTransaction() (*GetAllResponseByStatus, error) {
-// }
+func (c Controller) GetAllTransaction() (*GetAllResponseDataTransaction, error) {
 
-func (c Controller) GetTransactionByStatus(status string) (*GetAllResponseByStatus, error) {
+	transaction, err := c.useCase.GetAllTransaction()
+	if err != nil {
+		return nil, err
+	}
+
+	res := &GetAllResponseDataTransaction{
+		Code:    200,
+		Message: "Success",
+		Error:   "Not Found",
+	}
+
+	for _, v := range transaction {
+		res.Data = append(res.Data, TransactionItemResponse{
+			Id:               v.Id,
+			OdaNumber:        v.OdaNumber,
+			BankAccountNo:    v.BankAccountNo,
+			BillingCycleDate: v.BillingCycleDate,
+			PaymentDueDate:   v.PaymentDueDate,
+			OverflowAmount:   v.OverflowAmount,
+			BillAmount:       v.BillAmount,
+			PrincipalAmount:  v.PrincipalAmount,
+			InterestAmount:   v.InterestAmount,
+			TotalFeeAmount:   v.TotalFeeAmount,
+			Status:           v.Status,
+			PaymentMethod:    v.PaymentMethod,
+			AutoDebetCounter: v.AutoDebetCounter,
+			CreatedAt:        v.CreatedAt,
+			UpdatedAt:        v.UpdatedAt,
+			IsHold:           v.IsHold,
+			IsFstlPending:    v.IsFstlPending,
+			IsHstlPending:    v.IsHstlPending,
+			IsLaaPositif:     v.IsLaaPositif,
+			PaymentAmount:    v.PaymentAmount,
+			BillingGenDate:   v.BillingGenDate,
+			IsOdaPositif:     v.IsOdaPositif,
+		})
+	}
+	return res, nil
+}
+
+func (c Controller) GetTransactionByStatus(status string) (*GetAllResponseDataTransaction, error) {
 
 	transaction, err := c.useCase.GetTransactionByStatus(status)
 	if err != nil {
 		return nil, err
 	}
 
-	res := &GetAllResponseByStatus{
+	res := &GetAllResponseDataTransaction{
 		Code:    200,
 		Message: "Success",
 		Error:   "Not Found",
-		Data: TransactionItemResponse{
-			Id:               transaction.Id,
-			OdaNumber:        transaction.OdaNumber,
-			BankAccountNo:    transaction.BankAccountNo,
-			BillingCycleDate: transaction.BillingCycleDate,
-			PaymentDueDate:   transaction.PaymentDueDate,
-			OverflowAmount:   transaction.OverflowAmount,
-			BillAmount:       transaction.BillAmount,
-			PrincipalAmount:  transaction.PrincipalAmount,
-			InterestAmount:   transaction.InterestAmount,
-			TotalFeeAmount:   transaction.TotalFeeAmount,
-			Status:           transaction.Status,
-			PaymentMethod:    transaction.PaymentMethod,
-			AutoDebetCounter: transaction.AutoDebetCounter,
-			CreatedAt:        transaction.CreatedAt,
-			UpdatedAt:        transaction.UpdatedAt,
-			IsHold:           transaction.IsHold,
-			IsFstlPending:    transaction.IsFstlPending,
-			IsHstlPending:    transaction.IsHstlPending,
-			IsLaaPositif:     transaction.IsLaaPositif,
-			PaymentAmount:    transaction.PaymentAmount,
-			BillingGenDate:   transaction.BillingGenDate,
-			IsOdaPositif:     transaction.IsOdaPositif,
-		},
+	}
+
+	for _, v := range transaction {
+		res.Data = append(res.Data, TransactionItemResponse{
+			Id:               v.Id,
+			OdaNumber:        v.OdaNumber,
+			BankAccountNo:    v.BankAccountNo,
+			BillingCycleDate: v.BillingCycleDate,
+			PaymentDueDate:   v.PaymentDueDate,
+			OverflowAmount:   v.OverflowAmount,
+			BillAmount:       v.BillAmount,
+			PrincipalAmount:  v.PrincipalAmount,
+			InterestAmount:   v.InterestAmount,
+			TotalFeeAmount:   v.TotalFeeAmount,
+			Status:           v.Status,
+			PaymentMethod:    v.PaymentMethod,
+			AutoDebetCounter: v.AutoDebetCounter,
+			CreatedAt:        v.CreatedAt,
+			UpdatedAt:        v.UpdatedAt,
+			IsHold:           v.IsHold,
+			IsFstlPending:    v.IsFstlPending,
+			IsHstlPending:    v.IsHstlPending,
+			IsLaaPositif:     v.IsLaaPositif,
+			PaymentAmount:    v.PaymentAmount,
+			BillingGenDate:   v.BillingGenDate,
+			IsOdaPositif:     v.IsOdaPositif,
+		})
 	}
 	return res, nil
+}
+
+func (c Controller) GetTransactionByStatusAndDate(req FilterByStatusDate, input FilterLimit) (*GetAllResponseDataTransaction, error) {
+
+	transaction, err := c.useCase.GetTransactionByStatusAndDate(req, input)
+	if err != nil {
+		return nil, err
+	}
+
+	res := &GetAllResponseDataTransaction{
+		Code:    200,
+		Message: "Success",
+		Error:   "Not Found",
+	}
+
+	for _, v := range transaction {
+		res.Data = append(res.Data, TransactionItemResponse{
+			Id:               v.Id,
+			OdaNumber:        v.OdaNumber,
+			BankAccountNo:    v.BankAccountNo,
+			BillingCycleDate: v.BillingCycleDate,
+			PaymentDueDate:   v.PaymentDueDate,
+			OverflowAmount:   v.OverflowAmount,
+			BillAmount:       v.BillAmount,
+			PrincipalAmount:  v.PrincipalAmount,
+			InterestAmount:   v.InterestAmount,
+			TotalFeeAmount:   v.TotalFeeAmount,
+			Status:           v.Status,
+			PaymentMethod:    v.PaymentMethod,
+			AutoDebetCounter: v.AutoDebetCounter,
+			CreatedAt:        v.CreatedAt,
+			UpdatedAt:        v.UpdatedAt,
+			IsHold:           v.IsHold,
+			IsFstlPending:    v.IsFstlPending,
+			IsHstlPending:    v.IsHstlPending,
+			IsLaaPositif:     v.IsLaaPositif,
+			PaymentAmount:    v.PaymentAmount,
+			BillingGenDate:   v.BillingGenDate,
+			IsOdaPositif:     v.IsOdaPositif,
+		})
+	}
+	return res, nil
+}
+
+func (c Controller) GetTransactionByDate(req FilterByDate, input FilterLimit) (*GetAllResponseDataTransaction, error) {
+	transaction, err := c.useCase.GetTransactionByDate(req, input)
+	if err != nil {
+		return nil, err
+	}
+
+	res := &GetAllResponseDataTransaction{
+		Code:    200,
+		Message: "Success",
+		Error:   "Not Found",
+	}
+
+	for _, v := range transaction {
+		res.Data = append(res.Data, TransactionItemResponse{
+			Id:               v.Id,
+			OdaNumber:        v.OdaNumber,
+			BankAccountNo:    v.BankAccountNo,
+			BillingCycleDate: v.BillingCycleDate,
+			PaymentDueDate:   v.PaymentDueDate,
+			OverflowAmount:   v.OverflowAmount,
+			BillAmount:       v.BillAmount,
+			PrincipalAmount:  v.PrincipalAmount,
+			InterestAmount:   v.InterestAmount,
+			TotalFeeAmount:   v.TotalFeeAmount,
+			Status:           v.Status,
+			PaymentMethod:    v.PaymentMethod,
+			AutoDebetCounter: v.AutoDebetCounter,
+			CreatedAt:        v.CreatedAt,
+			UpdatedAt:        v.UpdatedAt,
+			IsHold:           v.IsHold,
+			IsFstlPending:    v.IsFstlPending,
+			IsHstlPending:    v.IsHstlPending,
+			IsLaaPositif:     v.IsLaaPositif,
+			PaymentAmount:    v.PaymentAmount,
+			BillingGenDate:   v.BillingGenDate,
+			IsOdaPositif:     v.IsOdaPositif,
+		})
+	}
+	return res, nil
+
 }

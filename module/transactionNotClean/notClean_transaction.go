@@ -3,6 +3,7 @@ package transactionNotClean
 import (
 	"golang/auth"
 	"golang/model"
+	"net/http"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -11,7 +12,7 @@ import (
 func GetAllTransactions(c *gin.Context) {
 	var transactions []auth.Transaction
 	if err := model.DB.Find(&transactions).Error; err != nil {
-		c.JSON(500, gin.H{"message": "Error"})
+		c.JSON(http.StatusBadRequest, gin.H{"message": "Error"})
 		return
 	}
 	c.JSON(200, gin.H{
@@ -28,16 +29,16 @@ func GetAllTransactionsLimit(c *gin.Context) {
 	id := c.Param("id")
 
 	page, _ := strconv.Atoi(c.DefaultQuery("page", id))
-	pageSize, _ := strconv.Atoi(c.DefaultQuery("page_size", "100"))
+	pageSize, _ := strconv.Atoi(c.DefaultQuery("page_size", "4"))
 	if err := model.DB.Where("id = ?", id).Find(&transactions).Error; err != nil {
-		c.JSON(500, gin.H{"message": "Error"})
+		c.JSON(http.StatusBadRequest, gin.H{"message": "Error"})
 		return
 	}
 
 	model.DB.Model(&transactions).Count(&count)
 
 	if err := model.DB.Offset((page - 1) * pageSize).Limit(pageSize).Find(&transactions).Error; err != nil {
-		c.JSON(500, gin.H{"message": "Error"})
+		c.JSON(http.StatusBadRequest, gin.H{"message": "Error"})
 		return
 	}
 	c.JSON(200, gin.H{
@@ -49,14 +50,17 @@ func GetAllTransactionsLimit(c *gin.Context) {
 	})
 }
 
-func GetAllTransactionByStatus(c *gin.Context) {
+func GetAllTransactionByDate(c *gin.Context) {
 	var transactions []auth.Transaction
-	status := c.Param("status")
-	if err := model.DB.Where("status = ?", status).Find(&transactions).Error; err != nil {
-		c.JSON(500, gin.H{"message": "Error"})
+	start := c.Param("start")
+	end := c.Param("end")
+
+	if err := model.DB.Where("created_at BETWEEN ? AND ?", start, end).Find(&transactions).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
 
 	}
+
 	c.JSON(200, gin.H{
 		"code":    200,
 		"message": "Success",
@@ -65,15 +69,15 @@ func GetAllTransactionByStatus(c *gin.Context) {
 	})
 }
 
-/*type FilterByStatus struct {
+type FilterByStatus struct {
 	Status string `json:"status"`
 }
 
-func GetTransactionByStatus(c *gin.Context) {
+func GetTransactionByQueryStatus(c *gin.Context) {
 	var transactions []auth.Transaction
-	status := c.Param("status")
+	status := c.Query("status")
 	if err := model.DB.Where("status = ?", status).Find(&transactions).Error; err != nil {
-		c.JSON(500, gin.H{"message": "Error"})
+		c.JSON(http.StatusBadRequest, gin.H{"message": "Error"})
 		return
 
 	}
@@ -84,7 +88,6 @@ func GetTransactionByStatus(c *gin.Context) {
 		"data":    &transactions,
 	})
 }
-*/
 
 type FilterByDate struct {
 	StartDate string `json:"start_date"`
@@ -100,11 +103,11 @@ func GetTransactionByDate(c *gin.Context) {
 	pageSize, _ := strconv.Atoi(c.DefaultQuery("pageSize", "100"))
 
 	if err := c.ShouldBindJSON(&filterByDate); err != nil {
-		c.JSON(500, gin.H{"message": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 	}
 
 	if err := model.DB.Offset((page-1)*pageSize).Limit(pageSize).Order("created_at desc").Where("created_at BETWEEN ? AND ?", filterByDate.StartDate, filterByDate.EndDate).Find(&transactions).Error; err != nil {
-		c.JSON(500, gin.H{"message": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
 	}
 
@@ -132,15 +135,15 @@ func GetTransactionByStatusDate(c *gin.Context) {
 	pageSize, _ := strconv.Atoi(c.DefaultQuery("pageSize", "100"))
 
 	if err := c.ShouldBindJSON(&filterByStatusDate); err != nil {
-		c.JSON(500, gin.H{"message": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 	}
 
 	if err := model.DB.Offset((page-1)*pageSize).Limit(pageSize).Order("created_at desc").Where("status =? AND(created_at BETWEEN ? AND ?)", filterByStatusDate.Status, filterByStatusDate.StartDate, filterByStatusDate.EndDate).Find(&transactions).Error; err != nil {
-		c.JSON(500, gin.H{"message": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
 	}
 
-	c.JSON(200, gin.H{
+	c.JSON(http.StatusOK, gin.H{
 		"code":    200,
 		"status":  "Success",
 		"page":    &parameterPage,
