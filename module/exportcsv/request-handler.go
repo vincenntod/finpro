@@ -2,7 +2,6 @@ package exportcsv
 
 import (
 	"encoding/csv"
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -71,8 +70,6 @@ func (h ExpoertCSVRequestHandler) ExportCSVHandlerStatusfilter(c *gin.Context) {
 			c.JSON(http.StatusNotFound, ErrorResponse{Error: err.Error()})
 		case err.Error() == "Invalid field status":
 			c.JSON(http.StatusNotAcceptable, ErrorResponse{Error: err.Error()})
-		case err.Error() == "Invalid param request":
-			c.JSON(http.StatusNotAcceptable, ErrorResponse{Error: err.Error()})
 		case err.Error() == "Failed to generate CSV file":
 			c.JSON(http.StatusInternalServerError, ErrorResponse{Error: err.Error()})
 		default:
@@ -98,8 +95,6 @@ func (h ExpoertCSVRequestHandler) ExportCSVHandlerRangeDateFilter(c *gin.Context
 			c.JSON(http.StatusNotFound, ErrorResponse{Error: err.Error()})
 		case err.Error() == "Invalid field status":
 			c.JSON(http.StatusNotAcceptable, ErrorResponse{Error: err.Error()})
-		case err.Error() == "Invalid param request":
-			c.JSON(http.StatusNotAcceptable, ErrorResponse{Error: err.Error()})
 		case err.Error() == "Failed to generate CSV file":
 			c.JSON(http.StatusInternalServerError, ErrorResponse{Error: err.Error()})
 		default:
@@ -119,16 +114,12 @@ func (h ExpoertCSVRequestHandler) ExportCSVHandlerStatusAndRangeDateFilter(c *gi
 	status := c.Param("status")
 	startDate := c.Param("start_date")
 	endDate := c.Param("end_date")
-	fmt.Println(status, startDate, endDate)
-
 	exportData, err := h.ctrl.ExportCSVStatusAndRangeDate(status, startDate, endDate)
 	if err != nil {
 		switch {
 		case err.Error() == "Not Found":
 			c.JSON(http.StatusNotFound, ErrorResponse{Error: err.Error()})
 		case err.Error() == "Invalid field status":
-			c.JSON(http.StatusNotAcceptable, ErrorResponse{Error: err.Error()})
-		case err.Error() == "Invalid param request":
 			c.JSON(http.StatusNotAcceptable, ErrorResponse{Error: err.Error()})
 		case err.Error() == "Failed to generate CSV file":
 			c.JSON(http.StatusInternalServerError, ErrorResponse{Error: err.Error()})

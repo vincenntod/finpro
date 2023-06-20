@@ -9,6 +9,15 @@ import (
 	"gorm.io/gorm"
 )
 
+type RepositoryInterface interface {
+	GetDataUser() ([]Account, error)
+	GetDataUserById(id string) (Account, error)
+	EditDataUser(id string, req *Account) (Account, error)
+	DeleteDataUser(id string) (Account, error)
+	CreateAccount(req *Account) (Account, error)
+	Login(req *Account) (string, Account, error)
+}
+
 type Repository struct {
 	db *gorm.DB
 }

@@ -13,6 +13,7 @@ import (
 func main() {
 	model.ConnectDatabase()
 	r := gin.Default()
+	r.Use(auth.CORSMiddleware())
 	export := exportcsv.DefaultRequestHandler(model.DB)
 	accountHandler := account.DefaultRequestHandler(model.DB)
 
@@ -27,11 +28,10 @@ func main() {
 		Admin.GET("/logout", accountHandler.Logout)
 
 		//export csv file
-		//	Admin.GET("/export-transaction", export.ExportCSVHandler)
-		r.GET("/export-transaction", export.ExportCSVHandler)
-		r.GET("/export-transaction/status/:status", export.ExportCSVHandlerStatusfilter)
-		r.GET("/export-transaction/range-date/:start_date/:end_date", export.ExportCSVHandlerRangeDateFilter)
-		r.GET("/export-transaction/status-range-date/:status/:start_date/:end_date", export.ExportCSVHandlerStatusAndRangeDateFilter)
+		Admin.GET("/export-transaction", export.ExportCSVHandler)
+		Admin.GET("/export-transaction/status/:status", export.ExportCSVHandlerStatusfilter)
+		Admin.GET("/export-transaction/range-date/:start_date/:end_date", export.ExportCSVHandlerRangeDateFilter)
+		Admin.GET("/export-transaction/status-range-date/:status/:start_date/:end_date", export.ExportCSVHandlerStatusAndRangeDateFilter)
 
 		//transaction table
 		Admin.GET("/get-transactions", transactions.GetAllTransactions)
