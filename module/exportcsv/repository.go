@@ -22,11 +22,12 @@ func (r Repository) GetAllTransaction() ([]Transaction, error) {
 		return nil, err
 
 	}
+	//	fmt.Println(transactions)
 	return transactions, nil
 }
-func (r Repository) GetTransactionByStatusFilter(req *ExportCSVRequest) ([]Transaction, error) {
+func (r Repository) GetTransactionByStatusFilter(status string) ([]Transaction, error) {
 	var transactions []Transaction
-	if err := r.db.Where("status = ?", req.Status).Find(&transactions).Error; err != nil {
+	if err := r.db.Where("status = ?", status).Find(&transactions).Error; err != nil {
 		return nil, err
 
 	}

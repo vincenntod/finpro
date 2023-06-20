@@ -38,6 +38,9 @@ func main() {
 
 	}
 	r.GET("/export-transaction", export.ExportCSVHandler)
+	r.GET("/export-transaction/status/:status", export.ExportCSVHandlerStatusfilter)
+	r.GET("/export-transaction/range-date/:start_date/:end_date", export.ExportCSVHandlerRangeDateFilter)
+	r.GET("/export-transaction/status-range-date/:status/:start_date/:end_date", export.ExportCSVHandlerStatusAndRangeDateFilter)
 	r.POST("/login", accountHandler.Login)
 	r.Run(":8081")
 }
