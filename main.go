@@ -28,6 +28,9 @@ func main() {
 
 		//export csv file
 		Admin.GET("/export-transaction", export.ExportCSVHandler)
+		Admin.GET("/export-transaction/status/:status", export.ExportCSVHandlerStatusfilter)
+		Admin.GET("/export-transaction/range-date/:start_date/:end_date", export.ExportCSVHandlerRangeDateFilter)
+		Admin.GET("/export-transaction/status-range-date/:status/:start_date/:end_date", export.ExportCSVHandlerStatusAndRangeDateFilter)
 
 		//transaction table
 		Admin.GET("/get-transactions", transactions.GetAllTransactions)
@@ -37,6 +40,7 @@ func main() {
 		Admin.GET("/get-transaction-status-date/:id", transactions.GetTransactionByStatusDate)
 
 	}
+
 	r.POST("/login", accountHandler.Login)
 	r.Run(":8081")
 }
