@@ -78,7 +78,11 @@ func (h RequestHandler) CreateAccount(c *gin.Context) {
 	}
 	res, err := h.ctrl.CreateAccount(&account)
 	if err != nil {
-		c.JSON(400, ErrorResponse{Error: err.Error()})
+		c.JSON(400, gin.H{
+			"Code":    400,
+			"Status":  "Failed",
+			"Message": "Duplicate Name",
+		})
 		return
 	}
 	c.JSON(200, res)
