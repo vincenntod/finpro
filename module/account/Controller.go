@@ -117,13 +117,14 @@ func (c Controller) CreateAccount(req *CreateRequest) (*CreateResponse, error) {
 		Name:     req.Name,
 		Email:    req.Email,
 		Phone:    req.Phone,
+		Role:     req.Role,
 		Password: req.Password,
 	}
 	_, err := c.useCase.CreateAccount(&request)
 	if err != nil {
 		res := &CreateResponse{
 			Code:    400,
-			Status:  "Failed",
+			Status:  "Error",
 			Message: "Duplicate account name",
 			Data:    nil,
 		}
@@ -192,15 +193,15 @@ func (c Controller) DeleteDataUser(id string) (*CreateResponse, error) {
 }
 func (c Controller) Login(req *LoginResponseRequest) (string, *LoginResponse, error) {
 	request := Account{
-		Name:     req.Name,
+		Email:    req.Email,
 		Password: req.Password,
 	}
 	token, data, err := c.useCase.Login(&request)
 	if err != nil {
 		res := &LoginResponse{
 			Code:    401,
-			Status:  "Unauthorized",
-			Message: "Username atau Password Salah",
+			Status:  "Error",
+			Message: "Email atau Password Salah",
 			Data:    nil,
 		}
 		return "", res, err
@@ -208,8 +209,8 @@ func (c Controller) Login(req *LoginResponseRequest) (string, *LoginResponse, er
 	if err := bcrypt.CompareHashAndPassword([]byte(data.Password), []byte(request.Password)); err != nil {
 		res := &LoginResponse{
 			Code:    401,
-			Status:  "Unauthorized",
-			Message: "Username atau Password Salah",
+			Status:  "Error",
+			Message: "Email atau Password Salah",
 			Data:    nil,
 		}
 		return "", res, nil

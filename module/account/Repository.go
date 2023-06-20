@@ -59,7 +59,7 @@ func (r Repository) Login(req *Account) (string, Account, error) {
 	var account Account
 
 	// var getAcount Account
-	err := model.DB.Where("name = ?", req.Name).First(&account).Error
+	err := model.DB.Where("email = ?", req.Email).First(&account).Error
 	if err != nil {
 		return "", account, err
 	}
