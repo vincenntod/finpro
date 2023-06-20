@@ -142,28 +142,22 @@ type FilterByStatusDate struct {
 	EndDate   string `json:"end_date"`
 }
 
-func GetTransactionByStatusDate(c *gin.Context) {
+func GetAllTransactionByStatusDate(c *gin.Context) {
 	var transactions []Transaction
-	var filterByStatusDate FilterByStatusDate
+	status := c.Param("status")
+	start := c.Param("start")
+	end := c.Param("end")
 
-	parameterPage := c.Param("page")
-	page, _ := strconv.Atoi(c.DefaultQuery("page", parameterPage))
-	pageSize, _ := strconv.Atoi(c.DefaultQuery("pageSize", "100"))
-
-	if err := c.ShouldBindJSON(&filterByStatusDate); err != nil {
-		c.JSON(500, gin.H{"message": err.Error()})
-	}
-
-	if err := model.DB.Offset((page-1)*pageSize).Limit(pageSize).Order("created_at desc").Where("status =? AND(created_at BETWEEN ? AND ?)", filterByStatusDate.Status, filterByStatusDate.StartDate, filterByStatusDate.EndDate).Find(&transactions).Error; err != nil {
-		c.JSON(500, gin.H{"message": err.Error()})
+	if err := model.DB.Where("status =? AND(created_at BETWEEN ? AND ?)", status, start, end).Find(&transactions).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
+
 	}
 
 	c.JSON(200, gin.H{
 		"code":    200,
-		"status":  "Success",
-		"page":    &parameterPage,
-		"message": "Success Get Transaction",
-		"data":    &transactions})
-
+		"message": "Success",
+		"error":   "Tidak Ada Error",
+		"data":    &transactions,
+	})
 }

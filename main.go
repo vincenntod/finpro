@@ -37,10 +37,10 @@ func main() {
 		Admin.GET("/get-transactions-limit/:id", transactions.GetAllTransactionsLimit)
 		Admin.GET("/getTransactions/:status", transactions.GetAllTransactionByStatus)
 		Admin.GET("/getTransactionsDate/:start/:end", transactions.GetAllTransactionByDate)
-		Admin.GET("/get-transaction-status-date/:id", transactions.GetTransactionByStatusDate)
+		Admin.GET("/getTransactionsStatusDate/:status/:start/:end", transactions.GetAllTransactionByStatusDate)
 
 	}
-
+	r.POST("/create-user", accountHandler.CreateAccount)
 	r.POST("/login", accountHandler.Login)
 	r.Run(":8081")
 }
