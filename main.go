@@ -28,12 +28,6 @@ func main() {
 
 		//export csv file
 		Admin.GET("/export-transaction", export.ExportCSVHandler)
-<<<<<<< HEAD
-		Admin.GET("/export-transaction/status/:status", export.ExportCSVHandlerStatusfilter)
-		Admin.GET("/export-transaction/range-date/:start_date/:end_date", export.ExportCSVHandlerRangeDateFilter)
-		Admin.GET("/export-transaction/status-range-date/:status/:start_date/:end_date", export.ExportCSVHandlerStatusAndRangeDateFilter)
-=======
->>>>>>> parent of 007e65b (solve error and adding custom resspone invalid json format)
 
 		//transaction table
 		Admin.GET("/get-transactions", transactions.GetAllTransactions)
@@ -43,10 +37,7 @@ func main() {
 		Admin.GET("/getTransactionsStatusDate/:status/:start/:end", transactions.GetAllTransactionByStatusDate)
 
 	}
-<<<<<<< HEAD
 	r.POST("/create-user", accountHandler.CreateAccount)
-=======
->>>>>>> parent of 007e65b (solve error and adding custom resspone invalid json format)
 	r.POST("/login", accountHandler.Login)
 	r.Run(":8081")
 }
