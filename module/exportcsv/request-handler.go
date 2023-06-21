@@ -40,6 +40,7 @@ type ErrorResponse struct {
 }
 
 func (h ExpoertCSVRequestHandler) ExportCSVHandler(c *gin.Context) {
+<<<<<<< HEAD
 	exportData, err := h.ctrl.ExportCSV()
 	if err != nil {
 		switch {
@@ -127,7 +128,25 @@ func (h ExpoertCSVRequestHandler) ExportCSVHandlerStatusAndRangeDateFilter(c *gi
 		default:
 			c.JSON(http.StatusInternalServerError, ErrorResponse{Error: err.Error()})
 		}
+=======
+
+	var req ExportCSVRequest
+	if err := c.BindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, ErrorResponse{Error: err.Error()})
+		return
 	}
+
+	exportData, err := h.ctrl.ExportCSV(&req)
+	switch {
+	case err != nil && err.Error() == "Not Found":
+		c.JSON(http.StatusNotFound, ErrorResponse{Error: err.Error()})
+	case err != nil && err.Error() == "invalid field status":
+		c.JSON(http.StatusNotAcceptable, ErrorResponse{Error: err.Error()})
+	case err != nil:
+		c.JSON(http.StatusInternalServerError, ErrorResponse{Error: err.Error()})
+>>>>>>> parent of 007e65b (solve error and adding custom resspone invalid json format)
+	}
+
 	c.Writer.Header().Set("Content-Type", "text/csv")
 	c.Writer.Header().Set("Content-Disposition", "attachment;filename=transaction-export.csv")
 	writer := csv.NewWriter(c.Writer)
