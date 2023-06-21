@@ -28,7 +28,7 @@ func TestUseCase_GetDataUser(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name: "Success",
+			name: "Success Get Data User",
 			u:    account.UseCase{Repo: mockery},
 			want: []account.Account{{
 				Name:  "Vincen",
@@ -76,7 +76,7 @@ func TestUseCase_GetDataUserById(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name: "Success",
+			name: "Success Get Data User By Id",
 			u:    account.UseCase{Repo: mockery},
 			args: args{id: "1"},
 			want: account.Account{
@@ -131,7 +131,7 @@ func TestUseCase_EditDataUser(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name: "Success",
+			name: "Success Edit Data User",
 			u:    account.UseCase{Repo: mockery},
 			args: args{
 				id: "1",
@@ -195,7 +195,7 @@ func TestUseCase_CreateAccount(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name: "Success",
+			name: "Success Create Account",
 			u: account.UseCase{
 				Repo: mockery,
 			},
@@ -250,7 +250,7 @@ func TestUseCase_DeleteDataUser(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name: "Success",
+			name: "Success Delete Data User",
 			u: account.UseCase{
 				Repo: mockery,
 			},
@@ -296,7 +296,7 @@ func TestUseCase_Login(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name: "Success",
+			name: "Success Login",
 			u: account.UseCase{
 				Repo: mockery,
 			},

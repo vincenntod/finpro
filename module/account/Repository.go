@@ -19,11 +19,11 @@ type RepositoryInterface interface {
 }
 
 type Repository struct {
-	db *gorm.DB
+	Db *gorm.DB
 }
 
 func NewRepository(db *gorm.DB) *Repository {
-	return &Repository{db: db}
+	return &Repository{Db: db}
 }
 
 func (r Repository) GetDataUser() ([]Account, error) {
