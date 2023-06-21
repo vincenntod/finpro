@@ -2,6 +2,7 @@ package exportcsv
 
 import (
 	"errors"
+	"fmt"
 	"strings"
 
 	"strconv"
@@ -62,6 +63,7 @@ func (u UseCase) ExportCSVStatusAndRangeDate(status string, startDate string, en
 		return nil, errors.New("Not Found")
 	}
 	transactionStringData, err := TransactionStringConverter(resultGetTransaction)
+	fmt.Println(resultGetTransaction)
 	return transactionStringData, nil
 
 }
