@@ -47,9 +47,10 @@ func (h ExpoertCSVRequestHandler) ExportCSVHandler(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, ErrorResponse{Error: err.Error()})
 		return
 	}
-	req.StartDate = transactions.FormatDate(req.StartDate)
-	req.EndDate = transactions.FormatDate(req.EndDate)
-
+	if req.StartDate != "" && req.EndDate != "" {
+		req.StartDate = transactions.FormatDate(req.StartDate)
+		req.EndDate = transactions.FormatDate(req.EndDate)
+	}
 	exportData, err := h.ctrl.ExportCSV(&req)
 	switch {
 	case err != nil && err.Error() == "Not Found":
