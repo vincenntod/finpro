@@ -10,7 +10,7 @@ type UseCaseInterface interface {
 }
 
 type UseCase struct {
-	repo UseCaseInterface
+	Repo UseCaseInterface
 }
 
 func NewUseCase(repo *Repository) *UseCase {
@@ -18,47 +18,47 @@ func NewUseCase(repo *Repository) *UseCase {
 		return nil
 	}
 	return &UseCase{
-		repo: repo,
+		Repo: repo,
 	}
 }
 
 func (u UseCase) GetDataUser() ([]Account, error) {
-	result, err := u.repo.GetDataUser()
+	result, err := u.Repo.GetDataUser()
 	if err != nil {
 		return []Account{}, err
 	}
 	return result, nil
 }
 func (u UseCase) GetDataUserById(id string) (Account, error) {
-	result, err := u.repo.GetDataUserById(id)
+	result, err := u.Repo.GetDataUserById(id)
 	if err != nil {
 		return Account{}, err
 	}
 	return result, nil
 }
 func (u UseCase) EditDataUser(id string, req *Account) (Account, error) {
-	result, err := u.repo.EditDataUser(id, req)
+	result, err := u.Repo.EditDataUser(id, req)
 	if err != nil {
 		return Account{}, err
 	}
 	return result, nil
 }
 func (u UseCase) CreateAccount(req *Account) (Account, error) {
-	result, err := u.repo.CreateAccount(req)
+	result, err := u.Repo.CreateAccount(req)
 	if err != nil {
 		return Account{}, err
 	}
 	return result, nil
 }
 func (u UseCase) DeleteDataUser(id string) (Account, error) {
-	result, err := u.repo.DeleteDataUser(id)
+	result, err := u.Repo.DeleteDataUser(id)
 	if err != nil {
 		return Account{}, err
 	}
 	return result, nil
 }
 func (u UseCase) Login(req *Account) (string, Account, error) {
-	string, result, err := u.repo.Login(req)
+	string, result, err := u.Repo.Login(req)
 	if err != nil {
 		return string, Account{}, err
 	}
