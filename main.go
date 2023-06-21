@@ -37,7 +37,9 @@ func main() {
 		Admin.GET("/getTransactionsStatusDate/:status/:start/:end", transactions.GetAllTransactionByStatusDate)
 
 	}
+
 	r.POST("/create-user", accountHandler.CreateAccount)
 	r.POST("/login", accountHandler.Login)
 	r.Run(":8081")
+
 }
