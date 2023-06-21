@@ -58,6 +58,6 @@ func TransactionStringConverter(transactions []Transaction) ([][]string, error) 
 			strings.Trim(transaction.Billing_gen_date, "T00:00:00Z"), strconv.FormatBool(transaction.Is_oda_positif)}
 		stringData = append(stringData, record)
 	}
-
+	//
 	return stringData, nil
 }
