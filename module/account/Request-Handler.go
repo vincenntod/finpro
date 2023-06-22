@@ -115,10 +115,9 @@ func (h RequestHandler) Login(c *gin.Context) {
 		c.JSON(401, res)
 		return
 	}
-	c.SetCookie("gin_cookie", token, 3600, "/", "localhost", false, true)
+	c.Writer.Header().Set("Authorization", token)
 	c.JSON(200, res)
 }
 func (h RequestHandler) Logout(c *gin.Context) {
-	c.SetCookie("gin_cookie", "", -1, "/", "localhost", false, true)
 	c.JSON(200, gin.H{"message": "Berhasil Logout"})
 }

@@ -12,12 +12,12 @@ type ControllerInterface interface {
 }
 
 type Controller struct {
-	useCase *UseCase
+	UseCase *UseCase
 }
 
 func NewController(useCase *UseCase) *Controller {
 	return &Controller{
-		useCase: useCase,
+		UseCase: useCase,
 	}
 }
 
@@ -55,7 +55,7 @@ type LoginResponseWithToken struct {
 }
 
 func (c Controller) GetDataUser() (*ReadResponse, error) {
-	account, err := c.useCase.GetDataUser()
+	account, err := c.UseCase.GetDataUser()
 	if err != nil {
 		return nil, err
 	}
@@ -80,7 +80,7 @@ func (c Controller) GetDataUser() (*ReadResponse, error) {
 	return res, nil
 }
 func (c Controller) GetDataUserById(id string) (*ReadResponse, error) {
-	account, err := c.useCase.GetDataUserById(id)
+	account, err := c.UseCase.GetDataUserById(id)
 	if err != nil {
 		return nil, err
 	}
@@ -120,7 +120,7 @@ func (c Controller) CreateAccount(req *CreateRequest) (*CreateResponse, error) {
 		Role:     req.Role,
 		Password: req.Password,
 	}
-	_, err := c.useCase.CreateAccount(&request)
+	_, err := c.UseCase.CreateAccount(&request)
 	if err != nil {
 		res := &CreateResponse{
 			Code:    400,
@@ -159,7 +159,7 @@ func (c Controller) EditDataUser(id string, req *EditDataUserRequest) (*CreateRe
 		Role:     req.Role,
 		Password: req.Password,
 	}
-	_, err := c.useCase.EditDataUser(id, &request)
+	_, err := c.UseCase.EditDataUser(id, &request)
 	if err != nil {
 		return nil, err
 	}
@@ -180,7 +180,7 @@ func (c Controller) EditDataUser(id string, req *EditDataUserRequest) (*CreateRe
 	return res, nil
 }
 func (c Controller) DeleteDataUser(id string) (*CreateResponse, error) {
-	_, err := c.useCase.DeleteDataUser(id)
+	_, err := c.UseCase.DeleteDataUser(id)
 	if err != nil {
 		return nil, err
 	}
@@ -196,7 +196,7 @@ func (c Controller) Login(req *LoginResponseRequest) (string, *LoginResponse, er
 		Email:    req.Email,
 		Password: req.Password,
 	}
-	token, data, err := c.useCase.Login(&request)
+	token, data, err := c.UseCase.Login(&request)
 	if err != nil {
 		res := &LoginResponse{
 			Code:    401,

@@ -10,12 +10,14 @@ import (
 )
 
 func MiddlewareAdmin(c *gin.Context) {
-	tokenString, err := c.Cookie("gin_cookie")
-	if err != nil {
-		c.AbortWithStatus(401)
+	TokenString := c.Request.Header.Get("Authorization")
+	if TokenString == "" {
 		c.JSON(401, gin.H{"message": "Silahkan Login"})
+		c.AbortWithStatus(401)
+		return
 	}
-	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+
+	token, _ := jwt.Parse(TokenString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method : %v", token.Header["alg"])
 		}
@@ -24,18 +26,21 @@ func MiddlewareAdmin(c *gin.Context) {
 
 	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
 		if float64(time.Now().Unix()) > claims["exp"].(float64) {
-			c.JSON(401, gin.H{"message": "Silahkan Login Kembali "})
+			c.JSON(401, gin.H{"message": "Silahkan Login Kembali"})
 			c.AbortWithStatus(401)
+			return
 		}
 		var account Account
 		model.DB.First(&account, claims["Id"])
 		if account.Id == 0 {
 			c.AbortWithStatus(401)
+			return
 		}
 		c.Set("account", account)
 		c.Next()
 	} else {
 		c.AbortWithStatus(401)
+		return
 	}
 
 }
@@ -44,7 +49,7 @@ func CORSMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
-		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
+		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With, withCredentials")
 		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT")
 
 		if c.Request.Method == "OPTIONS" {

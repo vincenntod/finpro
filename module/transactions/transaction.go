@@ -119,8 +119,8 @@ type FilterByDate struct {
 
 func GetAllTransactionByDate(c *gin.Context) {
 	var transactions []Transaction
-	start := c.Param("start")
-	end := c.Param("end")
+	start := FormatDate(c.Param("start"))
+	end := FormatDate(c.Param("end"))
 
 	if err := model.DB.Where("created_at BETWEEN ? AND ?", start, end).Find(&transactions).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
