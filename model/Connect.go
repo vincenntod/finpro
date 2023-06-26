@@ -2,6 +2,7 @@ package model
 
 import (
 	"fmt"
+
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
@@ -20,3 +21,15 @@ func ConnectDatabase() {
 	}
 	DB = db
 }
+
+// func ConnectDatabase() {
+// 	dsn := "root:12345@tcp(localhost:3306)/dbceria?parseTime=true"
+// 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{NamingStrategy: schema.NamingStrategy{
+// 		SingularTable: true,
+// 	}})
+// 	if err != nil {
+// 		fmt.Printf("Error")
+// 		return
+// 	}
+// 	DB = db
+// }

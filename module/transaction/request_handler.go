@@ -14,10 +14,11 @@ type RequestHandler struct {
 
 type RequestHandlerinterface interface {
 	GetAllTransaction(c *gin.Context)
-	GetTransactionByStatus(c *gin.Context)
+	GetAllTransactionByStatus(c *gin.Context)
+	GetAllTransactionByDate(c *gin.Context)
+	GetAllTransactionByStatusDate(c *gin.Context)
 	GetTransactionByStatusAndDate(c *gin.Context)
 	GetTransactionByDate(c *gin.Context)
-	GetAllTransactionByDate(c *gin.Context)
 }
 
 type GetAllResponseDataTransaction struct {
@@ -41,6 +42,15 @@ type FilterByStatusDate struct {
 type FilterLimit struct {
 	Page     int
 	PageSize int
+}
+
+func FormatDate(date string) string {
+	day := string(date[:2])
+	month := string(date[3:5])
+	year := string(date[6:10])
+
+	parseDate := year + "-" + month + "-" + day
+	return parseDate
 }
 
 func NewRequestHandler(ctrl ControllerInterface) RequestHandlerinterface {
@@ -70,7 +80,7 @@ func (h RequestHandler) GetAllTransaction(c *gin.Context) {
 
 }
 
-func (h RequestHandler) GetTransactionByStatus(c *gin.Context) {
+func (h RequestHandler) GetAllTransactionByStatus(c *gin.Context) {
 	status := c.Param("status")
 
 	if status == "" {
@@ -78,7 +88,7 @@ func (h RequestHandler) GetTransactionByStatus(c *gin.Context) {
 		return
 	}
 
-	res, err := h.ctrl.GetTransactionByStatus(status)
+	res, err := h.ctrl.GetAllTransactionByStatus(status)
 	if err != nil {
 		c.JSON(500, gin.H{"message": err.Error()})
 		return
@@ -88,15 +98,34 @@ func (h RequestHandler) GetTransactionByStatus(c *gin.Context) {
 }
 
 func (h RequestHandler) GetAllTransactionByDate(c *gin.Context) {
-	start := c.Param("start")
-	end := c.Param("end")
+	start := FormatDate(c.Param("start"))
+	end := FormatDate(c.Param("end"))
 
 	if start == "" || end == "" {
-		c.JSON(http.StatusNotFound, gin.H{"message": "status not found"})
+		c.JSON(http.StatusNotFound, gin.H{"message": "inputan tidak boleh kosong"})
 		return
 	}
 
 	res, err := h.ctrl.GetAllTransactionByDate(start, end)
+	if err != nil {
+		c.JSON(500, gin.H{"message": err.Error()})
+		return
+	}
+	c.JSON(200, res)
+
+}
+
+func (h RequestHandler) GetAllTransactionByStatusDate(c *gin.Context) {
+	status := c.Param("status")
+	start := FormatDate(c.Param("start"))
+	end := FormatDate(c.Param("end"))
+
+	if status == "" || start == "" || end == "" {
+		c.JSON(http.StatusNotFound, gin.H{"message": "status not found"})
+		return
+	}
+
+	res, err := h.ctrl.GetAllTransactionByStatusDate(status, start, end)
 	if err != nil {
 		c.JSON(500, gin.H{"message": err.Error()})
 		return

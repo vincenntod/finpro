@@ -10,10 +10,11 @@ type Repository struct {
 
 type RepositoryInterface interface {
 	GetAllTransaction() ([]Transaction, error)
-	GetTransactionByStatus(status string) ([]Transaction, error)
+	GetAllTransactionByStatus(status string) ([]Transaction, error)
+	GetAllTransactionByDate(start string, end string) ([]Transaction, error)
+	GetAllTransactionByStatusDate(status string, start string, end string) ([]Transaction, error)
 	GetTransactionByStatusAndDate(req FilterByStatusDate, input FilterLimit) ([]Transaction, error)
 	GetTransactionByDate(req FilterByDate, input FilterLimit) ([]Transaction, error)
-	GetAllTransactionByDate(start string, end string) ([]Transaction, error)
 }
 
 func NewRepository(db *gorm.DB) RepositoryInterface {
@@ -26,7 +27,7 @@ func (r Repository) GetAllTransaction() ([]Transaction, error) {
 	return transactions, err
 }
 
-func (r Repository) GetTransactionByStatus(status string) ([]Transaction, error) {
+func (r Repository) GetAllTransactionByStatus(status string) ([]Transaction, error) {
 	var transactions []Transaction
 	err := r.db.Where("status = ?", status).Find(&transactions).Error
 	return transactions, err
@@ -35,6 +36,12 @@ func (r Repository) GetTransactionByStatus(status string) ([]Transaction, error)
 func (r Repository) GetAllTransactionByDate(start string, end string) ([]Transaction, error) {
 	var transactions []Transaction
 	err := r.db.Where("created_at BETWEEN ? AND ?", start, end).Find(&transactions).Error
+	return transactions, err
+}
+
+func (r Repository) GetAllTransactionByStatusDate(status string, start string, end string) ([]Transaction, error) {
+	var transactions []Transaction
+	err := r.db.Where("status =? AND(created_at BETWEEN ? AND ?)", status, start, end).Find(&transactions).Error
 	return transactions, err
 }
 
