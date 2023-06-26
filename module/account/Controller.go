@@ -213,7 +213,7 @@ func (c Controller) Login(req *LoginResponseRequest) (string, *LoginResponse, er
 			Message: "Email atau Password Salah",
 			Data:    nil,
 		}
-		return "", res, nil
+		return "", res, err
 	}
 
 	res := &LoginResponse{

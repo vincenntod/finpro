@@ -4,8 +4,6 @@ import (
 	"encoding/csv"
 	"net/http"
 
-	"golang/module/transactions"
-
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
@@ -46,10 +44,6 @@ func (h ExpoertCSVRequestHandler) ExportCSVHandler(c *gin.Context) {
 	if err := c.Bind(&req); err != nil {
 		c.JSON(http.StatusBadRequest, ErrorResponse{Error: err.Error()})
 		return
-	}
-	if req.StartDate != "" && req.EndDate != "" {
-		req.StartDate = transactions.FormatDate(req.StartDate)
-		req.EndDate = transactions.FormatDate(req.EndDate)
 	}
 	exportData, err := h.ctrl.ExportCSV(&req)
 	switch {
