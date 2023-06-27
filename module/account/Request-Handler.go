@@ -121,3 +121,66 @@ func (h RequestHandler) Login(c *gin.Context) {
 func (h RequestHandler) Logout(c *gin.Context) {
 	c.JSON(200, gin.H{"message": "Berhasil Logout"})
 }
+func (h RequestHandler) SendEmail(c *gin.Context) {
+	email := c.Param("email")
+	res, err := h.ctrl.SendEmail(email)
+	if err != nil {
+		c.JSON(401, res)
+	}
+	c.JSON(200, res)
+
+}
+func (h RequestHandler) CompareVerificationCode(c *gin.Context) {
+	var verificationCodeRequest VerificationCodeRequest
+
+	if err := c.ShouldBindJSON(&verificationCodeRequest); err != nil {
+		c.JSON(500, gin.H{
+			"code":    500,
+			"status":  "Error",
+			"message": "Internal Server Error",
+		})
+		return
+	}
+	res, err := h.ctrl.CompareVerificationCode(&verificationCodeRequest)
+	if err != nil {
+		c.JSON(400, res)
+		return
+	}
+	c.JSON(200, res)
+}
+func (h RequestHandler) EditPassword(c *gin.Context) {
+	var req EditDataUserRequest
+	queryUrl := c.Request.URL.Query()
+	id := queryUrl.Get("id")
+	if id == "" {
+		c.JSON(400, gin.H{
+			"code":    400,
+			"status":  "Error",
+			"message": "Bad Request id nil",
+		})
+		return
+	}
+
+	code := c.Request.Header.Get("VerificationCode")
+	if code == "" {
+		c.JSON(400, gin.H{
+			"code":    400,
+			"status":  "Error",
+			"message": "Bad Request Verification Code nil",
+		})
+		return
+	}
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(500, gin.H{
+			"code":    500,
+			"status":  "Error",
+			"message": "Internal Server Error",
+		})
+		return
+	}
+	res, err := h.ctrl.EditPassword(id, code, &req)
+	if err != nil {
+		c.JSON(500, res)
+	}
+	c.JSON(200, res)
+}

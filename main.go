@@ -38,9 +38,9 @@ func main() {
 
 	}
 	r.POST("/create-user", accountHandler.CreateAccount)
-	r.POST("/send-email/:email", account.SendEmail)
-	r.POST("/compare-verification-code", account.CompareVerificationCode)
-	r.PUT("/edit-password/", account.EditPassword)
+	r.POST("/send-email/:email", accountHandler.SendEmail)
+	r.POST("/compare-verification-code", accountHandler.CompareVerificationCode)
+	r.PUT("/edit-password/", accountHandler.EditPassword)
 	r.POST("/login", accountHandler.Login)
 	r.Run(":8081")
 }

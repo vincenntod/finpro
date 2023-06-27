@@ -8,3 +8,10 @@ type Account struct {
 	Password string `json:"password"`
 	Email    string `json:"email"`
 }
+
+type VerificationCodeRequest struct {
+	Email string `json:"email"`
+	Code  string `json:"code"`
+}
+
+var VerificationCodes = make(map[string]string)
