@@ -494,3 +494,101 @@ func TestNewController(t *testing.T) {
 		})
 	}
 }
+
+// func TestController_GetTransaction(t *testing.T) {
+// 	type args struct {
+// 		req *FilterByStatusDate
+// 	}
+// 	tests := []struct {
+// 		name    string
+// 		c       Controller
+// 		args    args
+// 		want    *GetAllResponseDataTransaction
+// 		wantErr bool
+// 	}{
+// 		// TODO: Add test cases.
+// 		{
+// 			name: "Get Transaction | Success",
+// 			c: Controller{
+// 				useCase: NewMockUseCaseInterface(t),
+// 			},
+// 			args: args{
+// 				req: &FilterByStatusDate{
+// 					Status:    "SUCCESS",
+// 					StartDate: "2023-01-01",
+// 					EndDate:   "2023-07-01",
+// 				},
+// 			},
+// 			want: &GetAllResponseDataTransaction{
+// 				Code:    http.StatusOK,
+// 				Message: "Success",
+// 				Error:   " ",
+// 				Data: []TransactionItemResponse{
+// 					{
+// 						Id:               1,
+// 						OdaNumber:        123456789,
+// 						BankAccountNo:    123456789,
+// 						BillingCycleDate: "2021-01-01",
+// 						PaymentDueDate:   time.Date(2023, 06, 01, 11, 59, 10, 11, time.UTC),
+// 						OverflowAmount:   100000,
+// 						BillAmount:       100000,
+// 						PrincipalAmount:  100000,
+// 						InterestAmount:   100000,
+// 						TotalFeeAmount:   100000,
+// 						Status:           "Success",
+// 						PaymentMethod:    "BCA",
+// 						AutoDebetCounter: 1,
+// 						CreatedAt:        time.Date(2023, 06, 01, 11, 59, 10, 11, time.UTC),
+// 						UpdatedAt:        time.Date(2023, 06, 01, 11, 59, 10, 11, time.UTC),
+// 						IsHold:           false,
+// 						IsFstlPending:    false,
+// 						IsHstlPending:    false,
+// 						IsLaaPositif:     false,
+// 						PaymentAmount:    100000,
+// 						BillingGenDate:   time.Date(2023, 06, 01, 11, 59, 10, 11, time.UTC),
+// 						IsOdaPositif:     false,
+// 					},
+// 				},
+// 			},
+// 			wantErr: false,
+// 		},
+// 	}
+// 	for _, tt := range tests {
+// 		t.Run(tt.name, func(t *testing.T) {
+// 			tt.c.useCase.(*MockUseCaseInterface).EXPECT().GetTransaction().Return([]Transaction{
+// 				{
+// 					Id:               1,
+// 					OdaNumber:        123456789,
+// 					BankAccountNo:    123456789,
+// 					BillingCycleDate: "2021-01-01",
+// 					PaymentDueDate:   time.Date(2023, 06, 01, 11, 59, 10, 11, time.UTC),
+// 					OverflowAmount:   100000,
+// 					BillAmount:       100000,
+// 					PrincipalAmount:  100000,
+// 					InterestAmount:   100000,
+// 					TotalFeeAmount:   100000,
+// 					Status:           "Success",
+// 					PaymentMethod:    "BCA",
+// 					AutoDebetCounter: 1,
+// 					CreatedAt:        time.Date(2023, 06, 01, 11, 59, 10, 11, time.UTC),
+// 					UpdatedAt:        time.Date(2023, 06, 01, 11, 59, 10, 11, time.UTC),
+// 					IsHold:           false,
+// 					IsFstlPending:    false,
+// 					IsHstlPending:    false,
+// 					IsLaaPositif:     false,
+// 					PaymentAmount:    100000,
+// 					BillingGenDate:   time.Date(2023, 06, 01, 11, 59, 10, 11, time.UTC),
+// 					IsOdaPositif:     false,
+// 				},
+// 			}, nil)
+// 			got, err := tt.c.GetTransaction(tt.args.req)
+// 			if (err != nil) != tt.wantErr {
+// 				t.Errorf("Controller.GetTransaction() error = %v, wantErr %v", err, tt.wantErr)
+// 				return
+// 			}
+// 			if !reflect.DeepEqual(got, tt.want) {
+// 				t.Errorf("Controller.GetTransaction() = %v, want %v", got, tt.want)
+// 			}
+// 		})
+// 	}
+// }

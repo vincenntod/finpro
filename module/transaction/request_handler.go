@@ -17,6 +17,8 @@ type RequestHandlerinterface interface {
 	GetAllTransactionByStatus(c *gin.Context)
 	GetAllTransactionByDate(c *gin.Context)
 	GetAllTransactionByStatusDate(c *gin.Context)
+	GetTransaction(c *gin.Context)
+	
 	GetTransactionByStatusAndDate(c *gin.Context)
 	GetTransactionByDate(c *gin.Context)
 }
@@ -184,4 +186,19 @@ func (h RequestHandler) GetTransactionByDate(c *gin.Context) {
 	}
 	c.JSON(200, res)
 
+}
+
+func (h RequestHandler) GetTransaction(c *gin.Context) {
+	var req FilterByStatusDate
+	if err := c.Bind(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		return
+	}
+
+	res, err := h.ctrl.GetTransaction(&req)
+	if err != nil {
+		c.JSON(500, gin.H{"message": err.Error()})
+		return
+	}
+	c.JSON(200, res)
 }

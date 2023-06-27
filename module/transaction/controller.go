@@ -14,6 +14,8 @@ type ControllerInterface interface {
 	GetAllTransactionByStatus(status string) (*GetAllResponseDataTransaction, error)
 	GetAllTransactionByDate(start string, end string) (*GetAllResponseDataTransaction, error)
 	GetAllTransactionByStatusDate(status string, start string, end string) (*GetAllResponseDataTransaction, error)
+	GetTransaction(req *FilterByStatusDate) (*GetAllResponseDataTransaction, error)
+	
 	GetTransactionByStatusAndDate(req FilterByStatusDate, input FilterLimit) (*GetAllResponseDataTransaction, error)
 	GetTransactionByDate(req FilterByDate, input FilterLimit) (*GetAllResponseDataTransaction, error)
 }
@@ -306,5 +308,29 @@ func (c Controller) GetTransactionByDate(req FilterByDate, input FilterLimit) (*
 		})
 	}
 	return res, nil
+
+}
+
+func (c Controller) GetTransaction(req *FilterByStatusDate) (*GetAllResponseDataTransaction, error) {
+
+	res := &GetAllResponseDataTransaction{
+		Code:    http.StatusBadRequest,
+		Message: "Bad Request",
+		Error:   "Inputan Salah",
+		Data:    nil,
+	}
+
+	switch {
+	case req.Status == "" && req.StartDate == "" && req.EndDate == "":
+		return c.GetAllTransaction()
+	case req.Status == "":
+		return c.GetAllTransactionByDate(req.StartDate, req.EndDate)
+	case req.StartDate == "" && req.EndDate == "":
+		return c.GetAllTransactionByStatus(req.Status)
+	case req.StartDate == "" || req.EndDate == "":
+		return res, nil
+	default:
+		return c.GetAllTransactionByStatusDate(req.Status, req.StartDate, req.EndDate)
+	}
 
 }

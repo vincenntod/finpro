@@ -33,7 +33,7 @@ func main() {
 	r.GET("/get-transaction-status/:status", transactionHandler.GetAllTransactionByStatus)
 	r.GET("/getTransactionDate/:start/:end", transactionHandler.GetAllTransactionByDate)
 	r.GET("/getTransactionStatusDate/:status/:start/:end", transactionHandler.GetAllTransactionByStatusDate)
-
+	r.GET("/get-Transaction", transactionHandler.GetTransaction)
 	//Gak dipake
 	/*
 		r.GET("/get-transactions-date/:id", transactionHandler.GetTransactionByDate)

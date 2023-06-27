@@ -152,6 +152,39 @@ func (_c *MockRequestHandlerinterface_GetAllTransactionByStatusDate_Call) RunAnd
 	return _c
 }
 
+// GetTransaction provides a mock function with given fields: c
+func (_m *MockRequestHandlerinterface) GetTransaction(c *gin.Context) {
+	_m.Called(c)
+}
+
+// MockRequestHandlerinterface_GetTransaction_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetTransaction'
+type MockRequestHandlerinterface_GetTransaction_Call struct {
+	*mock.Call
+}
+
+// GetTransaction is a helper method to define mock.On call
+//   - c *gin.Context
+func (_e *MockRequestHandlerinterface_Expecter) GetTransaction(c interface{}) *MockRequestHandlerinterface_GetTransaction_Call {
+	return &MockRequestHandlerinterface_GetTransaction_Call{Call: _e.mock.On("GetTransaction", c)}
+}
+
+func (_c *MockRequestHandlerinterface_GetTransaction_Call) Run(run func(c *gin.Context)) *MockRequestHandlerinterface_GetTransaction_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(*gin.Context))
+	})
+	return _c
+}
+
+func (_c *MockRequestHandlerinterface_GetTransaction_Call) Return() *MockRequestHandlerinterface_GetTransaction_Call {
+	_c.Call.Return()
+	return _c
+}
+
+func (_c *MockRequestHandlerinterface_GetTransaction_Call) RunAndReturn(run func(*gin.Context)) *MockRequestHandlerinterface_GetTransaction_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // GetTransactionByDate provides a mock function with given fields: c
 func (_m *MockRequestHandlerinterface) GetTransactionByDate(c *gin.Context) {
 	_m.Called(c)
