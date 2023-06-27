@@ -19,6 +19,9 @@ type UseCaseInterface interface {
 	GetTransactionByDate(req FilterByDate, input FilterLimit) ([]Transaction, error)
 	GetAllTransactionByDate(start string, end string) ([]Transaction, error)
 <<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> parent of 276e577 (feat: add unit test layer usecase & controller)
+=======
 >>>>>>> parent of 276e577 (feat: add unit test layer usecase & controller)
 =======
 >>>>>>> parent of 276e577 (feat: add unit test layer usecase & controller)
@@ -46,6 +49,7 @@ func (u UseCase) GetAllTransactionOnePoint(req *FilterByStatusDate) ([]Transacti
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 func TransactionStringConverter(transactions []Transaction) ([][]string, error) {
 	//set name field transaction in first record
 	stringData := [][]string{[]string{"id", "od_number", "bank_acount_no", "billing_cycle_date", "payment_due_date",
@@ -68,6 +72,8 @@ func TransactionStringConverter(transactions []Transaction) ([][]string, error) 
 =======
 =======
 >>>>>>> parent of 276e577 (feat: add unit test layer usecase & controller)
+=======
+>>>>>>> parent of 276e577 (feat: add unit test layer usecase & controller)
 func (u UseCase) GetTransactionByStatus(status string) ([]Transaction, error) {
 	return u.repo.GetTransactionByStatus(status)
 }
@@ -79,6 +85,11 @@ func (u UseCase) GetTransactionByStatusAndDate(req FilterByStatusDate, input Fil
 func (u UseCase) GetTransactionByDate(req FilterByDate, input FilterLimit) ([]Transaction, error) {
 	return u.repo.GetTransactionByDate(req, input)
 >>>>>>> parent of 276e577 (feat: add unit test layer usecase & controller)
+}
+
+func (u UseCase) GetAllTransactionByDate(start string, end string) ([]Transaction, error) {
+	return u.repo.GetAllTransactionByDate(start, end)
+
 }
 
 func (u UseCase) GetAllTransactionByDate(start string, end string) ([]Transaction, error) {
