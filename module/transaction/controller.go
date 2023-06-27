@@ -11,11 +11,10 @@ type Controller struct {
 
 type ControllerInterface interface {
 	GetAllTransaction() (*GetAllResponseDataTransaction, error)
-	GetAllTransactionByStatus(status string) (*GetAllResponseDataTransaction, error)
-	GetAllTransactionByDate(start string, end string) (*GetAllResponseDataTransaction, error)
-	GetAllTransactionByStatusDate(status string, start string, end string) (*GetAllResponseDataTransaction, error)
+	GetTransactionByStatus(status string) (*GetAllResponseDataTransaction, error)
 	GetTransactionByStatusAndDate(req FilterByStatusDate, input FilterLimit) (*GetAllResponseDataTransaction, error)
 	GetTransactionByDate(req FilterByDate, input FilterLimit) (*GetAllResponseDataTransaction, error)
+	GetAllTransactionByDate(start string, end string) (*GetAllResponseDataTransaction, error)
 }
 
 type TransactionItemResponse struct {
@@ -100,9 +99,9 @@ func (c Controller) GetAllTransaction() (*GetAllResponseDataTransaction, error) 
 	return res, nil
 }
 
-func (c Controller) GetAllTransactionByStatus(status string) (*GetAllResponseDataTransaction, error) {
+func (c Controller) GetTransactionByStatus(status string) (*GetAllResponseDataTransaction, error) {
 
-	transaction, err := c.useCase.GetAllTransactionByStatus(status)
+	transaction, err := c.useCase.GetTransactionByStatus(status)
 	if err != nil {
 		return nil, err
 	}
@@ -182,47 +181,6 @@ func (c Controller) GetAllTransactionByDate(start string, end string) (*GetAllRe
 	}
 	return res, nil
 
-}
-
-func (c Controller) GetAllTransactionByStatusDate(status string, start string, end string) (*GetAllResponseDataTransaction, error) {
-	transaction, err := c.useCase.GetAllTransactionByStatusDate(status, start, end)
-	if err != nil {
-		return nil, err
-	}
-
-	res := &GetAllResponseDataTransaction{
-		Code:    http.StatusOK,
-		Message: "Success",
-		Error:   " ",
-	}
-
-	for _, v := range transaction {
-		res.Data = append(res.Data, TransactionItemResponse{
-			Id:               v.Id,
-			OdaNumber:        v.OdaNumber,
-			BankAccountNo:    v.BankAccountNo,
-			BillingCycleDate: v.BillingCycleDate,
-			PaymentDueDate:   v.PaymentDueDate,
-			OverflowAmount:   v.OverflowAmount,
-			BillAmount:       v.BillAmount,
-			PrincipalAmount:  v.PrincipalAmount,
-			InterestAmount:   v.InterestAmount,
-			TotalFeeAmount:   v.TotalFeeAmount,
-			Status:           v.Status,
-			PaymentMethod:    v.PaymentMethod,
-			AutoDebetCounter: v.AutoDebetCounter,
-			CreatedAt:        v.CreatedAt,
-			UpdatedAt:        v.UpdatedAt,
-			IsHold:           v.IsHold,
-			IsFstlPending:    v.IsFstlPending,
-			IsHstlPending:    v.IsHstlPending,
-			IsLaaPositif:     v.IsLaaPositif,
-			PaymentAmount:    v.PaymentAmount,
-			BillingGenDate:   v.BillingGenDate,
-			IsOdaPositif:     v.IsOdaPositif,
-		})
-	}
-	return res, nil
 }
 
 func (c Controller) GetTransactionByStatusAndDate(req FilterByStatusDate, input FilterLimit) (*GetAllResponseDataTransaction, error) {

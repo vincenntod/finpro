@@ -10,7 +10,15 @@ type UseCase struct {
 }
 
 type UseCaseInterface interface {
+<<<<<<< HEAD
 	GetAllTransactionOnePoint(req *FilterByStatusDate) ([]Transaction, error)
+=======
+	GetAllTransaction() ([]Transaction, error)
+	GetTransactionByStatus(status string) ([]Transaction, error)
+	GetTransactionByStatusAndDate(req FilterByStatusDate, input FilterLimit) ([]Transaction, error)
+	GetTransactionByDate(req FilterByDate, input FilterLimit) ([]Transaction, error)
+	GetAllTransactionByDate(start string, end string) ([]Transaction, error)
+>>>>>>> parent of 276e577 (feat: add unit test layer usecase & controller)
 }
 
 func NewUseCase(repo RepositoryInterface) UseCaseInterface {
@@ -33,6 +41,7 @@ func (u UseCase) GetAllTransactionOnePoint(req *FilterByStatusDate) ([]Transacti
 	
 }
 
+<<<<<<< HEAD
 func TransactionStringConverter(transactions []Transaction) ([][]string, error) {
 	//set name field transaction in first record
 	stringData := [][]string{[]string{"id", "od_number", "bank_acount_no", "billing_cycle_date", "payment_due_date",
@@ -52,4 +61,21 @@ func TransactionStringConverter(transactions []Transaction) ([][]string, error) 
 	}
 	//
 	return stringData, nil
+=======
+func (u UseCase) GetTransactionByStatus(status string) ([]Transaction, error) {
+	return u.repo.GetTransactionByStatus(status)
+}
+
+func (u UseCase) GetTransactionByStatusAndDate(req FilterByStatusDate, input FilterLimit) ([]Transaction, error) {
+	return u.repo.GetTransactionByStatusAndDate(req, input)
+}
+
+func (u UseCase) GetTransactionByDate(req FilterByDate, input FilterLimit) ([]Transaction, error) {
+	return u.repo.GetTransactionByDate(req, input)
+>>>>>>> parent of 276e577 (feat: add unit test layer usecase & controller)
+}
+
+func (u UseCase) GetAllTransactionByDate(start string, end string) ([]Transaction, error) {
+	return u.repo.GetAllTransactionByDate(start, end)
+
 }
