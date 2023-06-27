@@ -11,9 +11,13 @@ type Repository struct {
 type RepositoryInterface interface {
 	GetAllTransaction() ([]Transaction, error)
 <<<<<<< HEAD
+<<<<<<< HEAD
 	GetAllTransactionByStatus(req *FilterByStatusDate) ([]Transaction, error)
 	GetAllTransactionByDate(req *FilterByStatusDate) ([]Transaction, error)
 	GetAllTransactionByStatusDate(req *FilterByStatusDate) ([]Transaction, error)
+=======
+	GetTransactionByStatus(status string) ([]Transaction, error)
+>>>>>>> parent of 276e577 (feat: add unit test layer usecase & controller)
 =======
 	GetTransactionByStatus(status string) ([]Transaction, error)
 >>>>>>> parent of 276e577 (feat: add unit test layer usecase & controller)
@@ -33,7 +37,11 @@ func (r Repository) GetAllTransaction() ([]Transaction, error) {
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 func (r Repository) GetAllTransactionByStatus(req *FilterByStatusDate) ([]Transaction, error) {
+=======
+func (r Repository) GetTransactionByStatus(status string) ([]Transaction, error) {
+>>>>>>> parent of 276e577 (feat: add unit test layer usecase & controller)
 =======
 func (r Repository) GetTransactionByStatus(status string) ([]Transaction, error) {
 >>>>>>> parent of 276e577 (feat: add unit test layer usecase & controller)
@@ -49,6 +57,7 @@ func (r Repository) GetAllTransactionByDate(req *FilterByStatusDate) ([]Transact
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 func (r Repository) GetAllTransactionByStatusDate(req *FilterByStatusDate) ([]Transaction, error) {
 	var transactions []Transaction
 	err := r.db.Where("status =? AND(created_at BETWEEN ? AND ?)", req.Status, req.StartDate, req.EndDate).Find(&transactions).Error
@@ -56,6 +65,8 @@ func (r Repository) GetAllTransactionByStatusDate(req *FilterByStatusDate) ([]Tr
 }
 
 
+=======
+>>>>>>> parent of 276e577 (feat: add unit test layer usecase & controller)
 =======
 >>>>>>> parent of 276e577 (feat: add unit test layer usecase & controller)
 func (r Repository) GetTransactionByStatusAndDate(req FilterByStatusDate, input FilterLimit) ([]Transaction, error) {
