@@ -27,7 +27,7 @@ func main() {
 		Admin.DELETE("/data-user/:id", accountHandler.DeleteDataUser)
 
 		//export csv file
-		Admin.GET("/export-transaction/", export.ExportCSVHandler)
+		Admin.GET("/export-transaction", export.ExportCSVHandler)
 
 		//transaction table
 		Admin.GET("/get-transactions/", transactionHandler.GetAllTransaction)
@@ -37,7 +37,7 @@ func main() {
 		Admin.GET("/get-Transaction", transactionHandler.GetTransaction)
 
 	}
-	//registrations
+
 	r.POST("/create-user", accountHandler.CreateAccount)
 	r.POST("/send-email-registration/:email", accountHandler.SendEmailRegister)
 

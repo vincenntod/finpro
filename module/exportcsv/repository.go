@@ -7,15 +7,21 @@ import (
 	"gorm.io/gorm"
 )
 
-type Repository struct {
+type repository struct {
 	db *gorm.DB
 }
-
-func NewRepository(db *gorm.DB) *Repository {
-	return &Repository{db: db}
+type Repository interface {
+	GetAllTransaction() ([]Transaction, error)
+	GetTransactionByStatusFilter(req *ExportCSVRequest) ([]Transaction, error)
+	GetAllTransactionByRangeDateFilter(req *ExportCSVRequest) ([]Transaction, error)
+	GetTransactionByStatusAndRangeDateFilter(req *ExportCSVRequest) ([]Transaction, error)
 }
 
-func (r Repository) GetAllTransaction() ([]Transaction, error) {
+func NewRepository(db *gorm.DB) *repository {
+	return &repository{db: db}
+}
+
+func (r repository) GetAllTransaction() ([]Transaction, error) {
 	var transactions []Transaction
 	if err := model.DB.Find(&transactions).Error; err != nil {
 		fmt.Println(err)
@@ -25,7 +31,7 @@ func (r Repository) GetAllTransaction() ([]Transaction, error) {
 	//	fmt.Println(transactions)
 	return transactions, nil
 }
-func (r Repository) GetTransactionByStatusFilter(req *ExportCSVRequest) ([]Transaction, error) {
+func (r repository) GetTransactionByStatusFilter(req *ExportCSVRequest) ([]Transaction, error) {
 	var transactions []Transaction
 	if err := r.db.Where("status = ?", req.Status).Find(&transactions).Error; err != nil {
 		return nil, err
@@ -34,14 +40,14 @@ func (r Repository) GetTransactionByStatusFilter(req *ExportCSVRequest) ([]Trans
 
 	return transactions, nil
 }
-func (r Repository) GetAllTransactionByRangeDateFilter(req *ExportCSVRequest) ([]Transaction, error) {
+func (r repository) GetAllTransactionByRangeDateFilter(req *ExportCSVRequest) ([]Transaction, error) {
 	var transactions []Transaction
 	if err := model.DB.Where("created_at BETWEEN  ? AND  ?", req.StartDate, req.EndDate).Find(&transactions).Error; err != nil {
 		return nil, err
 	}
 	return transactions, nil
 }
-func (r Repository) GetTransactionByStatusAndRangeDateFilter(req *ExportCSVRequest) ([]Transaction, error) {
+func (r repository) GetTransactionByStatusAndRangeDateFilter(req *ExportCSVRequest) ([]Transaction, error) {
 	var transactions []Transaction
 	err := r.db.Where("status =? AND(created_at  BETWEEN ? AND ?)", req.Status, req.StartDate, req.EndDate).Find(&transactions).Error
 	if err != nil {
