@@ -27,7 +27,7 @@ func main() {
 		Admin.GET("/logout", accountHandler.Logout)
 
 		//export csv file
-		Admin.GET("/export-transaction", export.ExportCSVHandler)
+		//Admin.GET("/export-transaction", export.ExportCSVHandler)
 
 		//transaction table
 		Admin.GET("/get-transactions", transactions.GetAllTransactions)

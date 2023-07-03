@@ -1,8 +1,5 @@
 package exportcsv
 
-type formatingDate struct {
-}
-
 type Transaction struct {
 	Id                 int
 	Oda_number         string
@@ -19,11 +16,6 @@ type Transaction struct {
 	Auto_debet_counter int
 	Created_at         string
 	Updated_at         string
-	Is_hold            bool
-	Is_fstl_pending    bool
-	Is_hstl_pending    bool
-	Is_laa_positif     bool
 	Payment_amount     float64
 	Billing_gen_date   string
-	Is_oda_positif     bool
 }
