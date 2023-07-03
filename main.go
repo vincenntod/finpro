@@ -5,7 +5,7 @@ import (
 	"golang/model"
 	"golang/module/account"
 	"golang/module/exportcsv"
-	"golang/module/transactions"
+	"golang/module/transaction"
 
 	"github.com/gin-gonic/gin"
 )
@@ -16,6 +16,7 @@ func main() {
 	r.Use(auth.CORSMiddleware())
 	export := exportcsv.DefaultRequestHandler(model.DB)
 	accountHandler := account.DefaultRequestHandler(model.DB)
+	transactionHandler := transaction.DefaultRequestHandler(model.DB)
 
 	Admin := r.Group("/api", auth.MiddlewareAdmin)
 	{
@@ -29,11 +30,11 @@ func main() {
 		Admin.GET("/export-transaction/", export.ExportCSVHandler)
 
 		//transaction table
-		Admin.GET("/get-transactions", transactions.GetAllTransactions)
-		Admin.GET("/get-transactions-limit/:id", transactions.GetAllTransactionsLimit)
-		Admin.GET("/getTransactions/:status", transactions.GetAllTransactionByStatus)
-		Admin.GET("/getTransactionsDate/:start/:end", transactions.GetAllTransactionByDate)
-		Admin.GET("/getTransactionsStatusDate/:status/:start/:end", transactions.GetAllTransactionByStatusDate)
+		Admin.GET("/get-transactions/", transactionHandler.GetAllTransaction)
+		Admin.GET("/get-transaction-status/:status/", transactionHandler.GetAllTransactionByStatus)
+		Admin.GET("/get-TransactionDate/:start/:end/", transactionHandler.GetAllTransactionByDate)
+		Admin.GET("/get-TransactionStatusDate/:status/:start/:end/", transactionHandler.GetAllTransactionByStatusDate)
+		Admin.GET("/get-Transaction", transactionHandler.GetTransaction)
 
 	}
 	//registrations
