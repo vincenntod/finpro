@@ -34,6 +34,21 @@ func (m *MockUseCaseInterface) EXPECT() *MockUseCaseInterfaceMockRecorder {
         return m.recorder
 }
 
+// CompareVerificationCode mocks base method.
+func (m *MockUseCaseInterface) CompareVerificationCode(verificationCode *account.VerificationCodeRequest) (account.Account, error) {
+        m.ctrl.T.Helper()
+        ret := m.ctrl.Call(m, "CompareVerificationCode", verificationCode)
+        ret0, _ := ret[0].(account.Account)
+        ret1, _ := ret[1].(error)
+        return ret0, ret1
+}
+
+// CompareVerificationCode indicates an expected call of CompareVerificationCode.
+func (mr *MockUseCaseInterfaceMockRecorder) CompareVerificationCode(verificationCode interface{}) *gomock.Call {
+        mr.mock.ctrl.T.Helper()
+        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CompareVerificationCode", reflect.TypeOf((*MockUseCaseInterface)(nil).CompareVerificationCode), verificationCode)
+}
+
 // CreateAccount mocks base method.
 func (m *MockUseCaseInterface) CreateAccount(req *account.Account) (account.Account, error) {
         m.ctrl.T.Helper()
@@ -79,6 +94,21 @@ func (mr *MockUseCaseInterfaceMockRecorder) EditDataUser(id, req interface{}) *g
         return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EditDataUser", reflect.TypeOf((*MockUseCaseInterface)(nil).EditDataUser), id, req)
 }
 
+// EditPassword mocks base method.
+func (m *MockUseCaseInterface) EditPassword(id int, req *account.Account) (account.Account, error) {
+        m.ctrl.T.Helper()
+        ret := m.ctrl.Call(m, "EditPassword", id, req)
+        ret0, _ := ret[0].(account.Account)
+        ret1, _ := ret[1].(error)
+        return ret0, ret1
+}
+
+// EditPassword indicates an expected call of EditPassword.
+func (mr *MockUseCaseInterfaceMockRecorder) EditPassword(id, req interface{}) *gomock.Call {
+        mr.mock.ctrl.T.Helper()
+        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EditPassword", reflect.TypeOf((*MockUseCaseInterface)(nil).EditPassword), id, req)
+}
+
 // GetDataUser mocks base method.
 func (m *MockUseCaseInterface) GetDataUser() ([]account.Account, error) {
         m.ctrl.T.Helper()
@@ -91,11 +121,11 @@ func (m *MockUseCaseInterface) GetDataUser() ([]account.Account, error) {
 // GetDataUser indicates an expected call of GetDataUser.
 func (mr *MockUseCaseInterfaceMockRecorder) GetDataUser() *gomock.Call {
         mr.mock.ctrl.T.Helper()
-        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDataUser", reflect.TypeOf((*MockUseCaseInterface)(nil).GetDataUser)) 
+        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDataUser", reflect.TypeOf((*MockUseCaseInterface)(nil).GetDataUser))
 }
 
 // GetDataUserById mocks base method.
-func (m *MockUseCaseInterface) GetDataUserById(id string) (account.Account, error) {
+func (m *MockUseCaseInterface) GetDataUserById(id int) (account.Account, error) {
         m.ctrl.T.Helper()
         ret := m.ctrl.Call(m, "GetDataUserById", id)
         ret0, _ := ret[0].(account.Account)
@@ -122,5 +152,20 @@ func (m *MockUseCaseInterface) Login(req *account.Account) (string, account.Acco
 // Login indicates an expected call of Login.
 func (mr *MockUseCaseInterfaceMockRecorder) Login(req interface{}) *gomock.Call {
         mr.mock.ctrl.T.Helper()
-        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Login", reflect.TypeOf((*MockUseCaseInterface)(nil).Login), req)        
+        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Login", reflect.TypeOf((*MockUseCaseInterface)(nil).Login), req)
+}
+
+// SendEmail mocks base method.
+func (m *MockUseCaseInterface) SendEmail(email string) (account.Account, error) {
+        m.ctrl.T.Helper()
+        ret := m.ctrl.Call(m, "SendEmail", email)
+        ret0, _ := ret[0].(account.Account)
+        ret1, _ := ret[1].(error)
+        return ret0, ret1
+}
+
+// SendEmail indicates an expected call of SendEmail.
+func (mr *MockUseCaseInterfaceMockRecorder) SendEmail(email interface{}) *gomock.Call {
+        mr.mock.ctrl.T.Helper()
+        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendEmail", reflect.TypeOf((*MockUseCaseInterface)(nil).SendEmail), email)
 }

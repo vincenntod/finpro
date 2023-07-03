@@ -14,7 +14,7 @@ import (
 type RepositoryInterface interface {
 	GetDataUser() ([]Account, error)
 	GetDataUserById(id string) (Account, error)
-	EditDataUser(id string, req *Account) (Account, error)
+	EditDataUser(id int, req *Account) (Account, error)
 	DeleteDataUser(id string) (Account, error)
 	CreateAccount(req *Account) (Account, error)
 	Login(req *Account) (string, Account, error)
@@ -37,7 +37,7 @@ func (r Repository) GetDataUser() ([]Account, error) {
 	return account, err
 }
 
-func (r Repository) GetDataUserById(id string) (Account, error) {
+func (r Repository) GetDataUserById(id int) (Account, error) {
 	var account Account
 	err := model.DB.Find(&account, id).Error
 	return account, err
@@ -105,9 +105,8 @@ func (r Repository) CompareVerificationCode(verificationCode *VerificationCodeRe
 	return account, err
 
 }
-func (r Repository) EditPassword(id string, req *Account) (Account, error) {
+func (r Repository) EditPassword(id int, req *Account) (Account, error) {
 	var account Account
-	// data := model.DB.Find(&account, id).Error
 	err := model.DB.Where("id = ?", id).Updates(&req).Find(&account).Error
 	return account, err
 

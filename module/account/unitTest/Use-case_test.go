@@ -56,12 +56,12 @@ func TestUseCase_GetDataUser(t *testing.T) {
 
 func TestUseCase_GetDataUserById(t *testing.T) {
 	type args struct {
-		id string
+		id int
 	}
 	ctrl := gomock.NewController(t)
 	mockery := mocks.NewMockUseCaseInterface(ctrl)
 
-	mockery.EXPECT().GetDataUserById("1").Return(account.Account{
+	mockery.EXPECT().GetDataUserById(1).Return(account.Account{
 		Name:  "Vincen",
 		Email: "vincen@gmail.com",
 		Role:  "admin",
@@ -78,7 +78,7 @@ func TestUseCase_GetDataUserById(t *testing.T) {
 		{
 			name: "Success Get Data User By Id",
 			u:    account.UseCase{Repo: mockery},
-			args: args{id: "1"},
+			args: args{id: 1},
 			want: account.Account{
 				Name:  "Vincen",
 				Email: "vincen@gmail.com",

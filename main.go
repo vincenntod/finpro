@@ -24,7 +24,6 @@ func main() {
 		Admin.GET("/data-user/:id", accountHandler.GetDataUserById)
 		Admin.PUT("/data-user/:id", accountHandler.EditDataUser)
 		Admin.DELETE("/data-user/:id", accountHandler.DeleteDataUser)
-		Admin.GET("/logout", accountHandler.Logout)
 
 		//export csv file
 		Admin.GET("/export-transaction/", export.ExportCSVHandler)
@@ -37,10 +36,15 @@ func main() {
 		Admin.GET("/getTransactionsStatusDate/:status/:start/:end", transactions.GetAllTransactionByStatusDate)
 
 	}
+	//registrations
 	r.POST("/create-user", accountHandler.CreateAccount)
+	r.POST("/send-email-registration/:email", accountHandler.SendEmailRegister)
+
+	//forgot password
 	r.POST("/send-email/:email", accountHandler.SendEmail)
 	r.POST("/compare-verification-code", accountHandler.CompareVerificationCode)
 	r.PUT("/edit-password/", accountHandler.EditPassword)
+
 	r.POST("/login", accountHandler.Login)
 	r.Run(":8081")
 }

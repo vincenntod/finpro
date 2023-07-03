@@ -118,9 +118,7 @@ func (h RequestHandler) Login(c *gin.Context) {
 	c.Writer.Header().Set("Authorization", token)
 	c.JSON(200, res)
 }
-func (h RequestHandler) Logout(c *gin.Context) {
-	c.JSON(200, gin.H{"message": "Berhasil Logout"})
-}
+
 func (h RequestHandler) SendEmail(c *gin.Context) {
 	email := c.Param("email")
 	res, err := h.ctrl.SendEmail(email)
@@ -128,7 +126,15 @@ func (h RequestHandler) SendEmail(c *gin.Context) {
 		c.JSON(401, res)
 	}
 	c.JSON(200, res)
+}
 
+func (h RequestHandler) SendEmailRegister(c *gin.Context) {
+	email := c.Param("email")
+	res, err := h.ctrl.SendEmailRegister(email)
+	if err != nil {
+		c.JSON(401, res)
+	}
+	c.JSON(200, res)
 }
 func (h RequestHandler) CompareVerificationCode(c *gin.Context) {
 	var verificationCodeRequest VerificationCodeRequest
@@ -150,9 +156,16 @@ func (h RequestHandler) CompareVerificationCode(c *gin.Context) {
 }
 func (h RequestHandler) EditPassword(c *gin.Context) {
 	var req EditDataUserRequest
-	queryUrl := c.Request.URL.Query()
-	id := queryUrl.Get("id")
-	if id == "" {
+
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(500, gin.H{
+			"code":    500,
+			"status":  "Error",
+			"message": "Internal Server Error",
+		})
+		return
+	}
+	if req.Id == 0 {
 		c.JSON(400, gin.H{
 			"code":    400,
 			"status":  "Error",
@@ -170,15 +183,8 @@ func (h RequestHandler) EditPassword(c *gin.Context) {
 		})
 		return
 	}
-	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(500, gin.H{
-			"code":    500,
-			"status":  "Error",
-			"message": "Internal Server Error",
-		})
-		return
-	}
-	res, err := h.ctrl.EditPassword(id, code, &req)
+
+	res, err := h.ctrl.EditPassword(code, &req)
 	if err != nil {
 		c.JSON(500, res)
 	}
