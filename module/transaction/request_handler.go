@@ -17,10 +17,7 @@ type RequestHandlerinterface interface {
 	GetAllTransactionByStatus(c *gin.Context)
 	GetAllTransactionByDate(c *gin.Context)
 	GetAllTransactionByStatusDate(c *gin.Context)
-	GetTransaction(c *gin.Context)
-
-	GetTransactionByStatusAndDate(c *gin.Context)
-	GetTransactionByDate(c *gin.Context)
+	GetAllLimit(c *gin.Context)
 }
 
 type GetAllResponseDataTransaction struct {
@@ -74,19 +71,6 @@ func DefaultRequestHandler(db *gorm.DB) RequestHandlerinterface {
 
 func (h RequestHandler) GetAllTransaction(c *gin.Context) {
 
-	// parameterPage := c.Param("page")
-	// page, _ := strconv.Atoi(c.DefaultQuery("page", parameterPage))
-	// pageSize, _ := strconv.Atoi(c.DefaultQuery("pageSize", "100"))
-
-	// input := FilterLimit{
-	// 	Page:     page,
-	// 	PageSize: pageSize,
-	// }
-
-	// if parameterPage == "" {
-	// 	c.JSON(http.StatusNotFound, gin.H{"message": "parameter not found"})
-	// 	return
-	// }
 
 	res, err := h.ctrl.GetAllTransaction()
 	if err != nil {
@@ -151,10 +135,8 @@ func (h RequestHandler) GetAllTransactionByStatusDate(c *gin.Context) {
 
 }
 
-func (h RequestHandler) GetTransactionByStatusAndDate(c *gin.Context) {
-	var req FilterByStatusDate
-
-	parameterPage := c.Param("page")
+func (h RequestHandler) GetAllLimit(c *gin.Context) {
+	parameterPage := c.Param("id")
 	page, _ := strconv.Atoi(c.DefaultQuery("page", parameterPage))
 	pageSize, _ := strconv.Atoi(c.DefaultQuery("pageSize", "100"))
 
@@ -163,58 +145,16 @@ func (h RequestHandler) GetTransactionByStatusAndDate(c *gin.Context) {
 		PageSize: pageSize,
 	}
 
-	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+	if parameterPage == "" {
+		c.JSON(http.StatusNotFound, gin.H{"message": "parameter not found"})
 		return
 	}
 
-	res, err := h.ctrl.GetTransactionByStatusAndDate(req, input)
-	if err != nil {
-		c.JSON(500, gin.H{"message": err.Error()})
-		return
-	}
-	c.JSON(200, res)
-
-}
-
-func (h RequestHandler) GetTransactionByDate(c *gin.Context) {
-	var req FilterByDate
-
-	parameterPage := c.Param("page")
-	page, _ := strconv.Atoi(c.DefaultQuery("page", parameterPage))
-	pageSize, _ := strconv.Atoi(c.DefaultQuery("pageSize", "100"))
-
-	input := FilterLimit{
-		Page:     page,
-		PageSize: pageSize,
-	}
-
-	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
-		return
-	}
-
-	res, err := h.ctrl.GetTransactionByDate(req, input)
-	if err != nil {
-		c.JSON(500, gin.H{"message": err.Error()})
-		return
-	}
-	c.JSON(200, res)
-
-}
-
-func (h RequestHandler) GetTransaction(c *gin.Context) {
-	var req FilterByStatusDate
-
-	if err := c.Bind(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
-		return
-	}
-
-	res, err := h.ctrl.GetTransaction(&req)
+	res, err, _ := h.ctrl.GetAllLimit(input)
 	if err != nil {
 		c.JSON(500, gin.H{"message": err.Error()})
 		return
 	}
 	c.JSON(200, res)
 }
+

@@ -8,18 +8,18 @@ import (
 	"gorm.io/gorm"
 )
 
-type ExpoertCSVRequestHandler struct {
-	ctrl *ExportCSVController
+type ExportCSVRequestHandler struct {
+	ctrl ExportCSVController
 }
 
-func NewRequestHandler(ctrl *ExportCSVController) *ExpoertCSVRequestHandler {
-	return &ExpoertCSVRequestHandler{
+func NewRequestHandler(ctrl ExportCSVController) *ExportCSVRequestHandler {
+	return &ExportCSVRequestHandler{
 		ctrl: ctrl,
 	}
 
 }
 
-func DefaultRequestHandler(db *gorm.DB) *ExpoertCSVRequestHandler {
+func DefaultRequestHandler(db *gorm.DB) *ExportCSVRequestHandler {
 	return NewRequestHandler(
 		NewController(
 			NewUseCase(
@@ -38,7 +38,7 @@ type ErrorResponse struct {
 	Error string `json:"error"`
 }
 
-func (h ExpoertCSVRequestHandler) ExportCSVHandler(c *gin.Context) {
+func (h ExportCSVRequestHandler) ExportCSVHandler(c *gin.Context) {
 
 	var req ExportCSVRequest
 	if err := c.Bind(&req); err != nil {

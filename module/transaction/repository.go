@@ -13,9 +13,7 @@ type RepositoryInterface interface {
 	GetAllTransactionByStatus(status string) ([]Transaction, error)
 	GetAllTransactionByDate(start string, end string) ([]Transaction, error)
 	GetAllTransactionByStatusDate(status string, start string, end string) ([]Transaction, error)
-
-	GetTransactionByStatusAndDate(req FilterByStatusDate, input FilterLimit) ([]Transaction, error)
-	GetTransactionByDate(req FilterByDate, input FilterLimit) ([]Transaction, error)
+	GetAllLimit(input FilterLimit) ([]Transaction, error, int64)
 }
 
 func NewRepository(db *gorm.DB) RepositoryInterface {
@@ -48,18 +46,11 @@ func (r Repository) GetAllTransactionByStatusDate(status string, start string, e
 	return transactions, err
 }
 
-func (r Repository) GetTransactionByStatusAndDate(req FilterByStatusDate, input FilterLimit) ([]Transaction, error) {
+func (r Repository) GetAllLimit(input FilterLimit) ([]Transaction, error, int64) {
 	var transactions []Transaction
+	var count int64
 
-	err := r.db.Offset((input.Page-1)*input.PageSize).Limit(input.PageSize).Order("created_at desc").Where("status =? AND(created_at BETWEEN ? AND ?)", req.Status, req.StartDate, req.EndDate).Find(&transactions).Error
-
-	return transactions, err
-}
-
-func (r Repository) GetTransactionByDate(req FilterByDate, input FilterLimit) ([]Transaction, error) {
-	var transactions []Transaction
-
-	err := r.db.Offset((input.Page-1)*input.PageSize).Limit(input.PageSize).Order("created_at desc").Where("created_at BETWEEN ? AND ?", req.StartDate, req.EndDate).Find(&transactions).Error
-
-	return transactions, err
+	r.db.Model(&transactions).Count(&count)
+	err := r.db.Offset((input.Page - 1) * input.PageSize).Limit(input.PageSize).Order("created_at desc").Find(&transactions).Error
+	return transactions, err, count
 }

@@ -13,10 +13,7 @@ type ControllerInterface interface {
 	GetAllTransactionByStatus(status string) (*GetAllResponseDataTransaction, error)
 	GetAllTransactionByDate(start string, end string) (*GetAllResponseDataTransaction, error)
 	GetAllTransactionByStatusDate(status string, start string, end string) (*GetAllResponseDataTransaction, error)
-	GetTransaction(req *FilterByStatusDate) (*GetAllResponseDataTransaction, error)
-
-	GetTransactionByStatusAndDate(req FilterByStatusDate, input FilterLimit) (*GetAllResponseDataTransaction, error)
-	GetTransactionByDate(req FilterByDate, input FilterLimit) (*GetAllResponseDataTransaction, error)
+	GetAllLimit(input FilterLimit) (*GetAllResponseDataTransaction, error, int64)
 }
 
 type TransactionItemResponse struct {
@@ -88,7 +85,13 @@ func (c Controller) GetAllTransactionByStatus(status string) (*GetAllResponseDat
 func (c Controller) GetAllTransactionByDate(start string, end string) (*GetAllResponseDataTransaction, error) {
 	transaction, err := c.useCase.GetAllTransactionByDate(start, end)
 	if err != nil {
-		return nil, err
+		res := &GetAllResponseDataTransaction{
+			Code:      400,
+			Message:   "Bad Request",
+			Error:     "Error",
+			TotalData: len(transaction),
+		}
+		return res, nil
 	}
 
 	res := &GetAllResponseDataTransaction{
@@ -136,18 +139,18 @@ func (c Controller) GetAllTransactionByStatusDate(status string, start string, e
 	return res, nil
 }
 
-func (c Controller) GetTransactionByStatusAndDate(req FilterByStatusDate, input FilterLimit) (*GetAllResponseDataTransaction, error) {
 
-	transaction, err := c.useCase.GetTransactionByStatusAndDate(req, input)
+func (c Controller) GetAllLimit(input FilterLimit) (*GetAllResponseDataTransaction, error, int64) {
+	transaction, err, total := c.useCase.GetAllLimit(input)
 	if err != nil {
-		return nil, err
+		return nil, err, 0
 	}
 
 	res := &GetAllResponseDataTransaction{
 		Code:      200,
 		Message:   "Data Berhasil Diambil",
 		Error:     "Success",
-		TotalData: len(transaction),
+		TotalData: int(total),
 	}
 
 	for _, v := range transaction {
@@ -159,55 +162,5 @@ func (c Controller) GetTransactionByStatusAndDate(req FilterByStatusDate, input 
 			CreatedAt:  v.CreatedAt,
 		})
 	}
-	return res, nil
-}
-
-func (c Controller) GetTransactionByDate(req FilterByDate, input FilterLimit) (*GetAllResponseDataTransaction, error) {
-	transaction, err := c.useCase.GetTransactionByDate(req, input)
-	if err != nil {
-		return nil, err
-	}
-
-	res := &GetAllResponseDataTransaction{
-		Code:      200,
-		Message:   "Data Berhasil Diambil",
-		Error:     "Success",
-		TotalData: len(transaction),
-	}
-
-	for _, v := range transaction {
-		res.Data = append(res.Data, TransactionItemResponse{
-			Id:         v.Id,
-			OdaNumber:  v.OdaNumber,
-			BillAmount: v.BillAmount,
-			Status:     v.Status,
-			CreatedAt:  v.CreatedAt,
-		})
-	}
-	return res, nil
-
-}
-
-func (c Controller) GetTransaction(req *FilterByStatusDate) (*GetAllResponseDataTransaction, error) {
-
-	res := &GetAllResponseDataTransaction{
-		Code:    http.StatusBadRequest,
-		Message: "Gagal Mengambil Data",
-		Error:   "Failed",
-		Data:    nil,
-	}
-
-	switch {
-	case req.Status == "" && req.StartDate == "" && req.EndDate == "":
-		return c.GetAllTransaction()
-	case req.Status == "":
-		return c.GetAllTransactionByDate(req.StartDate, req.EndDate)
-	case req.StartDate == "" && req.EndDate == "":
-		return c.GetAllTransactionByStatus(req.Status)
-	case req.StartDate == "" || req.EndDate == "":
-		return res, nil
-	default:
-		return c.GetAllTransactionByStatusDate(req.Status, req.StartDate, req.EndDate)
-	}
-
+	return res, nil, total
 }

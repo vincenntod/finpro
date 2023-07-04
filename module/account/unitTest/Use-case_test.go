@@ -322,3 +322,135 @@ func TestUseCase_Login(t *testing.T) {
 		})
 	}
 }
+func TestUseCase_SendEmail(t *testing.T) {
+	type args struct {
+		email string
+	}
+	ctrl := gomock.NewController(t)
+	mockery := mocks.NewMockUseCaseInterface(ctrl)
+
+	mockery.EXPECT().SendEmail("maxwelvincen@gmail.com").Return(account.Account{}, nil).Times(1)
+	tests := []struct {
+		name    string
+		u       account.UseCase
+		args    args
+		want    account.Account
+		wantErr bool
+	}{
+		{
+			name: "success",
+			u: account.UseCase{
+				Repo: mockery,
+			},
+			args: args{
+				email: "maxwelvincen@gmail.com",
+			},
+			want:    account.Account{},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := tt.u.SendEmail(tt.args.email)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("UseCase.SendEmail() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("UseCase.SendEmail() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+func TestUseCase_CompareVerificationCode(t *testing.T) {
+	type args struct {
+		verificationCode *account.VerificationCodeRequest
+	}
+	ctrl := gomock.NewController(t)
+	mockery := mocks.NewMockUseCaseInterface(ctrl)
+
+	mockery.EXPECT().CompareVerificationCode(&account.VerificationCodeRequest{
+		Email: "maxwelvincen@gmail.com",
+		Code:  "1234",
+	}).Return(account.Account{}, nil).Times(1)
+	tests := []struct {
+		name    string
+		u       account.UseCase
+		args    args
+		want    account.Account
+		wantErr bool
+	}{
+		{
+			name: "Success",
+			u: account.UseCase{
+				Repo: mockery,
+			},
+			args: args{
+				&account.VerificationCodeRequest{
+					Email: "maxwelvincen@gmail.com",
+					Code:  "1234",
+				},
+			},
+			want:    account.Account{},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := tt.u.CompareVerificationCode(tt.args.verificationCode)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("UseCase.CompareVerificationCode() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("UseCase.CompareVerificationCode() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestUseCase_EditPassword(t *testing.T) {
+	type args struct {
+		id  int
+		req *account.Account
+	}
+	ctrl := gomock.NewController(t)
+	mockery := mocks.NewMockUseCaseInterface(ctrl)
+
+	mockery.EXPECT().EditPassword(1, &account.Account{
+		Password: "123456",
+	}).Return(account.Account{}, nil).Times(1)
+	tests := []struct {
+		name    string
+		u       account.UseCase
+		args    args
+		want    account.Account
+		wantErr bool
+	}{
+		{
+			name: "success",
+			u: account.UseCase{
+				Repo: mockery,
+			},
+			args: args{
+				1, &account.Account{
+					Password: "123456",
+				},
+			},
+			want:    account.Account{},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := tt.u.EditPassword(tt.args.id, tt.args.req)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("UseCase.EditPassword() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("UseCase.EditPassword() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

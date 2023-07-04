@@ -27,17 +27,17 @@ func main() {
 		Admin.DELETE("/data-user/:id", accountHandler.DeleteDataUser)
 
 		//export csv file
-		Admin.GET("/export-transaction/", export.ExportCSVHandler)
+		Admin.GET("/export-transaction", export.ExportCSVHandler)
 
 		//transaction table
 		Admin.GET("/get-transactions/", transactionHandler.GetAllTransaction)
 		Admin.GET("/get-transaction-status/:status/", transactionHandler.GetAllTransactionByStatus)
 		Admin.GET("/get-TransactionDate/:start/:end/", transactionHandler.GetAllTransactionByDate)
 		Admin.GET("/get-TransactionStatusDate/:status/:start/:end/", transactionHandler.GetAllTransactionByStatusDate)
-		Admin.GET("/get-Transaction", transactionHandler.GetTransaction)
+		Admin.GET("/get-transactions-limit/:id", transactionHandler.GetAllLimit)
 
 	}
-	//registrations
+
 	r.POST("/create-user", accountHandler.CreateAccount)
 	r.POST("/send-email-registration/:email", accountHandler.SendEmailRegister)
 
