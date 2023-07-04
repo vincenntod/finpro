@@ -21,6 +21,67 @@ func (_m *ControllerInterface) EXPECT() *ControllerInterface_Expecter {
 	return &ControllerInterface_Expecter{mock: &_m.Mock}
 }
 
+// GetAllLimit provides a mock function with given fields: input
+func (_m *ControllerInterface) GetAllLimit(input transaction.FilterLimit) (*transaction.GetAllResponseDataTransaction, error, int64) {
+	ret := _m.Called(input)
+
+	var r0 *transaction.GetAllResponseDataTransaction
+	var r1 error
+	var r2 int64
+	if rf, ok := ret.Get(0).(func(transaction.FilterLimit) (*transaction.GetAllResponseDataTransaction, error, int64)); ok {
+		return rf(input)
+	}
+	if rf, ok := ret.Get(0).(func(transaction.FilterLimit) *transaction.GetAllResponseDataTransaction); ok {
+		r0 = rf(input)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*transaction.GetAllResponseDataTransaction)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(transaction.FilterLimit) error); ok {
+		r1 = rf(input)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	if rf, ok := ret.Get(2).(func(transaction.FilterLimit) int64); ok {
+		r2 = rf(input)
+	} else {
+		r2 = ret.Get(2).(int64)
+	}
+
+	return r0, r1, r2
+}
+
+// ControllerInterface_GetAllLimit_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetAllLimit'
+type ControllerInterface_GetAllLimit_Call struct {
+	*mock.Call
+}
+
+// GetAllLimit is a helper method to define mock.On call
+//   - input transaction.FilterLimit
+func (_e *ControllerInterface_Expecter) GetAllLimit(input interface{}) *ControllerInterface_GetAllLimit_Call {
+	return &ControllerInterface_GetAllLimit_Call{Call: _e.mock.On("GetAllLimit", input)}
+}
+
+func (_c *ControllerInterface_GetAllLimit_Call) Run(run func(input transaction.FilterLimit)) *ControllerInterface_GetAllLimit_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(transaction.FilterLimit))
+	})
+	return _c
+}
+
+func (_c *ControllerInterface_GetAllLimit_Call) Return(_a0 *transaction.GetAllResponseDataTransaction, _a1 error, _a2 int64) *ControllerInterface_GetAllLimit_Call {
+	_c.Call.Return(_a0, _a1, _a2)
+	return _c
+}
+
+func (_c *ControllerInterface_GetAllLimit_Call) RunAndReturn(run func(transaction.FilterLimit) (*transaction.GetAllResponseDataTransaction, error, int64)) *ControllerInterface_GetAllLimit_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // GetAllTransaction provides a mock function with given fields:
 func (_m *ControllerInterface) GetAllTransaction() (*transaction.GetAllResponseDataTransaction, error) {
 	ret := _m.Called()
@@ -235,116 +296,6 @@ func (_c *ControllerInterface_GetAllTransactionByStatusDate_Call) Return(_a0 *tr
 }
 
 func (_c *ControllerInterface_GetAllTransactionByStatusDate_Call) RunAndReturn(run func(string, string, string) (*transaction.GetAllResponseDataTransaction, error)) *ControllerInterface_GetAllTransactionByStatusDate_Call {
-	_c.Call.Return(run)
-	return _c
-}
-
-// GetTransactionByDate provides a mock function with given fields: req, input
-func (_m *ControllerInterface) GetTransactionByDate(req transaction.FilterByDate, input transaction.FilterLimit) (*transaction.GetAllResponseDataTransaction, error) {
-	ret := _m.Called(req, input)
-
-	var r0 *transaction.GetAllResponseDataTransaction
-	var r1 error
-	if rf, ok := ret.Get(0).(func(transaction.FilterByDate, transaction.FilterLimit) (*transaction.GetAllResponseDataTransaction, error)); ok {
-		return rf(req, input)
-	}
-	if rf, ok := ret.Get(0).(func(transaction.FilterByDate, transaction.FilterLimit) *transaction.GetAllResponseDataTransaction); ok {
-		r0 = rf(req, input)
-	} else {
-		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*transaction.GetAllResponseDataTransaction)
-		}
-	}
-
-	if rf, ok := ret.Get(1).(func(transaction.FilterByDate, transaction.FilterLimit) error); ok {
-		r1 = rf(req, input)
-	} else {
-		r1 = ret.Error(1)
-	}
-
-	return r0, r1
-}
-
-// ControllerInterface_GetTransactionByDate_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetTransactionByDate'
-type ControllerInterface_GetTransactionByDate_Call struct {
-	*mock.Call
-}
-
-// GetTransactionByDate is a helper method to define mock.On call
-//   - req transaction.FilterByDate
-//   - input transaction.FilterLimit
-func (_e *ControllerInterface_Expecter) GetTransactionByDate(req interface{}, input interface{}) *ControllerInterface_GetTransactionByDate_Call {
-	return &ControllerInterface_GetTransactionByDate_Call{Call: _e.mock.On("GetTransactionByDate", req, input)}
-}
-
-func (_c *ControllerInterface_GetTransactionByDate_Call) Run(run func(req transaction.FilterByDate, input transaction.FilterLimit)) *ControllerInterface_GetTransactionByDate_Call {
-	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(transaction.FilterByDate), args[1].(transaction.FilterLimit))
-	})
-	return _c
-}
-
-func (_c *ControllerInterface_GetTransactionByDate_Call) Return(_a0 *transaction.GetAllResponseDataTransaction, _a1 error) *ControllerInterface_GetTransactionByDate_Call {
-	_c.Call.Return(_a0, _a1)
-	return _c
-}
-
-func (_c *ControllerInterface_GetTransactionByDate_Call) RunAndReturn(run func(transaction.FilterByDate, transaction.FilterLimit) (*transaction.GetAllResponseDataTransaction, error)) *ControllerInterface_GetTransactionByDate_Call {
-	_c.Call.Return(run)
-	return _c
-}
-
-// GetTransactionByStatusAndDate provides a mock function with given fields: req, input
-func (_m *ControllerInterface) GetTransactionByStatusAndDate(req transaction.FilterByStatusDate, input transaction.FilterLimit) (*transaction.GetAllResponseDataTransaction, error) {
-	ret := _m.Called(req, input)
-
-	var r0 *transaction.GetAllResponseDataTransaction
-	var r1 error
-	if rf, ok := ret.Get(0).(func(transaction.FilterByStatusDate, transaction.FilterLimit) (*transaction.GetAllResponseDataTransaction, error)); ok {
-		return rf(req, input)
-	}
-	if rf, ok := ret.Get(0).(func(transaction.FilterByStatusDate, transaction.FilterLimit) *transaction.GetAllResponseDataTransaction); ok {
-		r0 = rf(req, input)
-	} else {
-		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*transaction.GetAllResponseDataTransaction)
-		}
-	}
-
-	if rf, ok := ret.Get(1).(func(transaction.FilterByStatusDate, transaction.FilterLimit) error); ok {
-		r1 = rf(req, input)
-	} else {
-		r1 = ret.Error(1)
-	}
-
-	return r0, r1
-}
-
-// ControllerInterface_GetTransactionByStatusAndDate_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetTransactionByStatusAndDate'
-type ControllerInterface_GetTransactionByStatusAndDate_Call struct {
-	*mock.Call
-}
-
-// GetTransactionByStatusAndDate is a helper method to define mock.On call
-//   - req transaction.FilterByStatusDate
-//   - input transaction.FilterLimit
-func (_e *ControllerInterface_Expecter) GetTransactionByStatusAndDate(req interface{}, input interface{}) *ControllerInterface_GetTransactionByStatusAndDate_Call {
-	return &ControllerInterface_GetTransactionByStatusAndDate_Call{Call: _e.mock.On("GetTransactionByStatusAndDate", req, input)}
-}
-
-func (_c *ControllerInterface_GetTransactionByStatusAndDate_Call) Run(run func(req transaction.FilterByStatusDate, input transaction.FilterLimit)) *ControllerInterface_GetTransactionByStatusAndDate_Call {
-	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(transaction.FilterByStatusDate), args[1].(transaction.FilterLimit))
-	})
-	return _c
-}
-
-func (_c *ControllerInterface_GetTransactionByStatusAndDate_Call) Return(_a0 *transaction.GetAllResponseDataTransaction, _a1 error) *ControllerInterface_GetTransactionByStatusAndDate_Call {
-	_c.Call.Return(_a0, _a1)
-	return _c
-}
-
-func (_c *ControllerInterface_GetTransactionByStatusAndDate_Call) RunAndReturn(run func(transaction.FilterByStatusDate, transaction.FilterLimit) (*transaction.GetAllResponseDataTransaction, error)) *ControllerInterface_GetTransactionByStatusAndDate_Call {
 	_c.Call.Return(run)
 	return _c
 }

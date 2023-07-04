@@ -20,6 +20,39 @@ func (_m *RequestHandlerinterface) EXPECT() *RequestHandlerinterface_Expecter {
 	return &RequestHandlerinterface_Expecter{mock: &_m.Mock}
 }
 
+// GetAllLimit provides a mock function with given fields: c
+func (_m *RequestHandlerinterface) GetAllLimit(c *gin.Context) {
+	_m.Called(c)
+}
+
+// RequestHandlerinterface_GetAllLimit_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetAllLimit'
+type RequestHandlerinterface_GetAllLimit_Call struct {
+	*mock.Call
+}
+
+// GetAllLimit is a helper method to define mock.On call
+//   - c *gin.Context
+func (_e *RequestHandlerinterface_Expecter) GetAllLimit(c interface{}) *RequestHandlerinterface_GetAllLimit_Call {
+	return &RequestHandlerinterface_GetAllLimit_Call{Call: _e.mock.On("GetAllLimit", c)}
+}
+
+func (_c *RequestHandlerinterface_GetAllLimit_Call) Run(run func(c *gin.Context)) *RequestHandlerinterface_GetAllLimit_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(*gin.Context))
+	})
+	return _c
+}
+
+func (_c *RequestHandlerinterface_GetAllLimit_Call) Return() *RequestHandlerinterface_GetAllLimit_Call {
+	_c.Call.Return()
+	return _c
+}
+
+func (_c *RequestHandlerinterface_GetAllLimit_Call) RunAndReturn(run func(*gin.Context)) *RequestHandlerinterface_GetAllLimit_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // GetAllTransaction provides a mock function with given fields: c
 func (_m *RequestHandlerinterface) GetAllTransaction(c *gin.Context) {
 	_m.Called(c)
@@ -148,72 +181,6 @@ func (_c *RequestHandlerinterface_GetAllTransactionByStatusDate_Call) Return() *
 }
 
 func (_c *RequestHandlerinterface_GetAllTransactionByStatusDate_Call) RunAndReturn(run func(*gin.Context)) *RequestHandlerinterface_GetAllTransactionByStatusDate_Call {
-	_c.Call.Return(run)
-	return _c
-}
-
-// GetTransactionByDate provides a mock function with given fields: c
-func (_m *RequestHandlerinterface) GetTransactionByDate(c *gin.Context) {
-	_m.Called(c)
-}
-
-// RequestHandlerinterface_GetTransactionByDate_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetTransactionByDate'
-type RequestHandlerinterface_GetTransactionByDate_Call struct {
-	*mock.Call
-}
-
-// GetTransactionByDate is a helper method to define mock.On call
-//   - c *gin.Context
-func (_e *RequestHandlerinterface_Expecter) GetTransactionByDate(c interface{}) *RequestHandlerinterface_GetTransactionByDate_Call {
-	return &RequestHandlerinterface_GetTransactionByDate_Call{Call: _e.mock.On("GetTransactionByDate", c)}
-}
-
-func (_c *RequestHandlerinterface_GetTransactionByDate_Call) Run(run func(c *gin.Context)) *RequestHandlerinterface_GetTransactionByDate_Call {
-	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(*gin.Context))
-	})
-	return _c
-}
-
-func (_c *RequestHandlerinterface_GetTransactionByDate_Call) Return() *RequestHandlerinterface_GetTransactionByDate_Call {
-	_c.Call.Return()
-	return _c
-}
-
-func (_c *RequestHandlerinterface_GetTransactionByDate_Call) RunAndReturn(run func(*gin.Context)) *RequestHandlerinterface_GetTransactionByDate_Call {
-	_c.Call.Return(run)
-	return _c
-}
-
-// GetTransactionByStatusAndDate provides a mock function with given fields: c
-func (_m *RequestHandlerinterface) GetTransactionByStatusAndDate(c *gin.Context) {
-	_m.Called(c)
-}
-
-// RequestHandlerinterface_GetTransactionByStatusAndDate_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetTransactionByStatusAndDate'
-type RequestHandlerinterface_GetTransactionByStatusAndDate_Call struct {
-	*mock.Call
-}
-
-// GetTransactionByStatusAndDate is a helper method to define mock.On call
-//   - c *gin.Context
-func (_e *RequestHandlerinterface_Expecter) GetTransactionByStatusAndDate(c interface{}) *RequestHandlerinterface_GetTransactionByStatusAndDate_Call {
-	return &RequestHandlerinterface_GetTransactionByStatusAndDate_Call{Call: _e.mock.On("GetTransactionByStatusAndDate", c)}
-}
-
-func (_c *RequestHandlerinterface_GetTransactionByStatusAndDate_Call) Run(run func(c *gin.Context)) *RequestHandlerinterface_GetTransactionByStatusAndDate_Call {
-	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(*gin.Context))
-	})
-	return _c
-}
-
-func (_c *RequestHandlerinterface_GetTransactionByStatusAndDate_Call) Return() *RequestHandlerinterface_GetTransactionByStatusAndDate_Call {
-	_c.Call.Return()
-	return _c
-}
-
-func (_c *RequestHandlerinterface_GetTransactionByStatusAndDate_Call) RunAndReturn(run func(*gin.Context)) *RequestHandlerinterface_GetTransactionByStatusAndDate_Call {
 	_c.Call.Return(run)
 	return _c
 }

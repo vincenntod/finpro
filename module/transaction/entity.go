@@ -11,7 +11,7 @@ type Transaction struct {
 	CreatedAt time.Time `json:"created_at"`*/
 
 	Id               int       `json:"id"`
-	OdaNumber        int       `json:"oda_number"`
+	OdaNumber        string    `json:"oda_number"`
 	BankAccountNo    int       `json:"bank_account_no"`
 	BillingCycleDate string    `json:"billing_cycle_date"`
 	PaymentDueDate   time.Time `json:"payment_due_date"`
@@ -23,7 +23,7 @@ type Transaction struct {
 	Status           string    `json:"status"`
 	PaymentMethod    string    `json:"payment_method"`
 	AutoDebetCounter int       `json:"auto_debet_counter"`
-	CreatedAt        time.Time `json:"created_at"`
+	CreatedAt        string    `json:"created_at"`
 	UpdatedAt        time.Time `json:"updated_at"`
 	IsHold           bool      `json:"is_hold"`
 	IsFstlPending    bool      `json:"is_fstl_pending"`
