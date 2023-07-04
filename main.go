@@ -34,7 +34,7 @@ func main() {
 		Admin.GET("/get-transaction-status/:status/", transactionHandler.GetAllTransactionByStatus)
 		Admin.GET("/get-TransactionDate/:start/:end/", transactionHandler.GetAllTransactionByDate)
 		Admin.GET("/get-TransactionStatusDate/:status/:start/:end/", transactionHandler.GetAllTransactionByStatusDate)
-		Admin.GET("/get-Transaction", transactionHandler.GetTransaction)
+		Admin.GET("/get-transactions-limit/:id", transactionHandler.GetAllLimit)
 
 	}
 
