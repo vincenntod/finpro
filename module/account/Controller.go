@@ -16,16 +16,17 @@ type ControllerInterface interface {
 	DeleteDataUser(id string) (*CreateResponse, error)
 	Login(req *LoginResponseRequest) (string, *LoginResponse, error)
 	SendEmail(email string) (*CreateResponse, error)
-	CompareVerificationCode(verificationCode *VerificationCodeRequest) (Account, error)
+	SendEmailRegister(email string) (*CreateResponse, error)
+	CompareVerificationCode(verificationCode *VerificationCodeRequest) (*CreateResponse, error)
 	EditPassword(id string, code string, req *EditDataUserRequest) (*CreateResponse, error)
 }
 
 type Controller struct {
-	UseCase *UseCase
+	UseCase UseCaseInterface
 }
 
-func NewController(useCase *UseCase) *Controller {
-	return &Controller{
+func NewController(useCase UseCaseInterface) ControllerInterface {
+	return Controller{
 		UseCase: useCase,
 	}
 }
@@ -70,6 +71,7 @@ func (c Controller) GetDataUser() (*ReadResponse, error) {
 			Status:  "Error",
 			Message: "Internal Server Error",
 			Code:    400,
+			Data:    nil,
 		}
 		return res, nil
 	}
@@ -390,7 +392,7 @@ func (c Controller) CompareVerificationCode(verificationCode *VerificationCodeRe
 	return res, nil
 
 }
-func (c Controller) EditPassword(code string, req *EditDataUserRequest) (*CreateResponse, error) {
+func (c Controller) EditPassword(id string, code string, req *EditDataUserRequest) (*CreateResponse, error) {
 	result, err := c.UseCase.GetDataUserById(req.Id)
 	if err != nil {
 		res := &CreateResponse{
@@ -424,7 +426,7 @@ func (c Controller) EditPassword(code string, req *EditDataUserRequest) (*Create
 		Role:     req.Role,
 		Password: req.Password,
 	}
-	data, _ := c.UseCase.EditPassword(req.Id, &request)
+	data, _ := c.UseCase.EditPassword(id, &request)
 	if data.Id == 0 {
 		res := &CreateResponse{
 			Code:    400,

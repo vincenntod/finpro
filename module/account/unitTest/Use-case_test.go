@@ -11,16 +11,9 @@ import (
 
 func TestUseCase_GetDataUser(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockery := mocks.NewMockUseCaseInterface(ctrl)
+	mockery := mocks.NewMockRepositoryInterface(ctrl)
 
-	mockery.EXPECT().GetDataUser().Return([]account.Account{{
-		Name:  "Vincen",
-		Email: "vincen@gmail.com",
-		Role:  "admin",
-		Phone: "123",
-	},
-	}, nil).Times(1)
-
+	mockery.EXPECT().GetDataUser().Return().Times(1)
 	tests := []struct {
 		name    string
 		u       account.UseCase
@@ -29,7 +22,9 @@ func TestUseCase_GetDataUser(t *testing.T) {
 	}{
 		{
 			name: "Success Get Data User",
-			u:    account.UseCase{Repo: mockery},
+			u: account.UseCase{
+				Repo: mockery,
+			},
 			want: []account.Account{{
 				Name:  "Vincen",
 				Email: "vincen@gmail.com",

@@ -13,8 +13,8 @@ import (
 
 type RepositoryInterface interface {
 	GetDataUser() ([]Account, error)
-	GetDataUserById(id string) (Account, error)
-	EditDataUser(id int, req *Account) (Account, error)
+	GetDataUserById(id int) (Account, error)
+	EditDataUser(id string, req *Account) (Account, error)
 	DeleteDataUser(id string) (Account, error)
 	CreateAccount(req *Account) (Account, error)
 	Login(req *Account) (string, Account, error)
@@ -24,11 +24,11 @@ type RepositoryInterface interface {
 }
 
 type Repository struct {
-	Db *gorm.DB
+	db *gorm.DB
 }
 
-func NewRepository(db *gorm.DB) *Repository {
-	return &Repository{Db: db}
+func NewRepository(db *gorm.DB) RepositoryInterface {
+	return Repository{db}
 }
 
 func (r Repository) GetDataUser() ([]Account, error) {
@@ -105,7 +105,7 @@ func (r Repository) CompareVerificationCode(verificationCode *VerificationCodeRe
 	return account, err
 
 }
-func (r Repository) EditPassword(id int, req *Account) (Account, error) {
+func (r Repository) EditPassword(id string, req *Account) (Account, error) {
 	var account Account
 	err := model.DB.Where("id = ?", id).Updates(&req).Find(&account).Error
 	return account, err

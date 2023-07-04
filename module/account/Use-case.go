@@ -9,17 +9,14 @@ type UseCaseInterface interface {
 	Login(req *Account) (string, Account, error)
 	SendEmail(email string) (Account, error)
 	CompareVerificationCode(verificationCode *VerificationCodeRequest) (Account, error)
-	EditPassword(id int, req *Account) (Account, error)
+	EditPassword(code string, req *Account) (Account, error)
 }
 
 type UseCase struct {
-	Repo UseCaseInterface
+	Repo RepositoryInterface
 }
 
-func NewUseCase(repo *Repository) *UseCase {
-	if repo == nil {
-		return nil
-	}
+func NewUseCase(repo RepositoryInterface) UseCaseInterface {
 	return &UseCase{
 		Repo: repo,
 	}
@@ -84,7 +81,7 @@ func (u UseCase) CompareVerificationCode(verificationCode *VerificationCodeReque
 	return result, nil
 
 }
-func (u UseCase) EditPassword(id int, req *Account) (Account, error) {
+func (u UseCase) EditPassword(id string, req *Account) (Account, error) {
 	result, err := u.Repo.EditPassword(id, req)
 	if err != nil {
 		return Account{}, err

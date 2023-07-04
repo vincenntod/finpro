@@ -7,17 +7,29 @@ import (
 	"gorm.io/gorm"
 )
 
+type RequestHandlerInterface interface {
+	GetDataUser(c *gin.Context)
+	GetDataUserById(c *gin.Context)
+	CreateAccount(c *gin.Context)
+	EditDataUser(c *gin.Context)
+	DeleteDataUser(c *gin.Context)
+	Login(c *gin.Context)
+	SendEmail(c *gin.Context)
+	SendEmailRegister(c *gin.Context)
+	CompareVerificationCode(c *gin.Context)
+	EditPassword(c *gin.Context)
+}
 type RequestHandler struct {
-	ctrl *Controller
+	ctrl ControllerInterface
 }
 
-func NewRequestHandler(ctrl *Controller) *RequestHandler {
+func NewRequestHandler(ctrl ControllerInterface) RequestHandlerInterface {
 	return &RequestHandler{
 		ctrl: ctrl,
 	}
 }
 
-func DefaultRequestHandler(db *gorm.DB) *RequestHandler {
+func DefaultRequestHandler(db *gorm.DB) RequestHandlerInterface {
 	return NewRequestHandler(
 		NewController(
 			NewUseCase(
@@ -156,7 +168,16 @@ func (h RequestHandler) CompareVerificationCode(c *gin.Context) {
 }
 func (h RequestHandler) EditPassword(c *gin.Context) {
 	var req EditDataUserRequest
-
+	queryUrl := c.Request.URL.Query()
+	id := queryUrl.Get("id")
+	if id == "" {
+		c.JSON(500, gin.H{
+			"code":    500,
+			"status":  "Error",
+			"message": "Bad Request Id Parameter kosong",
+		})
+		return
+	}
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(500, gin.H{
 			"code":    500,
@@ -184,7 +205,7 @@ func (h RequestHandler) EditPassword(c *gin.Context) {
 		return
 	}
 
-	res, err := h.ctrl.EditPassword(code, &req)
+	res, err := h.ctrl.EditPassword(id, code, &req)
 	if err != nil {
 		c.JSON(500, res)
 	}
