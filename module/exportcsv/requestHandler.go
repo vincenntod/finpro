@@ -2,24 +2,25 @@ package exportcsv
 
 import (
 	"encoding/csv"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
 
-type ExportCSVRequestHandler struct {
-	ctrl ExportCSVController
+type RequestHandler struct {
+	Ctrl Controller
 }
 
-func NewRequestHandler(ctrl ExportCSVController) *ExportCSVRequestHandler {
-	return &ExportCSVRequestHandler{
-		ctrl: ctrl,
+func NewRequestHandler(ctrl Controller) *RequestHandler {
+	return &RequestHandler{
+		Ctrl: ctrl,
 	}
 
 }
 
-func DefaultRequestHandler(db *gorm.DB) *ExportCSVRequestHandler {
+func DefaultRequestHandler(db *gorm.DB) *RequestHandler {
 	return NewRequestHandler(
 		NewController(
 			NewUseCase(
@@ -38,19 +39,23 @@ type ErrorResponse struct {
 	Error string `json:"error"`
 }
 
-func (h ExportCSVRequestHandler) ExportCSVHandler(c *gin.Context) {
+func (h RequestHandler) ExportCSVHandler(c *gin.Context) {
 
 	var req ExportCSVRequest
-	if err := c.Bind(&req); err != nil {
+	fmt.Println("??")
+	err := c.Bind(&req)
+	fmt.Println(&req)
+	if err != nil {
 		c.JSON(http.StatusBadRequest, ErrorResponse{Error: err.Error()})
+
 		return
 	}
 
-	exportData, err := h.ctrl.ExportCSV(&req)
+	exportData, err := h.Ctrl.ExportCSV(&req)
 	switch {
 	case err != nil && err.Error() == "Not Found":
 		c.JSON(http.StatusNotFound, ErrorResponse{Error: err.Error()})
-	case err != nil && err.Error() == "invalid field status":
+	case err != nil && err.Error() == "Invalid field status":
 		c.JSON(http.StatusNotAcceptable, ErrorResponse{Error: err.Error()})
 	case err != nil:
 		c.JSON(http.StatusInternalServerError, ErrorResponse{Error: err.Error()})

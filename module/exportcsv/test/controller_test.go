@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestExportCSVController_ExportCSV(t *testing.T) {
+func TestExportCSVController(t *testing.T) {
 	mockUsecase := mocks.NewUsecase(t)
 	mockUsecase.EXPECT().ExportCSV(&exportcsv.ExportCSVRequest{"", "", ""}).Return(
 		[][]string{{"id", "od_number", "status", "price", "created_at"},

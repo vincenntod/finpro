@@ -4,13 +4,13 @@ import (
 	"errors"
 )
 
-type exportCSVController struct {
-	UseCase Usecase
+type controller struct {
+	useCase Usecase
 }
 
-func NewController(useCase Usecase) *exportCSVController {
-	return &exportCSVController{
-		UseCase: useCase,
+func NewController(useCase Usecase) *controller {
+	return &controller{
+		useCase: useCase,
 	}
 }
 
@@ -21,14 +21,14 @@ type ExportCSVResponse struct {
 type TransactionCollection struct {
 	DataItem []Transaction
 }
-type ExportCSVController interface {
+type Controller interface {
 	ExportCSV(req *ExportCSVRequest) ([][]string, error)
 }
 
-func (c exportCSVController) ExportCSV(req *ExportCSVRequest) ([][]string, error) {
+func (c controller) ExportCSV(req *ExportCSVRequest) ([][]string, error) {
 	switch req.Status {
 	case "SUCCESS", "WAITING_FOR_DEBITTED", "": //validate request.status
-		exportData, err := c.UseCase.ExportCSV(req)
+		exportData, err := c.useCase.ExportCSV(req)
 		if err != nil {
 
 			return nil, err
