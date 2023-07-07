@@ -1,7 +1,6 @@
 package account
 
 import (
-	"fmt"
 	"net/smtp"
 	"strconv"
 
@@ -405,8 +404,7 @@ func (c Controller) EditPassword(id string, code string, req *EditDataUserReques
 	}
 	CodeFromMap := VerificationCodes[result.Email]
 	CodeFromRequest := code
-	fmt.Println("dari map: ", CodeFromMap)
-	fmt.Println("dari header: ", CodeFromRequest)
+
 	if CodeFromMap != CodeFromRequest {
 		res := &CreateResponse{
 			Code:    400,

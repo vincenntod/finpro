@@ -80,7 +80,7 @@ func (mr *MockRepositoryInterfaceMockRecorder) DeleteDataUser(id interface{}) *g
 }
 
 // EditDataUser mocks base method.
-func (m *MockRepositoryInterface) EditDataUser(id int, req *account.Account) (account.Account, error) {
+func (m *MockRepositoryInterface) EditDataUser(id string, req *account.Account) (account.Account, error) {
         m.ctrl.T.Helper()
         ret := m.ctrl.Call(m, "EditDataUser", id, req)
         ret0, _ := ret[0].(account.Account)
@@ -125,7 +125,7 @@ func (mr *MockRepositoryInterfaceMockRecorder) GetDataUser() *gomock.Call {
 }
 
 // GetDataUserById mocks base method.
-func (m *MockRepositoryInterface) GetDataUserById(id string) (account.Account, error) {
+func (m *MockRepositoryInterface) GetDataUserById(id int) (account.Account, error) {
         m.ctrl.T.Helper()
         ret := m.ctrl.Call(m, "GetDataUserById", id)
         ret0, _ := ret[0].(account.Account)

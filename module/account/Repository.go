@@ -24,7 +24,7 @@ type RepositoryInterface interface {
 }
 
 type Repository struct {
-	db *gorm.DB
+	Db *gorm.DB
 }
 
 func NewRepository(db *gorm.DB) RepositoryInterface {

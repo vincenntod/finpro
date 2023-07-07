@@ -13,7 +13,12 @@ func TestUseCase_GetDataUser(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockery := mocks.NewMockRepositoryInterface(ctrl)
 
-	mockery.EXPECT().GetDataUser().Return().Times(1)
+	mockery.EXPECT().GetDataUser().Return([]account.Account{{
+		Name:  "Vincen",
+		Email: "vincen@gmail.com",
+		Role:  "admin",
+		Phone: "123",
+	}}, nil).Times(1)
 	tests := []struct {
 		name    string
 		u       account.UseCase
@@ -54,7 +59,7 @@ func TestUseCase_GetDataUserById(t *testing.T) {
 		id int
 	}
 	ctrl := gomock.NewController(t)
-	mockery := mocks.NewMockUseCaseInterface(ctrl)
+	mockery := mocks.NewMockRepositoryInterface(ctrl)
 
 	mockery.EXPECT().GetDataUserById(1).Return(account.Account{
 		Name:  "Vincen",
@@ -100,7 +105,7 @@ func TestUseCase_GetDataUserById(t *testing.T) {
 func TestUseCase_EditDataUser(t *testing.T) {
 
 	ctrl := gomock.NewController(t)
-	mockery := mocks.NewMockUseCaseInterface(ctrl)
+	mockery := mocks.NewMockRepositoryInterface(ctrl)
 
 	mockery.EXPECT().EditDataUser("1", &account.Account{
 		Name:  "Vincencius Maxwell",
@@ -149,6 +154,7 @@ func TestUseCase_EditDataUser(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := tt.u.EditDataUser(tt.args.id, tt.args.req)
+
 			if (err != nil) != tt.wantErr {
 				t.Errorf("UseCase.EditDataUser() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -164,7 +170,7 @@ func TestUseCase_CreateAccount(t *testing.T) {
 		req *account.Account
 	}
 	ctrl := gomock.NewController(t)
-	mockery := mocks.NewMockUseCaseInterface(ctrl)
+	mockery := mocks.NewMockRepositoryInterface(ctrl)
 
 	mockery.EXPECT().CreateAccount(&account.Account{
 		Id:       1,
@@ -233,7 +239,7 @@ func TestUseCase_DeleteDataUser(t *testing.T) {
 		id string
 	}
 	ctrl := gomock.NewController(t)
-	mockery := mocks.NewMockUseCaseInterface(ctrl)
+	mockery := mocks.NewMockRepositoryInterface(ctrl)
 
 	mockery.EXPECT().DeleteDataUser("1").Return(account.Account{}, nil).Times(1)
 
@@ -274,7 +280,7 @@ func TestUseCase_Login(t *testing.T) {
 		req *account.Account
 	}
 	ctrl := gomock.NewController(t)
-	mockery := mocks.NewMockUseCaseInterface(ctrl)
+	mockery := mocks.NewMockRepositoryInterface(ctrl)
 
 	mockery.EXPECT().Login(&account.Account{
 		Email:    "vincen@gmail.com",
@@ -327,7 +333,7 @@ func TestUseCase_SendEmail(t *testing.T) {
 		email string
 	}
 	ctrl := gomock.NewController(t)
-	mockery := mocks.NewMockUseCaseInterface(ctrl)
+	mockery := mocks.NewMockRepositoryInterface(ctrl)
 
 	mockery.EXPECT().SendEmail("maxwelvincen@gmail.com").Return(account.Account{}, nil).Times(1)
 	tests := []struct {
@@ -367,7 +373,7 @@ func TestUseCase_CompareVerificationCode(t *testing.T) {
 		verificationCode *account.VerificationCodeRequest
 	}
 	ctrl := gomock.NewController(t)
-	mockery := mocks.NewMockUseCaseInterface(ctrl)
+	mockery := mocks.NewMockRepositoryInterface(ctrl)
 
 	mockery.EXPECT().CompareVerificationCode(&account.VerificationCodeRequest{
 		Email: "maxwelvincen@gmail.com",
@@ -411,13 +417,13 @@ func TestUseCase_CompareVerificationCode(t *testing.T) {
 
 func TestUseCase_EditPassword(t *testing.T) {
 	type args struct {
-		id  int
+		id  string
 		req *account.Account
 	}
 	ctrl := gomock.NewController(t)
-	mockery := mocks.NewMockUseCaseInterface(ctrl)
+	mockery := mocks.NewMockRepositoryInterface(ctrl)
 
-	mockery.EXPECT().EditPassword(1, &account.Account{
+	mockery.EXPECT().EditPassword("1", &account.Account{
 		Password: "123456",
 	}).Return(account.Account{}, nil).Times(1)
 	tests := []struct {
@@ -433,7 +439,7 @@ func TestUseCase_EditPassword(t *testing.T) {
 				Repo: mockery,
 			},
 			args: args{
-				1, &account.Account{
+				"1", &account.Account{
 					Password: "123456",
 				},
 			},
