@@ -21,25 +21,25 @@ func (_m *Controller) EXPECT() *Controller_Expecter {
 	return &Controller_Expecter{mock: &_m.Mock}
 }
 
-// ExportCSV provides a mock function with given fields: req
-func (_m *Controller) ExportCSV(req *exportcsv.ExportCSVRequest) ([][]string, error) {
-	ret := _m.Called(req)
+// ExportCSV provides a mock function with given fields: req, url
+func (_m *Controller) ExportCSV(req *exportcsv.ExportCSVRequest, url *exportcsv.UrlRequest) ([][]string, error) {
+	ret := _m.Called(req, url)
 
 	var r0 [][]string
 	var r1 error
-	if rf, ok := ret.Get(0).(func(*exportcsv.ExportCSVRequest) ([][]string, error)); ok {
-		return rf(req)
+	if rf, ok := ret.Get(0).(func(*exportcsv.ExportCSVRequest, *exportcsv.UrlRequest) ([][]string, error)); ok {
+		return rf(req, url)
 	}
-	if rf, ok := ret.Get(0).(func(*exportcsv.ExportCSVRequest) [][]string); ok {
-		r0 = rf(req)
+	if rf, ok := ret.Get(0).(func(*exportcsv.ExportCSVRequest, *exportcsv.UrlRequest) [][]string); ok {
+		r0 = rf(req, url)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).([][]string)
 		}
 	}
 
-	if rf, ok := ret.Get(1).(func(*exportcsv.ExportCSVRequest) error); ok {
-		r1 = rf(req)
+	if rf, ok := ret.Get(1).(func(*exportcsv.ExportCSVRequest, *exportcsv.UrlRequest) error); ok {
+		r1 = rf(req, url)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -54,13 +54,14 @@ type Controller_ExportCSV_Call struct {
 
 // ExportCSV is a helper method to define mock.On call
 //   - req *exportcsv.ExportCSVRequest
-func (_e *Controller_Expecter) ExportCSV(req interface{}) *Controller_ExportCSV_Call {
-	return &Controller_ExportCSV_Call{Call: _e.mock.On("ExportCSV", req)}
+//   - url *exportcsv.UrlRequest
+func (_e *Controller_Expecter) ExportCSV(req interface{}, url interface{}) *Controller_ExportCSV_Call {
+	return &Controller_ExportCSV_Call{Call: _e.mock.On("ExportCSV", req, url)}
 }
 
-func (_c *Controller_ExportCSV_Call) Run(run func(req *exportcsv.ExportCSVRequest)) *Controller_ExportCSV_Call {
+func (_c *Controller_ExportCSV_Call) Run(run func(req *exportcsv.ExportCSVRequest, url *exportcsv.UrlRequest)) *Controller_ExportCSV_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(*exportcsv.ExportCSVRequest))
+		run(args[0].(*exportcsv.ExportCSVRequest), args[1].(*exportcsv.UrlRequest))
 	})
 	return _c
 }
@@ -70,7 +71,7 @@ func (_c *Controller_ExportCSV_Call) Return(_a0 [][]string, _a1 error) *Controll
 	return _c
 }
 
-func (_c *Controller_ExportCSV_Call) RunAndReturn(run func(*exportcsv.ExportCSVRequest) ([][]string, error)) *Controller_ExportCSV_Call {
+func (_c *Controller_ExportCSV_Call) RunAndReturn(run func(*exportcsv.ExportCSVRequest, *exportcsv.UrlRequest) ([][]string, error)) *Controller_ExportCSV_Call {
 	_c.Call.Return(run)
 	return _c
 }

@@ -13,10 +13,10 @@ func TestTransactionStringConverter(t *testing.T) {
 	request2 := []exportcsv.Transaction{{2242, "0969598565950745", "8298344194001672", "2023-04-17 00:00:00", "2023-04-17", 1000.000000, 1000.000000, 1000.000000, 1000.000000, 1000.000000, "SUCCESS", "", 0, "2023-04-18", "", 0.000000, "2023-04-17"}}
 	request3 := []exportcsv.Transaction{{241, "5655429080696649", "9018506264648524", "2023-04-17 00:00:00", "2023-04-17", 1000.000000, 1000.000000, 1000.000000, 1000.000000, 1000.000000, "WAITING_FOR_DEBITTED", "", 0, "2023-04-18", "", 0.000000, "2023-04-17"}}
 	request4 := []exportcsv.Transaction{{242, "1262435180570130", "1798502071284385", "2023-04-17 00:00:00", "2023-04-17", 1000.000000, 1000.000000, 1000.000000, 1000.000000, 1000.000000, "WAITING_FOR_DEBITTED", "", 0, "2023-04-18", "", 0.000000, "2023-04-17"}}
-	expected1 := [][]string{{"id", "od_number", "status", "price", "created_at"}, {"2241", "9860709914616572", "SUCCESS", "1000.000000", "2023-04-18"}}
-	expected2 := [][]string{{"id", "od_number", "status", "price", "created_at"}, {"2242", "0969598565950745", "SUCCESS", "1000.000000", "2023-04-18"}}
-	expected3 := [][]string{{"id", "od_number", "status", "price", "created_at"}, {"241", "5655429080696649", "WAITING_FOR_DEBITTED", "1000.000000", "2023-04-18"}}
-	expected4 := [][]string{{"id", "od_number", "status", "price", "created_at"}, {"242", "1262435180570130", "WAITING_FOR_DEBITTED", "1000.000000", "2023-04-18"}}
+	expected1 := [][]string{{"id", "oda_number", "status", "price", "created_at"}, {"2241", "9860709914616572", "SUCCESS", "1000.000000", "2023-04-18"}}
+	expected2 := [][]string{{"id", "oda_number", "status", "price", "created_at"}, {"2242", "0969598565950745", "SUCCESS", "1000.000000", "2023-04-18"}}
+	expected3 := [][]string{{"id", "oda_number", "status", "price", "created_at"}, {"241", "5655429080696649", "WAITING_FOR_DEBITTED", "1000.000000", "2023-04-18"}}
+	expected4 := [][]string{{"id", "oda_number", "status", "price", "created_at"}, {"242", "1262435180570130", "WAITING_FOR_DEBITTED", "1000.000000", "2023-04-18"}}
 	tests := []struct {
 		name     string
 		request  []exportcsv.Transaction
@@ -93,7 +93,7 @@ func TestExportCSV(t *testing.T) {
 		test{
 			name:    "PositifTest-exportAll",
 			request: exportcsv.ExportCSVRequest{"", "", ""},
-			expect: [][]string{{"id", "od_number", "status", "price", "created_at"},
+			expect: [][]string{{"id", "oda_number", "status", "price", "created_at"},
 				{"2241", "9860709914616572", "SUCCESS", "1000.000000", "2023-04-18"},
 				{"2242", "0969598565950745", "SUCCESS", "1000.000000", "2023-04-18"},
 				{"241", "5655429080696649", "WAITING_FOR_DEBITTED", "1000.000000", "2023-04-18"},
@@ -101,7 +101,7 @@ func TestExportCSV(t *testing.T) {
 		}, test{
 			name:    "PositifTest-rangeDate filter",
 			request: exportcsv.ExportCSVRequest{"", "2023-04-17", "2023-04-18"},
-			expect: [][]string{{"id", "od_number", "status", "price", "created_at"},
+			expect: [][]string{{"id", "oda_number", "status", "price", "created_at"},
 				{"2241", "9860709914616572", "SUCCESS", "1000.000000", "2023-04-18"},
 				{"2242", "0969598565950745", "SUCCESS", "1000.000000", "2023-04-18"},
 				{"241", "5655429080696649", "WAITING_FOR_DEBITTED", "1000.000000", "2023-04-18"},
@@ -109,25 +109,25 @@ func TestExportCSV(t *testing.T) {
 		}, test{
 			name:    "PositifTest-SUCCESS status filter",
 			request: exportcsv.ExportCSVRequest{"SUCCESS", "", ""},
-			expect: [][]string{{"id", "od_number", "status", "price", "created_at"},
+			expect: [][]string{{"id", "oda_number", "status", "price", "created_at"},
 				{"2241", "9860709914616572", "SUCCESS", "1000.000000", "2023-04-18"},
 				{"2242", "0969598565950745", "SUCCESS", "1000.000000", "2023-04-18"}},
 		}, test{
 			name:    "PositifTest-SUCCESS statusAndRageDate filter",
 			request: exportcsv.ExportCSVRequest{"SUCCESS", "2023-04-17", "2023-04-18"},
-			expect: [][]string{{"id", "od_number", "status", "price", "created_at"},
+			expect: [][]string{{"id", "oda_number", "status", "price", "created_at"},
 				{"2241", "9860709914616572", "SUCCESS", "1000.000000", "2023-04-18"},
 				{"2242", "0969598565950745", "SUCCESS", "1000.000000", "2023-04-18"}},
 		}, test{
 			name:    "PositifTest-WAITING_FOR_DEBITTED filter",
 			request: exportcsv.ExportCSVRequest{"WAITING_FOR_DEBITTED", "", ""},
-			expect: [][]string{{"id", "od_number", "status", "price", "created_at"},
+			expect: [][]string{{"id", "oda_number", "status", "price", "created_at"},
 				{"241", "5655429080696649", "WAITING_FOR_DEBITTED", "1000.000000", "2023-04-18"},
 				{"242", "1262435180570130", "WAITING_FOR_DEBITTED", "1000.000000", "2023-04-18"}},
 		}, test{
 			name:    "Positif-WAITING_FOR_DEBITTTED statusAndRageDate filter",
 			request: exportcsv.ExportCSVRequest{"WAITING_FOR_DEBITTED", "2023-04-17", "2023-04-18"},
-			expect: [][]string{{"id", "od_number", "status", "price", "created_at"},
+			expect: [][]string{{"id", "oda_number", "status", "price", "created_at"},
 				{"241", "5655429080696649", "WAITING_FOR_DEBITTED", "1000.000000", "2023-04-18"},
 				{"242", "1262435180570130", "WAITING_FOR_DEBITTED", "1000.000000", "2023-04-18"}},
 		},

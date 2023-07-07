@@ -35,6 +35,11 @@ type ExportCSVRequest struct {
 	StartDate string `form:"start_date"`
 	EndDate   string `form:"end_date"`
 }
+type UrlRequest struct {
+	ClientUrl string
+	PathUrl   string
+}
+
 type ErrorResponse struct {
 	Error string `json:"error"`
 }
@@ -42,16 +47,23 @@ type ErrorResponse struct {
 func (h RequestHandler) ExportCSVHandler(c *gin.Context) {
 
 	var req ExportCSVRequest
-	fmt.Println("??")
+	var url UrlRequest
 	err := c.Bind(&req)
-	fmt.Println(&req)
+	url.ClientUrl = c.Request.URL.String()
+	url.PathUrl = c.Request.URL.Path
+
+	fmt.Println(url.ClientUrl, " ", url.PathUrl)
+
 	if err != nil {
 		c.JSON(http.StatusBadRequest, ErrorResponse{Error: err.Error()})
 
 		return
 	}
-
-	exportData, err := h.Ctrl.ExportCSV(&req)
+	serverGot := url.PathUrl + "?" + "start_date=" + req.StartDate + "&end_date=" + req.EndDate
+	if serverGot == url.ClientUrl {
+		fmt.Println(serverGot, " ][", url.ClientUrl)
+	}
+	exportData, err := h.Ctrl.ExportCSV(&req, &url)
 	switch {
 	case err != nil && err.Error() == "Not Found":
 		c.JSON(http.StatusNotFound, ErrorResponse{Error: err.Error()})
