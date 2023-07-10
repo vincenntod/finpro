@@ -125,7 +125,7 @@ func (mr *MockUseCaseInterfaceMockRecorder) GetDataUser() *gomock.Call {
 }
 
 // GetDataUserById mocks base method.
-func (m *MockUseCaseInterface) GetDataUserById(id int) (account.Account, error) {
+func (m *MockUseCaseInterface) GetDataUserById(id string) (account.Account, error) {
         m.ctrl.T.Helper()
         ret := m.ctrl.Call(m, "GetDataUserById", id)
         ret0, _ := ret[0].(account.Account)

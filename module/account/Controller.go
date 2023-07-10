@@ -2,7 +2,6 @@ package account
 
 import (
 	"net/smtp"
-	"strconv"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -95,8 +94,7 @@ func (c Controller) GetDataUser() (*ReadResponse, error) {
 	return res, nil
 }
 func (c Controller) GetDataUserById(id string) (*ReadResponse, error) {
-	Id, _ := strconv.Atoi(id)
-	account, err := c.UseCase.GetDataUserById(Id)
+	account, err := c.UseCase.GetDataUserById(id)
 	if err != nil {
 		return nil, err
 	}
@@ -104,7 +102,7 @@ func (c Controller) GetDataUserById(id string) (*ReadResponse, error) {
 		res := &ReadResponse{
 			Code:    204,
 			Status:  "OK",
-			Message: "Data With ID: " + string(id) + " Empty",
+			Message: "Data With ID: " + id + " Empty",
 			Data:    nil,
 		}
 		return res, nil
@@ -392,7 +390,7 @@ func (c Controller) CompareVerificationCode(verificationCode *VerificationCodeRe
 
 }
 func (c Controller) EditPassword(id string, code string, req *EditDataUserRequest) (*CreateResponse, error) {
-	result, err := c.UseCase.GetDataUserById(req.Id)
+	result, err := c.UseCase.GetDataUserById(id)
 	if err != nil {
 		res := &CreateResponse{
 			Code:    400,

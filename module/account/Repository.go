@@ -12,7 +12,7 @@ import (
 
 type RepositoryInterface interface {
 	GetDataUser() ([]Account, error)
-	GetDataUserById(id int) (Account, error)
+	GetDataUserById(id string) (Account, error)
 	EditDataUser(id string, req *Account) (Account, error)
 	DeleteDataUser(id string) (Account, error)
 	CreateAccount(req *Account) (Account, error)
@@ -36,7 +36,7 @@ func (r Repository) GetDataUser() ([]Account, error) {
 	return account, err
 }
 
-func (r Repository) GetDataUserById(id int) (Account, error) {
+func (r Repository) GetDataUserById(id string) (Account, error) {
 	var account Account
 	err := r.Db.Find(&account, id).Error
 	return account, err

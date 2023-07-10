@@ -62,7 +62,7 @@ func TestRepository_GetDataUserById(t *testing.T) {
 	)
 
 	type args struct {
-		id int
+		id string
 	}
 	tests := []struct {
 		name    string
@@ -77,7 +77,7 @@ func TestRepository_GetDataUserById(t *testing.T) {
 				Db: mockDb,
 			},
 			args: args{
-				id: 1,
+				id: "1",
 			},
 			want: account.Account{
 				Id:       1,

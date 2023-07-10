@@ -2,10 +2,14 @@ package mocks
 
 import (
 	"fmt"
+	"io"
+	"net/http"
+	"net/http/httptest"
 	"testing"
 	"time"
 
 	"github.com/DATA-DOG/go-sqlmock"
+	"github.com/gin-gonic/gin"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
@@ -40,4 +44,21 @@ func NewMockQueryDb(t *testing.T) (sqlmock.Sqlmock, *gorm.DB) {
 		t.Fatal(fmt.Errorf("gorm.Open: %w", err))
 	}
 	return mockQuery, mockDb
+}
+
+func CreateTestServer(request *http.Request, route func(router *gin.Engine)) (int, []byte) {
+	gin.SetMode(gin.TestMode)
+	responseRecorder := httptest.NewRecorder()
+	_, router := gin.CreateTestContext(responseRecorder)
+
+	route(router)
+	router.ServeHTTP(responseRecorder, request)
+
+	response := responseRecorder.Result()
+	body, _ := io.ReadAll(response.Body)
+	defer func() {
+		_ = response.Body.Close()
+	}()
+
+	return response.StatusCode, body
 }

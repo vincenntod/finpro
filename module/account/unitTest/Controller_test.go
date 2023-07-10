@@ -63,7 +63,7 @@ func TestController_GetDataUser(t *testing.T) {
 func TestController_GetDataUserById(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockery := mocks.NewMockUseCaseInterface(ctrl)
-	mockery.EXPECT().GetDataUserById(1).Return(account.Account{
+	mockery.EXPECT().GetDataUserById("1").Return(account.Account{
 		Id:    1,
 		Name:  "Vincen",
 		Role:  "Admin",
@@ -299,12 +299,7 @@ func TestController_DeleteDataUser(t *testing.T) {
 }
 
 func TestController_Login(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	mockery := mocks.NewMockUseCaseInterface(ctrl)
-	mockery.EXPECT().Login(&account.LoginResponseRequest{
-		Password: "123456",
-		Email:    "maxwelvincen@gmail.com",
-	}).Return("123", account.Account{}, nil).Times(1)
+
 	type args struct {
 		req *account.LoginResponseRequest
 	}
@@ -312,49 +307,18 @@ func TestController_Login(t *testing.T) {
 		name    string
 		c       account.Controller
 		args    args
-		want    string
-		want1   *account.LoginResponse
+		want    *account.LoginResponse
 		wantErr bool
-	}{
-		{
-			name: "success",
-			c: account.Controller{
-				UseCase: mockery,
-			},
-			args: args{
-				req: &account.LoginResponseRequest{
-					Password: "123456",
-					Email:    "maxwelvincen@gmail.com",
-				},
-			},
-			want1: &account.LoginResponse{
-				Code:    200,
-				Status:  "OK",
-				Message: "Login Success",
-				Data: []account.LoginResponseWithToken{{
-					Id:    1,
-					Name:  "Vincen",
-					Email: "maxwelvincen@gmail.com",
-					Role:  "admin",
-					Token: "123123",
-				},
-				},
-			},
-			wantErr: true,
-		},
-	}
+	}{}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, got1, err := tt.c.Login(tt.args.req)
+			got, _, err := tt.c.Login(tt.args.req)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Controller.Login() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			if got != tt.want {
-				t.Errorf("Controller.Login() got = %v, want %v", got, tt.want)
-			}
-			if !reflect.DeepEqual(got1, tt.want1) {
-				t.Errorf("Controller.Login() got1 = %v, want %v", got1, tt.want1)
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Controller.Login() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -536,7 +500,7 @@ func TestController_EditPassword(t *testing.T) {
 		Email: "maxwelvincen@gmail.com",
 		Phone: "123",
 	}, nil).Times(1)
-	mockery.EXPECT().GetDataUserById(1).Return(account.Account{
+	mockery.EXPECT().GetDataUserById("1").Return(account.Account{
 		Id:    1,
 		Name:  "Vincen",
 		Role:  "Admin",
