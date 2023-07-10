@@ -304,7 +304,7 @@ func TestController_Login(t *testing.T) {
 	mockery.EXPECT().Login(&account.LoginResponseRequest{
 		Password: "123456",
 		Email:    "maxwelvincen@gmail.com",
-	}).Return("", account.Account{}, nil).Times(1)
+	}).Return("123", account.Account{}, nil).Times(1)
 	type args struct {
 		req *account.LoginResponseRequest
 	}
