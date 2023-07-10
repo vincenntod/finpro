@@ -7,8 +7,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-
-
 func main() {
 	model.ConnectDatabase()
 
@@ -18,9 +16,9 @@ func main() {
 
 	transactionHandler := transaction.DefaultRequestHandler(model.DB)
 	r.GET("/get-transactions/", transactionHandler.GetAllTransaction)
-	r.GET("/get-transaction-status/:status/", transactionHandler.GetAllTransactionByStatus)
-	r.GET("/get-TransactionDate/:start/:end/", transactionHandler.GetAllTransactionByDate)
-	r.GET("/get-TransactionStatusDate/:status/:start/:end/", transactionHandler.GetAllTransactionByStatusDate)
+	r.GET("/get-transactions-status/:status/", transactionHandler.GetAllTransactionByStatus)
+	r.GET("/get-transactions-date/:start/:end/", transactionHandler.GetAllTransactionByDate)
+	r.GET("/get-transactions-statusdate/:status/:start/:end/", transactionHandler.GetAllTransactionByStatusDate)
 	r.GET("/get-transactions-limit/:id", transactionHandler.GetAllLimit)
 
 	r.Run()

@@ -20,6 +20,10 @@ type RequestHandlerinterface interface {
 	GetAllLimit(c *gin.Context)
 }
 
+type MessageResponse struct {
+	Message string `json:"message"`
+}
+
 type GetAllResponseDataTransaction struct {
 	Code      int                       `json:"code"`
 	Message   string                    `json:"message"`
@@ -100,11 +104,6 @@ func (h RequestHandler) GetAllTransactionByStatus(c *gin.Context) {
 func (h RequestHandler) GetAllTransactionByDate(c *gin.Context) {
 	start := FormatDate(c.Param("start"))
 	end := FormatDate(c.Param("end"))
-
-	if start == "" || end == "" {
-		c.JSON(http.StatusNotFound, gin.H{"message": "inputan tidak boleh kosong"})
-		return
-	}
 
 	res, err := h.Ctrl.GetAllTransactionByDate(start, end)
 	if err != nil {
