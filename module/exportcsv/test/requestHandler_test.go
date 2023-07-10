@@ -3,7 +3,7 @@ package test
 import (
 	mocks "golang/mocks/module/exportcsv"
 	"golang/module/exportcsv"
-	"golang/module/exportcsv/helper"
+	"golang/module/exportcsv/test/helper"
 	"net/http"
 	"testing"
 
