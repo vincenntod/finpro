@@ -1,7 +1,6 @@
 package test
 
 import (
-	"bytes"
 	"encoding/json"
 	"errors"
 	"golang/helper"
@@ -38,7 +37,7 @@ func TestRequestHandler_GetAllLimit(t *testing.T) {
 			makeFields: func() fields {
 				mockController := mocks.NewControllerInterface(t)
 				err := errors.New("Error")
-				mockController.EXPECT().GetAllLimit(transaction.FilterLimit{1,100}).Return(&transaction.GetAllResponseDataTransaction{}, err, 6736).Once()
+				mockController.EXPECT().GetAllLimit(transaction.FilterLimit{1, 100}).Return(&transaction.GetAllResponseDataTransaction{}, err, 6736).Once()
 				return fields{
 					ctrl: mockController,
 				}
@@ -137,7 +136,7 @@ func TestRequestHandler_GetAllTransactionByDate(t *testing.T) {
 			name:               "Test Case Get All Transaction By Date",
 			expectedStatusCode: 500,
 			makeRequest: func() *http.Request {
-				req, _ := http.NewRequest(http.MethodGet, "/get-transactions-date/18-04-2023/19-04-2023/", nil)
+				req, _ := http.NewRequest(http.MethodGet, "/get-TransactionDate/18-04-2023/19-04-2023/", nil)
 				req.Header.Set("Content-Type", "application/json")
 				return req
 			},
@@ -165,7 +164,7 @@ func TestRequestHandler_GetAllTransactionByDate(t *testing.T) {
 			}
 
 			statusCode, body := helper.CreateTestServer(tt.makeRequest(), func(router *gin.Engine) {
-				router.GET("/get-transactions-date/:start/:end/", h.GetAllTransactionByDate)
+				router.GET("/get-TransactionDate/:start/:end/", h.GetAllTransactionByDate)
 			})
 			assert.Equal(t, tt.expectedStatusCode, statusCode)
 			if !tt.assertValue(t, body) {
@@ -245,19 +244,13 @@ func TestRequestHandler_GetAllTransactionByStatusDate(t *testing.T) {
 			name:               "Test Case Get All Transaction By Status Error",
 			expectedStatusCode: 500,
 			makeRequest: func() *http.Request {
-				parameter, _ := json.Marshal(gin.H{
-					"status":     "Success",
-					"start_date": "01-04-2023",
-					"end_date":   "31-05-2023",
-				})
-				req, _ := http.NewRequest(http.MethodPost, "/get-TransactionStatusDate/:status/:start/:end/", bytes.NewBuffer(parameter))
-				req.Header.Set("Content-Type", "application/json")
+				req, _ := http.NewRequest(http.MethodGet, "/get-TransactionStatusDate/SUCCESS/18-04-2023/19-04-2023/", nil)
 				return req
 			},
 			makeFields: func() fields {
 				mockController := mocks.NewControllerInterface(t)
 				err := errors.New("Error")
-				mockController.EXPECT().GetAllTransactionByStatusDate("Success", "01-04-2023", "31-05-2023").Return(&transaction.GetAllResponseDataTransaction{}, err).Once()
+				mockController.EXPECT().GetAllTransactionByStatusDate("SUCCESS", "2023-04-18", "2023-04-19").Return(&transaction.GetAllResponseDataTransaction{}, err).Once()
 				return fields{
 					ctrl: mockController,
 				}

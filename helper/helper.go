@@ -1,6 +1,7 @@
 package helper
 
 import (
+	"fmt"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -32,9 +33,9 @@ func CreateTestServer(request *http.Request, route func(router *gin.Engine)) (in
 }
 
 func NewMockQueryDb(t *testing.T) (sqlmock.Sqlmock, *gorm.DB) {
-	conn, mockQuery, err := sqlmock.New()
+	conn, mockQuery, err := sqlmock.New(sqlmock.QueryMatcherOption(sqlmock.QueryMatcherEqual))
 	if err != nil {
-		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
+		t.Fatal(fmt.Errorf("sqlmock.New: %w", err))
 	}
 
 	mysqlConfig := mysql.Config{
