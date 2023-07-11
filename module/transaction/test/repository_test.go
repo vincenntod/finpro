@@ -1,8 +1,8 @@
 package test
 
 import (
-	"golang/helper"
 	"golang/module/transaction"
+	"golang/module/transaction/helper"
 	"reflect"
 	"testing"
 

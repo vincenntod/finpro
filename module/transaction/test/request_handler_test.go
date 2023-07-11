@@ -3,8 +3,8 @@ package test
 import (
 	"encoding/json"
 	"errors"
-	"golang/helper"
 	"golang/module/transaction"
+	"golang/module/transaction/helper"
 	mocks "golang/module/transaction/mocks/module/transaction"
 	"net/http"
 

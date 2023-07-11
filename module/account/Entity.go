@@ -1,4 +1,4 @@
-package auth
+package account
 
 type Account struct {
 	Id       int    `json:"id"`
@@ -9,4 +9,9 @@ type Account struct {
 	Email    string `json:"email"`
 }
 
+type VerificationCodeRequest struct {
+	Email string `json:"email"`
+	Code  string `json:"code"`
+}
 
+var VerificationCodes = make(map[string]string)
