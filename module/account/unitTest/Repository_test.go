@@ -106,7 +106,7 @@ func TestRepository_GetDataUserById(t *testing.T) {
 
 func TestRepository_EditDataUser(t *testing.T) {
 	mockQuery, mockDb := mocks.NewMockQueryDb(t)
-	query := "UPDATE `account` SET `name`=?,`phone`=?,`role`=?,`password`=?,`email`=? WHERE `id` = ?"
+	query := "UPDATE account SET name=?, phone=?,role=?,password=?,email=? WHERE id = ?"
 
 	mockQuery.ExpectQuery(query).WillReturnRows(
 		sqlmock.NewRows([]string{"name", "phone", "role", "password", "email", "id"}).AddRow("Vincen", "213", "Admin", "123", "admin@mail.com", 1),
@@ -208,7 +208,7 @@ func TestRepository_DeleteDataUser(t *testing.T) {
 
 func TestRepository_CreateAccount(t *testing.T) {
 	mockQuery, mockDb := mocks.NewMockQueryDb(t)
-	query := "INSERT INTO `account` (`name`,`phone`,`role`,`password`,`email`) VALUES (?,?,?,?,?)"
+	query := "INSERT INTO account (name,phone,role,password,email) VALUES (?,?,?,?,?)"
 	mockQuery.ExpectQuery(query).WillReturnRows(
 		sqlmock.NewRows([]string{"name", "phone", "role", "password", "email"}).AddRow("Vincen", "213", "Admin", "123", "admin@mail.com"),
 	)
@@ -263,7 +263,7 @@ func TestRepository_CreateAccount(t *testing.T) {
 
 func TestRepository_Login(t *testing.T) {
 	mockQuery, mockDb := mocks.NewMockQueryDb(t)
-	query := "SELECT * FROM `account` WHERE email = ? ORDER BY `account`.`id` LIMIT 1"
+	query := "SELECT * FROM account WHERE email = ? ORDER BY account.id LIMIT 1"
 	mockQuery.ExpectQuery(query).WillReturnRows(
 		sqlmock.NewRows([]string{"id", "name", "phone", "Role", "password", "email"}).AddRow(1, "Vincen", "213", "Admin", "123", "admin@mail.com"),
 	)
@@ -416,8 +416,8 @@ func TestRepository_CompareVerificationCode(t *testing.T) {
 
 func TestRepository_EditPassword(t *testing.T) {
 	mockQuery, mockDb := mocks.NewMockQueryDb(t)
-	queryUpdate := "UPDATE `account` SET `password`=? WHERE`id` = ?"
-	queryFind := "SELECT * FROM `account` WHERE `account`.`id` = ?"
+	queryUpdate := "UPDATE account SET password=? WHERE id = ?"
+	queryFind := "SELECT * FROM account WHERE account.id = ?"
 	mockQuery.ExpectQuery(queryUpdate).WillReturnRows(
 		sqlmock.NewRows([]string{"id", "name", "phone", "role", "password", "email"}).AddRow(1, "Vincen", "213", "Admin", "123", "admin@mail.com"),
 	)
