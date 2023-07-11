@@ -44,7 +44,7 @@ func (r Repository) GetDataUserById(id string) (Account, error) {
 }
 func (r Repository) EditDataUser(id string, req *Account) (Account, error) {
 	var account Account
-	err := r.Db.Raw("UPDATE `account` SET `name`=?,`phone`=?,`role`=?,`password`=?,`email`=? WHERE `id` = ?", req.Name, req.Phone, req.Role, req.Password, req.Email, id).Scan(&account).Error
+	err := r.Db.Raw("UPDATE account SET name=?, phone=?,role=?,password=?,email=? WHERE id = ?", req.Name, req.Phone, req.Role, req.Password, req.Email, id).Scan(&account).Error
 	return account, err
 }
 func (r Repository) DeleteDataUser(id string) (Account, error) {
@@ -55,13 +55,13 @@ func (r Repository) DeleteDataUser(id string) (Account, error) {
 
 func (r Repository) CreateAccount(req *Account) (Account, error) {
 	var account Account
-	err := r.Db.Raw("INSERT INTO `account` (`name`,`phone`,`role`,`password`,`email`) VALUES (?,?,?,?,?)", req.Name, req.Phone, req.Role, req.Password, req.Email).Scan(&account).Error
+	err := r.Db.Raw("INSERT INTO account (name,phone,role,password,email) VALUES (?,?,?,?,?)", req.Name, req.Phone, req.Role, req.Password, req.Email).Scan(&account).Error
 	return account, err
 }
 
 func (r Repository) Login(req *Account) (string, Account, error) {
 	var account Account
-	err := r.Db.Raw("SELECT * FROM `account` WHERE email = ? ORDER BY `account`.`id` LIMIT 1", req.Email).Scan(&account).Error
+	err := r.Db.Raw("SELECT * FROM account WHERE email = ? ORDER BY account.id LIMIT 1", req.Email).Scan(&account).Error
 	if err != nil {
 		return "", account, err
 	}
@@ -105,7 +105,7 @@ func (r Repository) CompareVerificationCode(verificationCode *VerificationCodeRe
 }
 func (r Repository) EditPassword(id string, req *Account) (Account, error) {
 	var account Account
-	err := r.Db.Raw("UPDATE `account` SET `password`=? WHERE`id` = ?", req.Password, id).Scan(&account).Find(&account).Error
+	err := r.Db.Raw("UPDATE account SET password=? WHERE id = ?", req.Password, id).Scan(&account).Raw("SELECT * FROM account WHERE account.id = ?", id).Scan(&account).Error
 	return account, err
 
 }
