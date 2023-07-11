@@ -11,9 +11,10 @@ import (
 var DB *gorm.DB
 
 func ConnectDatabase() {
-	dsnmysql := "root:123456@tcp(localhost:3307)/dbceria?charset=utf8mb4&parseTime=True&loc=Local"
+	dsnmysqldeploy := "u472991515_vincenntes:vincen241!Aa@tcp(https://auth-db1031.hstgr.io/)/u472991515_dbceria?charset=utf8mb4&parseTime=True&loc=Local"
+	// dsnmysql := "root:123456@tcp(localhost:3307)/dbceria?charset=utf8mb4&parseTime=True&loc=Local"
 	// dsnpsql := "host=localhost user=postgres password=123456 dbname=dbceria port=5432 sslmode=disable TimeZone=Asia/Shanghai"
-	db, err := gorm.Open(mysql.Open(dsnmysql), &gorm.Config{NamingStrategy: schema.NamingStrategy{
+	db, err := gorm.Open(mysql.Open(dsnmysqldeploy), &gorm.Config{NamingStrategy: schema.NamingStrategy{
 		SingularTable: true,
 	}})
 	if err != nil {
