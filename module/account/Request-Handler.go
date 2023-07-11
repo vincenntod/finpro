@@ -20,12 +20,12 @@ type RequestHandlerInterface interface {
 	EditPassword(c *gin.Context)
 }
 type RequestHandler struct {
-	ctrl ControllerInterface
+	Ctrl ControllerInterface
 }
 
 func NewRequestHandler(ctrl ControllerInterface) RequestHandlerInterface {
 	return &RequestHandler{
-		ctrl: ctrl,
+		Ctrl: ctrl,
 	}
 }
 
@@ -39,6 +39,9 @@ func DefaultRequestHandler(db *gorm.DB) RequestHandlerInterface {
 	)
 }
 
+type MessageResponse struct {
+	Message string `json:"message"`
+}
 type CreateRequest struct {
 	Name     string `json:"name"`
 	Phone    string `json:"phone"`
@@ -64,7 +67,7 @@ type EditDataUserRequest struct {
 }
 
 func (h RequestHandler) GetDataUser(c *gin.Context) {
-	res, err := h.ctrl.GetDataUser()
+	res, err := h.Ctrl.GetDataUser()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, ErrorResponse{Error: err.Error()})
 		return
@@ -74,7 +77,7 @@ func (h RequestHandler) GetDataUser(c *gin.Context) {
 }
 func (h RequestHandler) GetDataUserById(c *gin.Context) {
 	id := c.Param("id")
-	res, err := h.ctrl.GetDataUserById(id)
+	res, err := h.Ctrl.GetDataUserById(id)
 	if err != nil {
 		c.JSON(500, ErrorResponse{Error: err.Error()})
 		return
@@ -88,7 +91,7 @@ func (h RequestHandler) CreateAccount(c *gin.Context) {
 		c.JSON(400, ErrorResponse{Error: err.Error()})
 		return
 	}
-	res, _ := h.ctrl.CreateAccount(&account)
+	res, _ := h.Ctrl.CreateAccount(&account)
 	c.JSON(200, res)
 
 }
@@ -100,7 +103,7 @@ func (h RequestHandler) EditDataUser(c *gin.Context) {
 		c.JSON(400, ErrorResponse{Error: err.Error()})
 		return
 	}
-	res, err := h.ctrl.EditDataUser(id, &account)
+	res, err := h.Ctrl.EditDataUser(id, &account)
 	if err != nil {
 		c.JSON(400, ErrorResponse{Error: err.Error()})
 		return
@@ -109,7 +112,7 @@ func (h RequestHandler) EditDataUser(c *gin.Context) {
 }
 func (h RequestHandler) DeleteDataUser(c *gin.Context) {
 	id := c.Param("id")
-	res, err := h.ctrl.DeleteDataUser(id)
+	res, err := h.Ctrl.DeleteDataUser(id)
 	if err != nil {
 		c.JSON(400, ErrorResponse{Error: err.Error()})
 	}
@@ -122,7 +125,7 @@ func (h RequestHandler) Login(c *gin.Context) {
 		c.JSON(400, ErrorResponse{Error: err.Error()})
 		return
 	}
-	token, res, err := h.ctrl.Login(&account)
+	token, res, err := h.Ctrl.Login(&account)
 	if err != nil {
 		c.JSON(401, res)
 		return
@@ -133,7 +136,7 @@ func (h RequestHandler) Login(c *gin.Context) {
 
 func (h RequestHandler) SendEmail(c *gin.Context) {
 	email := c.Param("email")
-	res, err := h.ctrl.SendEmail(email)
+	res, err := h.Ctrl.SendEmail(email)
 	if err != nil {
 		c.JSON(401, res)
 	}
@@ -142,7 +145,7 @@ func (h RequestHandler) SendEmail(c *gin.Context) {
 
 func (h RequestHandler) SendEmailRegister(c *gin.Context) {
 	email := c.Param("email")
-	res, err := h.ctrl.SendEmailRegister(email)
+	res, err := h.Ctrl.SendEmailRegister(email)
 	if err != nil {
 		c.JSON(401, res)
 	}
@@ -159,7 +162,7 @@ func (h RequestHandler) CompareVerificationCode(c *gin.Context) {
 		})
 		return
 	}
-	res, err := h.ctrl.CompareVerificationCode(&verificationCodeRequest)
+	res, err := h.Ctrl.CompareVerificationCode(&verificationCodeRequest)
 	if err != nil {
 		c.JSON(400, res)
 		return
@@ -205,7 +208,7 @@ func (h RequestHandler) EditPassword(c *gin.Context) {
 		return
 	}
 
-	res, err := h.ctrl.EditPassword(id, code, &req)
+	res, err := h.Ctrl.EditPassword(id, code, &req)
 	if err != nil {
 		c.JSON(500, res)
 	}

@@ -2,7 +2,7 @@ package account
 
 type UseCaseInterface interface {
 	GetDataUser() ([]Account, error)
-	GetDataUserById(id int) (Account, error)
+	GetDataUserById(id string) (Account, error)
 	EditDataUser(id string, req *Account) (Account, error)
 	DeleteDataUser(id string) (Account, error)
 	CreateAccount(req *Account) (Account, error)
@@ -29,7 +29,7 @@ func (u UseCase) GetDataUser() ([]Account, error) {
 	}
 	return result, nil
 }
-func (u UseCase) GetDataUserById(id int) (Account, error) {
+func (u UseCase) GetDataUserById(id string) (Account, error) {
 	result, err := u.Repo.GetDataUserById(id)
 	if err != nil {
 		return Account{}, err

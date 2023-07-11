@@ -35,10 +35,10 @@ func (m *MockControllerInterface) EXPECT() *MockControllerInterfaceMockRecorder 
 }
 
 // CompareVerificationCode mocks base method.
-func (m *MockControllerInterface) CompareVerificationCode(verificationCode *account.VerificationCodeRequest) (account.Account, error) {
+func (m *MockControllerInterface) CompareVerificationCode(verificationCode *account.VerificationCodeRequest) (*account.CreateResponse, error) {
         m.ctrl.T.Helper()
         ret := m.ctrl.Call(m, "CompareVerificationCode", verificationCode)
-        ret0, _ := ret[0].(account.Account)
+        ret0, _ := ret[0].(*account.CreateResponse)
         ret1, _ := ret[1].(error)
         return ret0, ret1
 }
@@ -95,7 +95,7 @@ func (mr *MockControllerInterfaceMockRecorder) EditDataUser(id, req interface{})
 }
 
 // EditPassword mocks base method.
-func (m *MockControllerInterface) EditPassword(id, code string, req *account.EditDataUserRequest) (*account.CreateResponse, error) {
+func (m *MockControllerInterface) EditPassword(id, code string, req *account.EditDataUserRequest) (*account.CreateResponse, error) {   
         m.ctrl.T.Helper()
         ret := m.ctrl.Call(m, "EditPassword", id, code, req)
         ret0, _ := ret[0].(*account.CreateResponse)
@@ -152,7 +152,7 @@ func (m *MockControllerInterface) Login(req *account.LoginResponseRequest) (stri
 // Login indicates an expected call of Login.
 func (mr *MockControllerInterfaceMockRecorder) Login(req interface{}) *gomock.Call {
         mr.mock.ctrl.T.Helper()
-        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Login", reflect.TypeOf((*MockControllerInterface)(nil).Login), req)
+        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Login", reflect.TypeOf((*MockControllerInterface)(nil).Login), req)     
 }
 
 // SendEmail mocks base method.
@@ -168,4 +168,19 @@ func (m *MockControllerInterface) SendEmail(email string) (*account.CreateRespon
 func (mr *MockControllerInterfaceMockRecorder) SendEmail(email interface{}) *gomock.Call {
         mr.mock.ctrl.T.Helper()
         return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendEmail", reflect.TypeOf((*MockControllerInterface)(nil).SendEmail), email)
+}
+
+// SendEmailRegister mocks base method.
+func (m *MockControllerInterface) SendEmailRegister(email string) (*account.CreateResponse, error) {
+        m.ctrl.T.Helper()
+        ret := m.ctrl.Call(m, "SendEmailRegister", email)
+        ret0, _ := ret[0].(*account.CreateResponse)
+        ret1, _ := ret[1].(error)
+        return ret0, ret1
+}
+
+// SendEmailRegister indicates an expected call of SendEmailRegister.
+func (mr *MockControllerInterfaceMockRecorder) SendEmailRegister(email interface{}) *gomock.Call {
+        mr.mock.ctrl.T.Helper()
+        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendEmailRegister", reflect.TypeOf((*MockControllerInterface)(nil).SendEmailRegister), email)
 }
