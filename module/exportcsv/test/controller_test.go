@@ -1,8 +1,9 @@
 package test
 
 import (
-	mocks "golang/mocks/module/exportcsv"
 	"golang/module/exportcsv"
+	mocks "golang/module/exportcsv/test/mock"
+
 	"testing"
 
 	"github.com/stretchr/testify/assert"

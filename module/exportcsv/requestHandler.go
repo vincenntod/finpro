@@ -67,7 +67,7 @@ func (h RequestHandler) ExportCSVHandler(c *gin.Context) {
 	switch {
 	case err != nil && err.Error() == "Not Found":
 		c.JSON(http.StatusNotFound, ErrorResponse{Error: err.Error()})
-	case err != nil && err.Error() == "Invalid field status":
+	case err != nil && err.Error() == "Invalid Request":
 		c.JSON(http.StatusNotAcceptable, ErrorResponse{Error: err.Error()})
 	case err != nil:
 		c.JSON(http.StatusInternalServerError, ErrorResponse{Error: err.Error()})

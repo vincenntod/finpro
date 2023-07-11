@@ -60,8 +60,8 @@ func (c controller) ExportCSV(req *ExportCSVRequest, url *UrlRequest) ([][]strin
 			return exportData, nil
 
 		default:
-			return nil, errors.New("Invalid field status")
+			return nil, errors.New("Invalid Request")
 		}
 	}
-	return nil, errors.New("Invalid field status")
+	return nil, errors.New("Invalid Request")
 }
