@@ -12,8 +12,12 @@ import (
 func TestRepository_GetAllLimit(t *testing.T) {
 
 	mockQuery, mockDB := helper.NewMockQueryDb(t)
-	query := "SELECT * FROM `transactions` ORDER BY created_at desc LIMIT 100"
-	mockQuery.ExpectQuery(query).WillReturnRows(
+	queryGet := "SELECT count(*) FROM `transactions`"
+	queryLimit := "SELECT * FROM `transactions` ORDER BY created_at desc LIMIT 100"
+	mockQuery.ExpectQuery(queryGet).WillReturnRows(
+		sqlmock.NewRows([]string{"total_data"}).AddRow(10),
+	)
+	mockQuery.ExpectQuery(queryLimit).WillReturnRows(
 		sqlmock.NewRows([]string{"id", "oda_number", "bill_amount", "status", "created_at"}).AddRow(1, "12345678", 100000, "Success", "2021-08-01 00:00:00"),
 	)
 
@@ -40,7 +44,7 @@ func TestRepository_GetAllLimit(t *testing.T) {
 				},
 			},
 			want1: nil,
-			want2: 0,
+			want2: 10,
 		},
 	}
 	for _, tt := range tests {
