@@ -47,5 +47,5 @@ func main() {
 	r.PUT("/edit-password/", accountHandler.EditPassword)
 
 	r.POST("/login", accountHandler.Login)
-	r.Run(":8081")
+	r.Run()
 }

@@ -2,7 +2,6 @@ package exportcsv
 
 import (
 	"fmt"
-	"golang/model"
 
 	"gorm.io/gorm"
 )
@@ -23,7 +22,7 @@ func NewRepository(db *gorm.DB) *repository {
 
 func (r repository) GetAllTransaction() ([]Transaction, error) {
 	var transactions []Transaction
-	if err := model.DB.Find(&transactions).Error; err != nil {
+	if err := r.db.Find(&transactions).Error; err != nil {
 		fmt.Println(err)
 		return nil, err
 
@@ -42,7 +41,7 @@ func (r repository) GetTransactionByStatusFilter(req *ExportCSVRequest) ([]Trans
 }
 func (r repository) GetAllTransactionByRangeDateFilter(req *ExportCSVRequest) ([]Transaction, error) {
 	var transactions []Transaction
-	if err := model.DB.Where("created_at BETWEEN  ? AND  ?", req.StartDate, req.EndDate).Find(&transactions).Error; err != nil {
+	if err := r.db.Where("created_at BETWEEN  ? AND  ?", req.StartDate, req.EndDate).Find(&transactions).Error; err != nil {
 		return nil, err
 	}
 	return transactions, nil

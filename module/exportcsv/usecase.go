@@ -56,7 +56,7 @@ func (u useCase) ExportCSV(req *ExportCSVRequest) ([][]string, error) {
 
 func TransactionStringConverter(transactions []Transaction) ([][]string, error) {
 	//set name field transaction in first record
-	stringData := [][]string{[]string{"id", "od_number", "status", "price", "created_at"}}
+	stringData := [][]string{[]string{"id", "oda_number", "status", "price", "created_at"}}
 	//converting some data from transaction to string
 	for _, transaction := range transactions {
 		record := []string{strconv.Itoa(transaction.Id), transaction.Oda_number, transaction.Status, strconv.FormatFloat(transaction.Bill_amount, 'f', 6, 64), strings.Trim(transaction.Created_at, "T00:00:00Z")}
