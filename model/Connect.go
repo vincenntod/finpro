@@ -12,7 +12,7 @@ var DB *gorm.DB
 
 func ConnectDatabase() {
 
-	dsn := "host=localhost user=postgres password=123456 dbname=dbceria port=5432 sslmode=disable TimeZone=Asia/Shanghai"
+	dsn := "host=ep-muddy-boat-134191.us-east-2.aws.neon.tech user=IchsanR password=v7jfgMB6hEPW dbname=neondb port=5432 sslmode=verify-full TimeZone=Asia/Shanghai"
 
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{NamingStrategy: schema.NamingStrategy{
 		SingularTable: true,
