@@ -44,7 +44,7 @@ func main() {
 	//forgot password
 	r.POST("/send-email/:email", accountHandler.SendEmail)
 	r.POST("/compare-verification-code", accountHandler.CompareVerificationCode)
-	r.PUT("/edit-password/", accountHandler.EditPassword)
+	r.PUT("/edit-password/:verification-code", accountHandler.EditPassword)
 
 	r.POST("/login", accountHandler.Login)
 	r.Run()
