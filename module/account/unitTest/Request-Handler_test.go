@@ -723,8 +723,7 @@ func TestRequestHandler_EditPassword(t *testing.T) {
 					Id:       1,
 					Password: "123456",
 				})
-				request, _ := http.NewRequest(http.MethodPut, "/edit-password/?id=1", bytes.NewReader(body))
-				request.Header.Set("VerificationCode", "6647")
+				request, _ := http.NewRequest(http.MethodPut, "/edit-password/6647/?id=1", bytes.NewReader(body))
 				return request
 			},
 			makeFields: func() RequestHandler {
@@ -776,7 +775,7 @@ func TestRequestHandler_EditPassword(t *testing.T) {
 				Ctrl: f.ctrl,
 			}
 			statusCode, body := mocks.CreateTestServer(tt.makeRequest(), func(router *gin.Engine) {
-				router.PUT("/edit-password/", h.EditPassword)
+				router.PUT("/edit-password/:verification-code/", h.EditPassword)
 			})
 			assert.Equal(t, tt.expectedStatusCode, statusCode)
 			if !tt.assertValue(t, body) {
