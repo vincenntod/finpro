@@ -45,6 +45,9 @@ type UrlRequest struct {
 type ErrorResponse struct {
 	Error string `json:"error"`
 }
+type MessageResponse struct {
+	Message string `json:"message"`
+}
 
 func (h RequestHandler) ExportCSVHandler(c *gin.Context) {
 
@@ -82,6 +85,7 @@ func (h RequestHandler) ExportCSVHandler(c *gin.Context) {
 	case "xlsx":
 		GenerateXLSX(c, exportData)
 	}
+	c.JSON(http.StatusOK, MessageResponse{Message: "export transaction success"})
 
 }
 func GenerateCSV(c *gin.Context, data [][]string) {
