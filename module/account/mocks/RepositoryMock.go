@@ -5,7 +5,8 @@
 package mocks
 
 import (
-        account "golang/module/account"
+        account "golang/module/account/dto"
+        "golang/module/account/entities"
         reflect "reflect"
 
         gomock "github.com/golang/mock/gomock"
@@ -35,10 +36,10 @@ func (m *MockRepositoryInterface) EXPECT() *MockRepositoryInterfaceMockRecorder 
 }
 
 // CompareVerificationCode mocks base method.
-func (m *MockRepositoryInterface) CompareVerificationCode(verificationCode *account.VerificationCodeRequest) (account.Account, error) {
+func (m *MockRepositoryInterface) CompareVerificationCode(verificationCode *account.VerificationCodeRequest) (entities.Account, error) {
         m.ctrl.T.Helper()
         ret := m.ctrl.Call(m, "CompareVerificationCode", verificationCode)
-        ret0, _ := ret[0].(account.Account)
+        ret0, _ := ret[0].(entities.Account)
         ret1, _ := ret[1].(error)
         return ret0, ret1
 }
@@ -50,10 +51,10 @@ func (mr *MockRepositoryInterfaceMockRecorder) CompareVerificationCode(verificat
 }
 
 // CreateAccount mocks base method.
-func (m *MockRepositoryInterface) CreateAccount(req *account.Account) (account.Account, error) {
+func (m *MockRepositoryInterface) CreateAccount(req *entities.Account) (entities.Account, error) {
         m.ctrl.T.Helper()
         ret := m.ctrl.Call(m, "CreateAccount", req)
-        ret0, _ := ret[0].(account.Account)
+        ret0, _ := ret[0].(entities.Account)
         ret1, _ := ret[1].(error)
         return ret0, ret1
 }
@@ -65,10 +66,10 @@ func (mr *MockRepositoryInterfaceMockRecorder) CreateAccount(req interface{}) *g
 }
 
 // DeleteDataUser mocks base method.
-func (m *MockRepositoryInterface) DeleteDataUser(id string) (account.Account, error) {
+func (m *MockRepositoryInterface) DeleteDataUser(id string) (entities.Account, error) {
         m.ctrl.T.Helper()
         ret := m.ctrl.Call(m, "DeleteDataUser", id)
-        ret0, _ := ret[0].(account.Account)
+        ret0, _ := ret[0].(entities.Account)
         ret1, _ := ret[1].(error)
         return ret0, ret1
 }
@@ -80,10 +81,10 @@ func (mr *MockRepositoryInterfaceMockRecorder) DeleteDataUser(id interface{}) *g
 }
 
 // EditDataUser mocks base method.
-func (m *MockRepositoryInterface) EditDataUser(id string, req *account.Account) (account.Account, error) {
+func (m *MockRepositoryInterface) EditDataUser(id string, req *entities.Account) (entities.Account, error) {
         m.ctrl.T.Helper()
         ret := m.ctrl.Call(m, "EditDataUser", id, req)
-        ret0, _ := ret[0].(account.Account)
+        ret0, _ := ret[0].(entities.Account)
         ret1, _ := ret[1].(error)
         return ret0, ret1
 }
@@ -95,10 +96,10 @@ func (mr *MockRepositoryInterfaceMockRecorder) EditDataUser(id, req interface{})
 }
 
 // EditPassword mocks base method.
-func (m *MockRepositoryInterface) EditPassword(id string, req *account.Account) (account.Account, error) {
+func (m *MockRepositoryInterface) EditPassword(id string, req *entities.Account) (entities.Account, error) {
         m.ctrl.T.Helper()
         ret := m.ctrl.Call(m, "EditPassword", id, req)
-        ret0, _ := ret[0].(account.Account)
+        ret0, _ := ret[0].(entities.Account)
         ret1, _ := ret[1].(error)
         return ret0, ret1
 }
@@ -110,10 +111,10 @@ func (mr *MockRepositoryInterfaceMockRecorder) EditPassword(id, req interface{})
 }
 
 // GetDataUser mocks base method.
-func (m *MockRepositoryInterface) GetDataUser() ([]account.Account, error) {
+func (m *MockRepositoryInterface) GetDataUser() ([]entities.Account, error) {
         m.ctrl.T.Helper()
         ret := m.ctrl.Call(m, "GetDataUser")
-        ret0, _ := ret[0].([]account.Account)
+        ret0, _ := ret[0].([]entities.Account)
         ret1, _ := ret[1].(error)
         return ret0, ret1
 }
@@ -125,10 +126,10 @@ func (mr *MockRepositoryInterfaceMockRecorder) GetDataUser() *gomock.Call {
 }
 
 // GetDataUserById mocks base method.
-func (m *MockRepositoryInterface) GetDataUserById(id string) (account.Account, error) {
+func (m *MockRepositoryInterface) GetDataUserById(id string) (entities.Account, error) {
         m.ctrl.T.Helper()
         ret := m.ctrl.Call(m, "GetDataUserById", id)
-        ret0, _ := ret[0].(account.Account)
+        ret0, _ := ret[0].(entities.Account)
         ret1, _ := ret[1].(error)
         return ret0, ret1
 }
@@ -140,11 +141,11 @@ func (mr *MockRepositoryInterfaceMockRecorder) GetDataUserById(id interface{}) *
 }
 
 // Login mocks base method.
-func (m *MockRepositoryInterface) Login(req *account.Account) (string, account.Account, error) {
+func (m *MockRepositoryInterface) Login(req *entities.Account) (string, entities.Account, error) {
         m.ctrl.T.Helper()
         ret := m.ctrl.Call(m, "Login", req)
         ret0, _ := ret[0].(string)
-        ret1, _ := ret[1].(account.Account)
+        ret1, _ := ret[1].(entities.Account)
         ret2, _ := ret[2].(error)
         return ret0, ret1, ret2
 }
@@ -152,14 +153,14 @@ func (m *MockRepositoryInterface) Login(req *account.Account) (string, account.A
 // Login indicates an expected call of Login.
 func (mr *MockRepositoryInterfaceMockRecorder) Login(req interface{}) *gomock.Call {
         mr.mock.ctrl.T.Helper()
-        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Login", reflect.TypeOf((*MockRepositoryInterface)(nil).Login), req)     
+        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Login", reflect.TypeOf((*MockRepositoryInterface)(nil).Login), req)
 }
 
 // SendEmail mocks base method.
-func (m *MockRepositoryInterface) SendEmail(email string) (account.Account, error) {
+func (m *MockRepositoryInterface) SendEmail(email string) (entities.Account, error) {
         m.ctrl.T.Helper()
         ret := m.ctrl.Call(m, "SendEmail", email)
-        ret0, _ := ret[0].(account.Account)
+        ret0, _ := ret[0].(entities.Account)
         ret1, _ := ret[1].(error)
         return ret0, ret1
 }

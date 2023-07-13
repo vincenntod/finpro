@@ -1,9 +1,9 @@
-package unitTest
+package account
 
 import (
 	"bytes"
 	"encoding/json"
-	"golang/module/account"
+	"golang/module/account/dto"
 	"golang/module/account/mocks"
 	"net/http"
 	"testing"
@@ -14,10 +14,6 @@ import (
 )
 
 func TestRequestHandler_GetDataUser(t *testing.T) {
-
-	type RequestHandler struct {
-		ctrl account.ControllerInterface
-	}
 
 	tests := []struct {
 		name               string
@@ -38,11 +34,11 @@ func TestRequestHandler_GetDataUser(t *testing.T) {
 				mockController := mocks.NewMockControllerInterface(ctrl)
 				mockController.EXPECT().
 					GetDataUser().
-					Return(&account.ReadResponse{
+					Return(&dto.MessageResponse{
 						Status:  "OK",
 						Message: "Success Get Data",
 						Code:    200,
-						Data: []account.AccountItemResponse{{
+						Data: []dto.AccountItemResponse{{
 							Id:    1,
 							Name:  "Vincen",
 							Role:  "admin",
@@ -52,16 +48,16 @@ func TestRequestHandler_GetDataUser(t *testing.T) {
 						},
 					}, nil).
 					Times(1)
-				return RequestHandler{ctrl: mockController}
+				return RequestHandler{Ctrl: mockController}
 			},
 			assertValue: func(t assert.TestingT, data any, i ...interface{}) bool {
-				res := &account.ReadResponse{}
+				res := &dto.MessageResponse{}
 				_ = json.Unmarshal(data.([]byte), &res)
-				return assert.Equal(t, &account.ReadResponse{
+				return assert.Equal(t, &dto.MessageResponse{
 					Status:  "OK",
 					Message: "Success Get Data",
 					Code:    200,
-					Data: []account.AccountItemResponse{{
+					Data: []dto.AccountItemResponse{{
 						Id:    1,
 						Name:  "Vincen",
 						Role:  "admin",
@@ -76,8 +72,8 @@ func TestRequestHandler_GetDataUser(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			f := tt.makeFields()
-			h := account.RequestHandler{
-				Ctrl: f.ctrl,
+			h := RequestHandler{
+				Ctrl: f.Ctrl,
 			}
 			statusCode, body := mocks.CreateTestServer(tt.makeRequest(), func(router *gin.Engine) {
 				router.GET("/data-user", h.GetDataUser)
@@ -91,9 +87,6 @@ func TestRequestHandler_GetDataUser(t *testing.T) {
 }
 
 func TestRequestHandler_GetDataUserById(t *testing.T) {
-	type RequestHandler struct {
-		ctrl account.ControllerInterface
-	}
 
 	tests := []struct {
 		name               string
@@ -114,11 +107,11 @@ func TestRequestHandler_GetDataUserById(t *testing.T) {
 				mockController := mocks.NewMockControllerInterface(ctrl)
 				mockController.EXPECT().
 					GetDataUserById("").
-					Return(&account.ReadResponse{
+					Return(&dto.MessageResponse{
 						Status:  "OK",
 						Message: "Success Get Data",
 						Code:    200,
-						Data: []account.AccountItemResponse{{
+						Data: []dto.AccountItemResponse{{
 							Id:    1,
 							Name:  "Vincen",
 							Role:  "admin",
@@ -128,16 +121,16 @@ func TestRequestHandler_GetDataUserById(t *testing.T) {
 						},
 					}, nil).
 					Times(1)
-				return RequestHandler{ctrl: mockController}
+				return RequestHandler{Ctrl: mockController}
 			},
 			assertValue: func(t assert.TestingT, data any, i ...interface{}) bool {
-				res := &account.ReadResponse{}
+				res := &dto.MessageResponse{}
 				_ = json.Unmarshal(data.([]byte), &res)
-				return assert.Equal(t, &account.ReadResponse{
+				return assert.Equal(t, &dto.MessageResponse{
 					Status:  "OK",
 					Message: "Success Get Data",
 					Code:    200,
-					Data: []account.AccountItemResponse{{
+					Data: []dto.AccountItemResponse{{
 						Id:    1,
 						Name:  "Vincen",
 						Role:  "admin",
@@ -152,8 +145,8 @@ func TestRequestHandler_GetDataUserById(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			f := tt.makeFields()
-			h := account.RequestHandler{
-				Ctrl: f.ctrl,
+			h := RequestHandler{
+				Ctrl: f.Ctrl,
 			}
 			statusCode, body := mocks.CreateTestServer(tt.makeRequest(), func(router *gin.Engine) {
 				router.GET("/data-user/1", h.GetDataUserById)
@@ -167,9 +160,6 @@ func TestRequestHandler_GetDataUserById(t *testing.T) {
 }
 
 func TestRequestHandler_CreateAccount(t *testing.T) {
-	type RequestHandler struct {
-		ctrl account.ControllerInterface
-	}
 
 	tests := []struct {
 		name               string
@@ -182,7 +172,7 @@ func TestRequestHandler_CreateAccount(t *testing.T) {
 			name:               "Success",
 			expectedStatusCode: 200,
 			makeRequest: func() *http.Request {
-				body, _ := json.Marshal(account.CreateRequest{
+				body, _ := json.Marshal(dto.CreateRequest{
 					Name:     "Vincen",
 					Role:     "admin",
 					Email:    "admin@example.com",
@@ -195,18 +185,18 @@ func TestRequestHandler_CreateAccount(t *testing.T) {
 				ctrl := gomock.NewController(t)
 				mockController := mocks.NewMockControllerInterface(ctrl)
 				mockController.EXPECT().
-					CreateAccount(&account.CreateRequest{
+					CreateAccount(&dto.CreateRequest{
 						Name:     "Vincen",
 						Role:     "admin",
 						Email:    "admin@example.com",
 						Phone:    "123",
 						Password: "123456",
 					}).
-					Return(&account.CreateResponse{
+					Return(&dto.MessageResponse{
 						Status:  "OK",
 						Message: "Success Create Data",
 						Code:    200,
-						Data: []account.AccountItemResponse{{
+						Data: []dto.AccountItemResponse{{
 							Id:    1,
 							Name:  "Vincen",
 							Role:  "admin",
@@ -216,16 +206,16 @@ func TestRequestHandler_CreateAccount(t *testing.T) {
 						},
 					}, nil).
 					Times(1)
-				return RequestHandler{ctrl: mockController}
+				return RequestHandler{Ctrl: mockController}
 			},
 			assertValue: func(t assert.TestingT, data any, i ...interface{}) bool {
-				res := &account.CreateResponse{}
+				res := &dto.MessageResponse{}
 				_ = json.Unmarshal(data.([]byte), &res)
-				return assert.Equal(t, &account.CreateResponse{
+				return assert.Equal(t, &dto.MessageResponse{
 					Status:  "OK",
 					Message: "Success Create Data",
 					Code:    200,
-					Data: []account.AccountItemResponse{{
+					Data: []dto.AccountItemResponse{{
 						Id:    1,
 						Name:  "Vincen",
 						Role:  "admin",
@@ -240,8 +230,8 @@ func TestRequestHandler_CreateAccount(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			f := tt.makeFields()
-			h := account.RequestHandler{
-				Ctrl: f.ctrl,
+			h := RequestHandler{
+				Ctrl: f.Ctrl,
 			}
 			statusCode, body := mocks.CreateTestServer(tt.makeRequest(), func(router *gin.Engine) {
 				router.POST("/create-user", h.CreateAccount)
@@ -255,9 +245,6 @@ func TestRequestHandler_CreateAccount(t *testing.T) {
 }
 
 func TestRequestHandler_EditDataUser(t *testing.T) {
-	type RequestHandler struct {
-		ctrl account.ControllerInterface
-	}
 
 	tests := []struct {
 		name               string
@@ -270,11 +257,10 @@ func TestRequestHandler_EditDataUser(t *testing.T) {
 			name:               "Success",
 			expectedStatusCode: 200,
 			makeRequest: func() *http.Request {
-				body, _ := json.Marshal(account.EditDataUserRequest{
+				body, _ := json.Marshal(dto.EditDataUserRequest{
 					Id:       1,
 					Name:     "Vincen",
 					Role:     "admin",
-					Email:    "admin@example.com",
 					Phone:    "123",
 					Password: "123456"})
 				request, _ := http.NewRequest(http.MethodPost, "/data-user/1", bytes.NewReader(body))
@@ -284,19 +270,18 @@ func TestRequestHandler_EditDataUser(t *testing.T) {
 				ctrl := gomock.NewController(t)
 				mockController := mocks.NewMockControllerInterface(ctrl)
 				mockController.EXPECT().
-					EditDataUser("", &account.EditDataUserRequest{
+					EditDataUser("", &dto.EditDataUserRequest{
 						Id:       1,
 						Name:     "Vincen",
 						Role:     "admin",
-						Email:    "admin@example.com",
 						Phone:    "123",
 						Password: "123456",
 					}).
-					Return(&account.CreateResponse{
+					Return(&dto.MessageResponse{
 						Status:  "OK",
 						Message: "Success Edit Data",
 						Code:    200,
-						Data: []account.AccountItemResponse{{
+						Data: []dto.AccountItemResponse{{
 							Id:    1,
 							Name:  "Vincen",
 							Role:  "admin",
@@ -306,16 +291,16 @@ func TestRequestHandler_EditDataUser(t *testing.T) {
 						},
 					}, nil).
 					Times(1)
-				return RequestHandler{ctrl: mockController}
+				return RequestHandler{Ctrl: mockController}
 			},
 			assertValue: func(t assert.TestingT, data any, i ...interface{}) bool {
-				res := &account.CreateResponse{}
+				res := &dto.MessageResponse{}
 				_ = json.Unmarshal(data.([]byte), &res)
-				return assert.Equal(t, &account.CreateResponse{
+				return assert.Equal(t, &dto.MessageResponse{
 					Status:  "OK",
 					Message: "Success Edit Data",
 					Code:    200,
-					Data: []account.AccountItemResponse{{
+					Data: []dto.AccountItemResponse{{
 						Id:    1,
 						Name:  "Vincen",
 						Role:  "admin",
@@ -330,8 +315,8 @@ func TestRequestHandler_EditDataUser(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			f := tt.makeFields()
-			h := account.RequestHandler{
-				Ctrl: f.ctrl,
+			h := RequestHandler{
+				Ctrl: f.Ctrl,
 			}
 			statusCode, body := mocks.CreateTestServer(tt.makeRequest(), func(router *gin.Engine) {
 				router.POST("/data-user/1", h.EditDataUser)
@@ -345,9 +330,6 @@ func TestRequestHandler_EditDataUser(t *testing.T) {
 }
 
 func TestRequestHandler_DeleteDataUser(t *testing.T) {
-	type RequestHandler struct {
-		ctrl account.ControllerInterface
-	}
 
 	tests := []struct {
 		name               string
@@ -369,18 +351,18 @@ func TestRequestHandler_DeleteDataUser(t *testing.T) {
 				mockController := mocks.NewMockControllerInterface(ctrl)
 				mockController.EXPECT().
 					DeleteDataUser("").
-					Return(&account.CreateResponse{
+					Return(&dto.MessageResponse{
 						Status:  "OK",
 						Message: "Success Delete Data",
 						Code:    200,
 					}, nil).
 					Times(1)
-				return RequestHandler{ctrl: mockController}
+				return RequestHandler{Ctrl: mockController}
 			},
 			assertValue: func(t assert.TestingT, data any, i ...interface{}) bool {
-				res := &account.CreateResponse{}
+				res := &dto.MessageResponse{}
 				_ = json.Unmarshal(data.([]byte), &res)
-				return assert.Equal(t, &account.CreateResponse{
+				return assert.Equal(t, &dto.MessageResponse{
 					Status:  "OK",
 					Message: "Success Delete Data",
 					Code:    200,
@@ -391,8 +373,8 @@ func TestRequestHandler_DeleteDataUser(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			f := tt.makeFields()
-			h := account.RequestHandler{
-				Ctrl: f.ctrl,
+			h := RequestHandler{
+				Ctrl: f.Ctrl,
 			}
 			statusCode, body := mocks.CreateTestServer(tt.makeRequest(), func(router *gin.Engine) {
 				router.DELETE("/data-user/1", h.DeleteDataUser)
@@ -406,9 +388,6 @@ func TestRequestHandler_DeleteDataUser(t *testing.T) {
 }
 
 func TestRequestHandler_Login(t *testing.T) {
-	type RequestHandler struct {
-		ctrl account.ControllerInterface
-	}
 
 	tests := []struct {
 		name               string
@@ -421,7 +400,7 @@ func TestRequestHandler_Login(t *testing.T) {
 			name:               "Success",
 			expectedStatusCode: 200,
 			makeRequest: func() *http.Request {
-				body, _ := json.Marshal(&account.LoginResponseRequest{
+				body, _ := json.Marshal(&dto.LoginResponseRequest{
 					Email:    "maxwelvincen@gmail.com",
 					Password: "123456"})
 				request, _ := http.NewRequest(http.MethodPost, "/login", bytes.NewReader(body))
@@ -431,14 +410,14 @@ func TestRequestHandler_Login(t *testing.T) {
 				ctrl := gomock.NewController(t)
 				mockController := mocks.NewMockControllerInterface(ctrl)
 				mockController.EXPECT().
-					Login(&account.LoginResponseRequest{
+					Login(&dto.LoginResponseRequest{
 						Email:    "maxwelvincen@gmail.com",
 						Password: "123456"}).
-					Return("123", &account.LoginResponse{
+					Return("123", &dto.LoginResponse{
 						Code:    200,
 						Status:  "OK",
 						Message: "Login Success",
-						Data: []account.LoginResponseWithToken{{
+						Data: []dto.LoginResponseWithToken{{
 							Id:    1,
 							Name:  "Vincen",
 							Email: "maxwelvincen@gmail.com",
@@ -448,16 +427,16 @@ func TestRequestHandler_Login(t *testing.T) {
 						},
 					}, nil).
 					Times(1)
-				return RequestHandler{ctrl: mockController}
+				return RequestHandler{Ctrl: mockController}
 			},
 			assertValue: func(t assert.TestingT, data any, i ...interface{}) bool {
-				res := &account.LoginResponse{}
+				res := &dto.LoginResponse{}
 				_ = json.Unmarshal(data.([]byte), &res)
-				return assert.Equal(t, &account.LoginResponse{
+				return assert.Equal(t, &dto.LoginResponse{
 					Code:    200,
 					Status:  "OK",
 					Message: "Login Success",
-					Data: []account.LoginResponseWithToken{{
+					Data: []dto.LoginResponseWithToken{{
 						Id:    1,
 						Name:  "Vincen",
 						Email: "maxwelvincen@gmail.com",
@@ -472,8 +451,8 @@ func TestRequestHandler_Login(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			f := tt.makeFields()
-			h := account.RequestHandler{
-				Ctrl: f.ctrl,
+			h := RequestHandler{
+				Ctrl: f.Ctrl,
 			}
 			statusCode, body := mocks.CreateTestServer(tt.makeRequest(), func(router *gin.Engine) {
 				router.POST("/login", h.Login)
@@ -487,9 +466,6 @@ func TestRequestHandler_Login(t *testing.T) {
 }
 
 func TestRequestHandler_SendEmail(t *testing.T) {
-	type RequestHandler struct {
-		ctrl account.ControllerInterface
-	}
 
 	tests := []struct {
 		name               string
@@ -510,11 +486,11 @@ func TestRequestHandler_SendEmail(t *testing.T) {
 				mockController := mocks.NewMockControllerInterface(ctrl)
 				mockController.EXPECT().
 					SendEmail("").
-					Return(&account.CreateResponse{
+					Return(&dto.MessageResponse{
 						Code:    200,
 						Status:  "OK",
 						Message: "Success Send Email",
-						Data: []account.AccountItemResponse{{
+						Data: []dto.AccountItemResponse{{
 							Id:    1,
 							Name:  "Vincen",
 							Email: "maxwelvincen@gmail.com",
@@ -523,16 +499,16 @@ func TestRequestHandler_SendEmail(t *testing.T) {
 						},
 					}, nil).
 					Times(1)
-				return RequestHandler{ctrl: mockController}
+				return RequestHandler{Ctrl: mockController}
 			},
 			assertValue: func(t assert.TestingT, data any, i ...interface{}) bool {
-				res := &account.CreateResponse{}
+				res := &dto.MessageResponse{}
 				_ = json.Unmarshal(data.([]byte), &res)
-				return assert.Equal(t, &account.CreateResponse{
+				return assert.Equal(t, &dto.MessageResponse{
 					Code:    200,
 					Status:  "OK",
 					Message: "Success Send Email",
-					Data: []account.AccountItemResponse{{
+					Data: []dto.AccountItemResponse{{
 						Id:    1,
 						Name:  "Vincen",
 						Email: "maxwelvincen@gmail.com",
@@ -546,8 +522,8 @@ func TestRequestHandler_SendEmail(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			f := tt.makeFields()
-			h := account.RequestHandler{
-				Ctrl: f.ctrl,
+			h := RequestHandler{
+				Ctrl: f.Ctrl,
 			}
 			statusCode, body := mocks.CreateTestServer(tt.makeRequest(), func(router *gin.Engine) {
 				router.POST("/send-email/maxwelvincen@gmail.com", h.SendEmail)
@@ -561,9 +537,6 @@ func TestRequestHandler_SendEmail(t *testing.T) {
 }
 
 func TestRequestHandler_SendEmailRegister(t *testing.T) {
-	type RequestHandler struct {
-		ctrl account.ControllerInterface
-	}
 
 	tests := []struct {
 		name               string
@@ -584,19 +557,19 @@ func TestRequestHandler_SendEmailRegister(t *testing.T) {
 				mockController := mocks.NewMockControllerInterface(ctrl)
 				mockController.EXPECT().
 					SendEmailRegister("").
-					Return(&account.CreateResponse{
+					Return(&dto.MessageResponse{
 						Code:    200,
 						Status:  "OK",
 						Message: "Success Send Email",
 						Data:    nil,
 					}, nil).
 					Times(1)
-				return RequestHandler{ctrl: mockController}
+				return RequestHandler{Ctrl: mockController}
 			},
 			assertValue: func(t assert.TestingT, data any, i ...interface{}) bool {
-				res := &account.CreateResponse{}
+				res := &dto.MessageResponse{}
 				_ = json.Unmarshal(data.([]byte), &res)
-				return assert.Equal(t, &account.CreateResponse{
+				return assert.Equal(t, &dto.MessageResponse{
 					Code:    200,
 					Status:  "OK",
 					Message: "Success Send Email",
@@ -608,8 +581,8 @@ func TestRequestHandler_SendEmailRegister(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			f := tt.makeFields()
-			h := account.RequestHandler{
-				Ctrl: f.ctrl,
+			h := RequestHandler{
+				Ctrl: f.Ctrl,
 			}
 			statusCode, body := mocks.CreateTestServer(tt.makeRequest(), func(router *gin.Engine) {
 				router.POST("/send-email-registration/maxwelvincen@gmail.com", h.SendEmailRegister)
@@ -623,9 +596,6 @@ func TestRequestHandler_SendEmailRegister(t *testing.T) {
 }
 
 func TestRequestHandler_CompareVerificationCode(t *testing.T) {
-	type RequestHandler struct {
-		ctrl account.ControllerInterface
-	}
 
 	tests := []struct {
 		name               string
@@ -638,7 +608,7 @@ func TestRequestHandler_CompareVerificationCode(t *testing.T) {
 			name:               "Success",
 			expectedStatusCode: 200,
 			makeRequest: func() *http.Request {
-				body, _ := json.Marshal(&account.VerificationCodeRequest{
+				body, _ := json.Marshal(&dto.VerificationCodeRequest{
 					Email: "maxwelvincen@gmail.com",
 					Code:  "1234"})
 				request, _ := http.NewRequest(http.MethodPost, "/compare-verification-code", bytes.NewReader(body))
@@ -648,14 +618,14 @@ func TestRequestHandler_CompareVerificationCode(t *testing.T) {
 				ctrl := gomock.NewController(t)
 				mockController := mocks.NewMockControllerInterface(ctrl)
 				mockController.EXPECT().
-					CompareVerificationCode(&account.VerificationCodeRequest{
+					CompareVerificationCode(&dto.VerificationCodeRequest{
 						Email: "maxwelvincen@gmail.com",
 						Code:  "1234"}).
-					Return(&account.CreateResponse{
+					Return(&dto.MessageResponse{
 						Code:    200,
 						Status:  "OK",
 						Message: "Success Verification Code",
-						Data: []account.AccountItemResponse{{
+						Data: []dto.AccountItemResponse{{
 							Id:    1,
 							Email: "maxwelvincen@gmail.com",
 							Name:  "Vincen",
@@ -665,16 +635,16 @@ func TestRequestHandler_CompareVerificationCode(t *testing.T) {
 						},
 					}, nil).
 					Times(1)
-				return RequestHandler{ctrl: mockController}
+				return RequestHandler{Ctrl: mockController}
 			},
 			assertValue: func(t assert.TestingT, data any, i ...interface{}) bool {
-				res := &account.CreateResponse{}
+				res := &dto.MessageResponse{}
 				_ = json.Unmarshal(data.([]byte), &res)
-				return assert.Equal(t, &account.CreateResponse{
+				return assert.Equal(t, &dto.MessageResponse{
 					Code:    200,
 					Status:  "OK",
 					Message: "Success Verification Code",
-					Data: []account.AccountItemResponse{{
+					Data: []dto.AccountItemResponse{{
 						Id:    1,
 						Email: "maxwelvincen@gmail.com",
 						Name:  "Vincen",
@@ -689,8 +659,8 @@ func TestRequestHandler_CompareVerificationCode(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			f := tt.makeFields()
-			h := account.RequestHandler{
-				Ctrl: f.ctrl,
+			h := RequestHandler{
+				Ctrl: f.Ctrl,
 			}
 			statusCode, body := mocks.CreateTestServer(tt.makeRequest(), func(router *gin.Engine) {
 				router.POST("/compare-verification-code", h.CompareVerificationCode)
@@ -704,9 +674,6 @@ func TestRequestHandler_CompareVerificationCode(t *testing.T) {
 }
 
 func TestRequestHandler_EditPassword(t *testing.T) {
-	type RequestHandler struct {
-		ctrl account.ControllerInterface
-	}
 
 	tests := []struct {
 		name               string
@@ -719,26 +686,25 @@ func TestRequestHandler_EditPassword(t *testing.T) {
 			name:               "Success",
 			expectedStatusCode: 200,
 			makeRequest: func() *http.Request {
-				body, _ := json.Marshal(&account.EditDataUserRequest{
+				body, _ := json.Marshal(&dto.EditDataUserRequest{
 					Id:       1,
 					Password: "123456",
 				})
-				request, _ := http.NewRequest(http.MethodPut, "/edit-password/?id=1", bytes.NewReader(body))
-				request.Header.Set("VerificationCode", "6647")
+				request, _ := http.NewRequest(http.MethodPut, "/edit-password/6647/?id=1", bytes.NewReader(body))
 				return request
 			},
 			makeFields: func() RequestHandler {
 				ctrl := gomock.NewController(t)
 				mockController := mocks.NewMockControllerInterface(ctrl)
 				mockController.EXPECT().
-					EditPassword("1", "6647", &account.EditDataUserRequest{
+					EditPassword("1", "6647", &dto.EditDataUserRequest{
 						Id:       1,
 						Password: "123456"}).
-					Return(&account.CreateResponse{
+					Return(&dto.MessageResponse{
 						Code:    200,
 						Status:  "OK",
 						Message: "Success Update Password",
-						Data: []account.AccountItemResponse{{
+						Data: []dto.AccountItemResponse{{
 							Id:    1,
 							Email: "maxwelvincen@gmail.com",
 							Name:  "Vincen",
@@ -748,16 +714,16 @@ func TestRequestHandler_EditPassword(t *testing.T) {
 						},
 					}, nil).
 					Times(1)
-				return RequestHandler{ctrl: mockController}
+				return RequestHandler{Ctrl: mockController}
 			},
 			assertValue: func(t assert.TestingT, data any, i ...interface{}) bool {
-				res := &account.CreateResponse{}
+				res := &dto.MessageResponse{}
 				_ = json.Unmarshal(data.([]byte), &res)
-				return assert.Equal(t, &account.CreateResponse{
+				return assert.Equal(t, &dto.MessageResponse{
 					Code:    200,
 					Status:  "OK",
 					Message: "Success Update Password",
-					Data: []account.AccountItemResponse{{
+					Data: []dto.AccountItemResponse{{
 						Id:    1,
 						Email: "maxwelvincen@gmail.com",
 						Name:  "Vincen",
@@ -772,11 +738,11 @@ func TestRequestHandler_EditPassword(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			f := tt.makeFields()
-			h := account.RequestHandler{
-				Ctrl: f.ctrl,
+			h := RequestHandler{
+				Ctrl: f.Ctrl,
 			}
 			statusCode, body := mocks.CreateTestServer(tt.makeRequest(), func(router *gin.Engine) {
-				router.PUT("/edit-password/", h.EditPassword)
+				router.PUT("/edit-password/:verification-code/", h.EditPassword)
 			})
 			assert.Equal(t, tt.expectedStatusCode, statusCode)
 			if !tt.assertValue(t, body) {

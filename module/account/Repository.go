@@ -2,6 +2,8 @@ package account
 
 import (
 	"golang/auth"
+	"golang/module/account/dto"
+	"golang/module/account/entities"
 	"math/rand"
 	"strconv"
 	"time"
@@ -11,15 +13,15 @@ import (
 )
 
 type RepositoryInterface interface {
-	GetDataUser() ([]Account, error)
-	GetDataUserById(id string) (Account, error)
-	EditDataUser(id string, req *Account) (Account, error)
-	DeleteDataUser(id string) (Account, error)
-	CreateAccount(req *Account) (Account, error)
-	Login(req *Account) (string, Account, error)
-	SendEmail(email string) (Account, error)
-	CompareVerificationCode(verificationCode *VerificationCodeRequest) (Account, error)
-	EditPassword(id string, req *Account) (Account, error)
+	GetDataUser() ([]entities.Account, error)
+	GetDataUserById(id string) (entities.Account, error)
+	EditDataUser(id string, req *entities.Account) (entities.Account, error)
+	DeleteDataUser(id string) (entities.Account, error)
+	CreateAccount(req *entities.Account) (entities.Account, error)
+	Login(req *entities.Account) (string, entities.Account, error)
+	SendEmail(email string) (entities.Account, error)
+	CompareVerificationCode(verificationCode *dto.VerificationCodeRequest) (entities.Account, error)
+	EditPassword(id string, req *entities.Account) (entities.Account, error)
 }
 
 type Repository struct {
@@ -30,37 +32,37 @@ func NewRepository(db *gorm.DB) RepositoryInterface {
 	return Repository{db}
 }
 
-func (r Repository) GetDataUser() ([]Account, error) {
-	var account []Account
+func (r Repository) GetDataUser() ([]entities.Account, error) {
+	var account []entities.Account
 	err := r.Db.Find(&account).Error
 	return account, err
 }
 
-func (r Repository) GetDataUserById(id string) (Account, error) {
-	var account Account
+func (r Repository) GetDataUserById(id string) (entities.Account, error) {
+	var account entities.Account
 	err := r.Db.Find(&account, id).Error
 	return account, err
 
 }
-func (r Repository) EditDataUser(id string, req *Account) (Account, error) {
-	var account Account
-	err := r.Db.Raw("UPDATE account SET name=?, phone=?,role=?,password=?,email=? WHERE id = ?", req.Name, req.Phone, req.Role, req.Password, req.Email, id).Scan(&account).Error
+func (r Repository) EditDataUser(id string, req *entities.Account) (entities.Account, error) {
+	var account entities.Account
+	err := r.Db.Raw("UPDATE account SET name=?,phone=?,role=?,password=? WHERE id = ?", req.Name, req.Phone, req.Role, req.Password, id).Scan(&account).Raw("SELECT * FROM account WHERE id = ?", id).Scan(&account).Error
 	return account, err
 }
-func (r Repository) DeleteDataUser(id string) (Account, error) {
-	var account Account
+func (r Repository) DeleteDataUser(id string) (entities.Account, error) {
+	var account entities.Account
 	err := r.Db.Where("id = ?", id).Delete(&account).Error
 	return account, err
 }
 
-func (r Repository) CreateAccount(req *Account) (Account, error) {
-	var account Account
+func (r Repository) CreateAccount(req *entities.Account) (entities.Account, error) {
+	var account entities.Account
 	err := r.Db.Raw("INSERT INTO account (name,phone,role,password,email) VALUES (?,?,?,?,?)", req.Name, req.Phone, req.Role, req.Password, req.Email).Scan(&account).Error
 	return account, err
 }
 
-func (r Repository) Login(req *Account) (string, Account, error) {
-	var account Account
+func (r Repository) Login(req *entities.Account) (string, entities.Account, error) {
+	var account entities.Account
 	err := r.Db.Raw("SELECT * FROM account WHERE email = ? ORDER BY account.id LIMIT 1", req.Email).Scan(&account).Error
 	if err != nil {
 		return "", account, err
@@ -87,24 +89,24 @@ func GenerateVerificationCode(email string) string {
 	rand.Seed(time.Now().UnixNano())
 	code := strconv.Itoa(rand.Intn(9000) + 1000)
 
-	VerificationCodes[email] = code
+	entities.VerificationCodes[email] = code
 	return code
 }
-func (r Repository) SendEmail(email string) (Account, error) {
-	var account Account
+func (r Repository) SendEmail(email string) (entities.Account, error) {
+	var account entities.Account
 	err := r.Db.Raw("SELECT * FROM account WHERE email = ?", email).Scan(&account).Error
 	return account, err
 
 }
 
-func (r Repository) CompareVerificationCode(verificationCode *VerificationCodeRequest) (Account, error) {
-	var account Account
+func (r Repository) CompareVerificationCode(verificationCode *dto.VerificationCodeRequest) (entities.Account, error) {
+	var account entities.Account
 	err := r.Db.Raw("SELECT * FROM account WHERE email = ?", verificationCode.Email).Scan(&account).Error
 	return account, err
 
 }
-func (r Repository) EditPassword(id string, req *Account) (Account, error) {
-	var account Account
+func (r Repository) EditPassword(id string, req *entities.Account) (entities.Account, error) {
+	var account entities.Account
 	err := r.Db.Raw("UPDATE account SET password=? WHERE id = ?", req.Password, id).Scan(&account).Raw("SELECT * FROM account WHERE account.id = ?", id).Scan(&account).Error
 	return account, err
 
