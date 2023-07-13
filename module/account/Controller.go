@@ -1,22 +1,24 @@
 package account
 
 import (
+	"golang/module/account/dto"
+	"golang/module/account/entities"
 	"net/smtp"
 
 	"golang.org/x/crypto/bcrypt"
 )
 
 type ControllerInterface interface {
-	GetDataUser() (*ReadResponse, error)
-	GetDataUserById(id string) (*ReadResponse, error)
-	CreateAccount(req *CreateRequest) (*CreateResponse, error)
-	EditDataUser(id string, req *EditDataUserRequest) (*CreateResponse, error)
-	DeleteDataUser(id string) (*CreateResponse, error)
-	Login(req *LoginResponseRequest) (string, *LoginResponse, error)
-	SendEmail(email string) (*CreateResponse, error)
-	SendEmailRegister(email string) (*CreateResponse, error)
-	CompareVerificationCode(verificationCode *VerificationCodeRequest) (*CreateResponse, error)
-	EditPassword(id string, code string, req *EditDataUserRequest) (*CreateResponse, error)
+	GetDataUser() (*dto.MessageResponse, error)
+	GetDataUserById(id string) (*dto.MessageResponse, error)
+	CreateAccount(req *dto.CreateRequest) (*dto.MessageResponse, error)
+	EditDataUser(id string, req *dto.EditDataUserRequest) (*dto.MessageResponse, error)
+	DeleteDataUser(id string) (*dto.MessageResponse, error)
+	Login(req *dto.LoginResponseRequest) (string, *dto.LoginResponse, error)
+	SendEmail(email string) (*dto.MessageResponse, error)
+	SendEmailRegister(email string) (*dto.MessageResponse, error)
+	CompareVerificationCode(verificationCode *dto.VerificationCodeRequest) (*dto.MessageResponse, error)
+	EditPassword(id string, code string, req *dto.EditDataUserRequest) (*dto.MessageResponse, error)
 }
 
 type Controller struct {
@@ -29,43 +31,10 @@ func NewController(useCase UseCaseInterface) ControllerInterface {
 	}
 }
 
-type CreateResponse struct {
-	Message string                `json:"message"`
-	Code    int                   `json:"code"`
-	Status  string                `json:"status"`
-	Data    []AccountItemResponse `json:"data"`
-}
-type ReadResponse struct {
-	Message string                `json:"message"`
-	Code    int                   `json:"code"`
-	Status  string                `json:"status"`
-	Data    []AccountItemResponse `json:"data"`
-}
-type AccountItemResponse struct {
-	Id    int    `json:"id"`
-	Name  string `json:"name"`
-	Phone string `json:"phone"`
-	Role  string `json:"role"`
-	Email string `json:"email"`
-}
-type LoginResponse struct {
-	Message string                   `json:"message"`
-	Code    int                      `json:"code"`
-	Status  string                   `json:"status"`
-	Data    []LoginResponseWithToken `json:"data"`
-}
-type LoginResponseWithToken struct {
-	Id    int    `json:"id"`
-	Name  string `json:"name"`
-	Role  string `json:"role"`
-	Email string `json:"email"`
-	Token string `json:"token"`
-}
-
-func (c Controller) GetDataUser() (*ReadResponse, error) {
+func (c Controller) GetDataUser() (*dto.MessageResponse, error) {
 	account, err := c.UseCase.GetDataUser()
 	if err != nil {
-		res := &ReadResponse{
+		res := &dto.MessageResponse{
 			Status:  "Error",
 			Message: "Internal Server Error",
 			Code:    400,
@@ -74,14 +43,14 @@ func (c Controller) GetDataUser() (*ReadResponse, error) {
 		return res, nil
 	}
 
-	res := &ReadResponse{
+	res := &dto.MessageResponse{
 		Status:  "OK",
 		Message: "Success Get Data",
 		Code:    200,
 	}
 
 	for _, account := range account {
-		item := AccountItemResponse{
+		item := dto.AccountItemResponse{
 			Id:    account.Id,
 			Name:  account.Name,
 			Role:  account.Role,
@@ -93,13 +62,13 @@ func (c Controller) GetDataUser() (*ReadResponse, error) {
 
 	return res, nil
 }
-func (c Controller) GetDataUserById(id string) (*ReadResponse, error) {
+func (c Controller) GetDataUserById(id string) (*dto.MessageResponse, error) {
 	account, err := c.UseCase.GetDataUserById(id)
 	if err != nil {
 		return nil, err
 	}
 	if account.Id == 0 {
-		res := &ReadResponse{
+		res := &dto.MessageResponse{
 			Code:    204,
 			Status:  "OK",
 			Message: "Data With ID: " + id + " Empty",
@@ -107,11 +76,11 @@ func (c Controller) GetDataUserById(id string) (*ReadResponse, error) {
 		}
 		return res, nil
 	}
-	res := &ReadResponse{
+	res := &dto.MessageResponse{
 		Code:    200,
 		Status:  "OK",
 		Message: "Success Get Data",
-		Data: []AccountItemResponse{{
+		Data: []dto.AccountItemResponse{{
 			Id:    account.Id,
 			Name:  account.Name,
 			Role:  account.Role,
@@ -122,12 +91,20 @@ func (c Controller) GetDataUserById(id string) (*ReadResponse, error) {
 	}
 	return res, nil
 }
-func (c Controller) CreateAccount(req *CreateRequest) (*CreateResponse, error) {
-
+func (c Controller) CreateAccount(req *dto.CreateRequest) (*dto.MessageResponse, error) {
+	if req.Name == "" || req.Phone == "" || req.Role == "" || req.Password == "" || req.Email == "" {
+		res := &dto.MessageResponse{
+			Code:    400,
+			Status:  "Error",
+			Message: "Field not complete",
+			Data:    nil,
+		}
+		return res, nil
+	}
 	HashPassword, _ := bcrypt.GenerateFromPassword([]byte((req.Password)), bcrypt.DefaultCost)
 	req.Password = string(HashPassword)
 
-	request := Account{
+	request := entities.Account{
 		Name:     req.Name,
 		Email:    req.Email,
 		Phone:    req.Phone,
@@ -136,7 +113,7 @@ func (c Controller) CreateAccount(req *CreateRequest) (*CreateResponse, error) {
 	}
 	_, err := c.UseCase.CreateAccount(&request)
 	if err != nil {
-		res := &CreateResponse{
+		res := &dto.MessageResponse{
 			Code:    400,
 			Status:  "Error",
 			Message: "Duplicate account name",
@@ -145,11 +122,11 @@ func (c Controller) CreateAccount(req *CreateRequest) (*CreateResponse, error) {
 		return res, err
 	}
 
-	res := &CreateResponse{
+	res := &dto.MessageResponse{
 		Code:    200,
 		Status:  "OK",
 		Message: "Success Save Data",
-		Data: []AccountItemResponse{{
+		Data: []dto.AccountItemResponse{{
 			Id:    request.Id,
 			Name:  request.Name,
 			Role:  request.Role,
@@ -161,58 +138,65 @@ func (c Controller) CreateAccount(req *CreateRequest) (*CreateResponse, error) {
 	return res, nil
 
 }
-func (c Controller) EditDataUser(id string, req *EditDataUserRequest) (*CreateResponse, error) {
-
+func (c Controller) EditDataUser(id string, req *dto.EditDataUserRequest) (*dto.MessageResponse, error) {
+	if req.Name == "" || req.Phone == "" || req.Role == "" || req.Password == "" {
+		res := &dto.MessageResponse{
+			Code:    400,
+			Status:  "Error",
+			Message: "Field not complete",
+			Data:    nil,
+		}
+		return res, nil
+	}
 	HashPassword, _ := bcrypt.GenerateFromPassword([]byte((req.Password)), bcrypt.DefaultCost)
 	req.Password = string(HashPassword)
 
-	request := Account{
+	request := entities.Account{
 		Name:     req.Name,
-		Email:    req.Email,
 		Phone:    req.Phone,
 		Role:     req.Role,
 		Password: req.Password,
 	}
-	_, err := c.UseCase.EditDataUser(id, &request)
+	data, err := c.UseCase.EditDataUser(id, &request)
 	if err != nil {
 		return nil, err
 	}
 
-	res := &CreateResponse{
+	res := &dto.MessageResponse{
 		Code:    200,
 		Status:  "OK",
 		Message: "Success Edit Data",
-		Data: []AccountItemResponse{{
-			Id:    request.Id,
-			Name:  request.Name,
-			Role:  request.Role,
-			Email: request.Email,
-			Phone: request.Phone,
+		Data: []dto.AccountItemResponse{{
+			Id:    data.Id,
+			Name:  data.Name,
+			Role:  data.Role,
+			Email: data.Email,
+			Phone: data.Phone,
 		},
 		},
 	}
 	return res, nil
 }
-func (c Controller) DeleteDataUser(id string) (*CreateResponse, error) {
+func (c Controller) DeleteDataUser(id string) (*dto.MessageResponse, error) {
 	_, err := c.UseCase.DeleteDataUser(id)
 	if err != nil {
 		return nil, err
 	}
-	res := &CreateResponse{
+	res := &dto.MessageResponse{
 		Code:    200,
 		Status:  "OK",
 		Message: "Success Delete Data",
 	}
 	return res, nil
 }
-func (c Controller) Login(req *LoginResponseRequest) (string, *LoginResponse, error) {
-	request := Account{
+func (c Controller) Login(req *dto.LoginResponseRequest) (string, *dto.LoginResponse, error) {
+	request := entities.Account{
 		Email:    req.Email,
 		Password: req.Password,
 	}
 	token, data, err := c.UseCase.Login(&request)
 	if err != nil {
-		res := &LoginResponse{
+		res := &dto.LoginResponse{
 			Code:    401,
 			Status:  "Error",
 			Message: "Email atau Password Salah",
@@ -221,7 +205,7 @@ func (c Controller) Login(req *LoginResponseRequest) (string, *LoginResponse, er
 		return "", res, err
 	}
 	if err := bcrypt.CompareHashAndPassword([]byte(data.Password), []byte(request.Password)); err != nil {
-		res := &LoginResponse{
+		res := &dto.LoginResponse{
 			Code:    401,
 			Status:  "Error",
 			Message: "Email atau Password Salah",
@@ -230,11 +214,11 @@ func (c Controller) Login(req *LoginResponseRequest) (string, *LoginResponse, er
 		return "", res, err
 	}
 
-	res := &LoginResponse{
+	res := &dto.LoginResponse{
 		Code:    200,
 		Status:  "OK",
 		Message: "Login Success",
-		Data: []LoginResponseWithToken{{
+		Data: []dto.LoginResponseWithToken{{
 			Id:    data.Id,
 			Name:  data.Name,
 			Email: data.Email,
@@ -245,10 +229,10 @@ func (c Controller) Login(req *LoginResponseRequest) (string, *LoginResponse, er
 	}
 	return token, res, nil
 }
-func (c Controller) SendEmail(email string) (*CreateResponse, error) {
+func (c Controller) SendEmail(email string) (*dto.MessageResponse, error) {
 	data, _ := c.UseCase.SendEmail(email)
 	if data.Id == 0 {
-		res := &CreateResponse{
+		res := &dto.MessageResponse{
 			Code:    400,
 			Status:  "Error",
 			Message: "Email not found",
@@ -277,7 +261,7 @@ func (c Controller) SendEmail(email string) (*CreateResponse, error) {
 	message := []byte(subject + mime + body)
 
 	if err := smtp.SendMail(smtpHost+":"+smtpPort, auth, from, to, message); err != nil {
-		res := &CreateResponse{
+		res := &dto.MessageResponse{
 			Code:    500,
 			Status:  "Error",
 			Message: "Failed Send Email",
@@ -286,11 +270,11 @@ func (c Controller) SendEmail(email string) (*CreateResponse, error) {
 		return res, nil
 	}
 
-	res := &CreateResponse{
+	res := &dto.MessageResponse{
 		Code:    200,
 		Status:  "OK",
 		Message: "Success Send Email",
-		Data: []AccountItemResponse{{
+		Data: []dto.AccountItemResponse{{
 			Id:    data.Id,
 			Email: data.Email,
 			Name:  data.Name,
@@ -301,10 +285,10 @@ func (c Controller) SendEmail(email string) (*CreateResponse, error) {
 	}
 	return res, nil
 }
-func (c Controller) SendEmailRegister(email string) (*CreateResponse, error) {
+func (c Controller) SendEmailRegister(email string) (*dto.MessageResponse, error) {
 	data, _ := c.UseCase.SendEmail(email)
 	if data.Id != 0 {
-		res := &CreateResponse{
+		res := &dto.MessageResponse{
 			Code:    400,
 			Status:  "Error",
 			Message: "Email Already Taken",
@@ -333,7 +317,7 @@ func (c Controller) SendEmailRegister(email string) (*CreateResponse, error) {
 	message := []byte(subject + mime + body)
 
 	if err := smtp.SendMail(smtpHost+":"+smtpPort, auth, from, to, message); err != nil {
-		res := &CreateResponse{
+		res := &dto.MessageResponse{
 			Code:    500,
 			Status:  "Error",
 			Message: "Failed Send Email",
@@ -342,7 +326,7 @@ func (c Controller) SendEmailRegister(email string) (*CreateResponse, error) {
 		return res, nil
 	}
 
-	res := &CreateResponse{
+	res := &dto.MessageResponse{
 		Code:    200,
 		Status:  "OK",
 		Message: "Success Send Email",
@@ -350,13 +334,13 @@ func (c Controller) SendEmailRegister(email string) (*CreateResponse, error) {
 	}
 	return res, nil
 }
-func (c Controller) CompareVerificationCode(verificationCode *VerificationCodeRequest) (*CreateResponse, error) {
+func (c Controller) CompareVerificationCode(verificationCode *dto.VerificationCodeRequest) (*dto.MessageResponse, error) {
 	data, _ := c.UseCase.CompareVerificationCode(verificationCode)
 
-	CodeFromMap := VerificationCodes[verificationCode.Email]
+	CodeFromMap := entities.VerificationCodes[verificationCode.Email]
 	CodeFromRequest := verificationCode.Code
 	if CodeFromMap != CodeFromRequest {
-		res := &CreateResponse{
+		res := &dto.MessageResponse{
 			Code:    400,
 			Status:  "Error",
 			Message: "Invalid Verification Code",
@@ -365,7 +349,7 @@ func (c Controller) CompareVerificationCode(verificationCode *VerificationCodeRe
 		return res, nil
 	}
 	if data.Id == 0 {
-		res := &CreateResponse{
+		res := &dto.MessageResponse{
 			Code:    200,
 			Status:  "OK",
 			Message: "Success Verification Code",
@@ -373,11 +357,11 @@ func (c Controller) CompareVerificationCode(verificationCode *VerificationCodeRe
 		}
 		return res, nil
 	}
-	res := &CreateResponse{
+	res := &dto.MessageResponse{
 		Code:    200,
 		Status:  "OK",
 		Message: "Success Verification Code",
-		Data: []AccountItemResponse{{
+		Data: []dto.AccountItemResponse{{
 			Id:    data.Id,
 			Email: data.Email,
 			Name:  data.Name,
@@ -389,10 +373,10 @@ func (c Controller) CompareVerificationCode(verificationCode *VerificationCodeRe
 	return res, nil
 
 }
-func (c Controller) EditPassword(id string, code string, req *EditDataUserRequest) (*CreateResponse, error) {
+func (c Controller) EditPassword(id string, code string, req *dto.EditDataUserRequest) (*dto.MessageResponse, error) {
 	result, err := c.UseCase.GetDataUserById(id)
 	if err != nil {
-		res := &CreateResponse{
+		res := &dto.MessageResponse{
 			Code:    400,
 			Status:  "Error",
 			Message: "Account Not Found",
@@ -400,11 +384,11 @@ func (c Controller) EditPassword(id string, code string, req *EditDataUserReques
 		}
 		return res, nil
 	}
-	CodeFromMap := VerificationCodes[result.Email]
+	CodeFromMap := entities.VerificationCodes[result.Email]
 	CodeFromRequest := code
 
 	if CodeFromMap != CodeFromRequest {
-		res := &CreateResponse{
+		res := &dto.MessageResponse{
 			Code:    400,
 			Status:  "Error",
 			Message: "Invalid Verification Code",
@@ -415,16 +399,15 @@ func (c Controller) EditPassword(id string, code string, req *EditDataUserReques
 	HashPassword, _ := bcrypt.GenerateFromPassword([]byte((req.Password)), bcrypt.DefaultCost)
 	req.Password = string(HashPassword)
 
-	request := Account{
+	request := entities.Account{
 		Name:     req.Name,
-		Email:    req.Email,
 		Phone:    req.Phone,
 		Role:     req.Role,
 		Password: req.Password,
 	}
 	data, _ := c.UseCase.EditPassword(id, &request)
 	if data.Id == 0 {
-		res := &CreateResponse{
+		res := &dto.MessageResponse{
 			Code:    400,
 			Status:  "Error",
 			Message: "Failed to update account",
@@ -433,11 +416,11 @@ func (c Controller) EditPassword(id string, code string, req *EditDataUserReques
 		return res, nil
 	}
 
-	res := &CreateResponse{
+	res := &dto.MessageResponse{
 		Code:    200,
 		Status:  "OK",
 		Message: "Success Update Password",
-		Data: []AccountItemResponse{{
+		Data: []dto.AccountItemResponse{{
 			Id:    data.Id,
 			Email: data.Email,
 			Name:  data.Name,

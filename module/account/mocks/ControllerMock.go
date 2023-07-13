@@ -5,7 +5,7 @@
 package mocks
 
 import (
-        account "golang/module/account"
+        account "golang/module/account/dto"
         reflect "reflect"
 
         gomock "github.com/golang/mock/gomock"
@@ -35,10 +35,10 @@ func (m *MockControllerInterface) EXPECT() *MockControllerInterfaceMockRecorder 
 }
 
 // CompareVerificationCode mocks base method.
-func (m *MockControllerInterface) CompareVerificationCode(verificationCode *account.VerificationCodeRequest) (*account.CreateResponse, error) {
+func (m *MockControllerInterface) CompareVerificationCode(verificationCode *account.VerificationCodeRequest) (*account.MessageResponse, error) {
         m.ctrl.T.Helper()
         ret := m.ctrl.Call(m, "CompareVerificationCode", verificationCode)
-        ret0, _ := ret[0].(*account.CreateResponse)
+        ret0, _ := ret[0].(*account.MessageResponse)
         ret1, _ := ret[1].(error)
         return ret0, ret1
 }
@@ -50,10 +50,10 @@ func (mr *MockControllerInterfaceMockRecorder) CompareVerificationCode(verificat
 }
 
 // CreateAccount mocks base method.
-func (m *MockControllerInterface) CreateAccount(req *account.CreateRequest) (*account.CreateResponse, error) {
+func (m *MockControllerInterface) CreateAccount(req *account.CreateRequest) (*account.MessageResponse, error) {
         m.ctrl.T.Helper()
         ret := m.ctrl.Call(m, "CreateAccount", req)
-        ret0, _ := ret[0].(*account.CreateResponse)
+        ret0, _ := ret[0].(*account.MessageResponse)
         ret1, _ := ret[1].(error)
         return ret0, ret1
 }
@@ -65,10 +65,10 @@ func (mr *MockControllerInterfaceMockRecorder) CreateAccount(req interface{}) *g
 }
 
 // DeleteDataUser mocks base method.
-func (m *MockControllerInterface) DeleteDataUser(id string) (*account.CreateResponse, error) {
+func (m *MockControllerInterface) DeleteDataUser(id string) (*account.MessageResponse, error) {
         m.ctrl.T.Helper()
         ret := m.ctrl.Call(m, "DeleteDataUser", id)
-        ret0, _ := ret[0].(*account.CreateResponse)
+        ret0, _ := ret[0].(*account.MessageResponse)
         ret1, _ := ret[1].(error)
         return ret0, ret1
 }
@@ -80,10 +80,10 @@ func (mr *MockControllerInterfaceMockRecorder) DeleteDataUser(id interface{}) *g
 }
 
 // EditDataUser mocks base method.
-func (m *MockControllerInterface) EditDataUser(id string, req *account.EditDataUserRequest) (*account.CreateResponse, error) {
+func (m *MockControllerInterface) EditDataUser(id string, req *account.EditDataUserRequest) (*account.MessageResponse, error) {
         m.ctrl.T.Helper()
         ret := m.ctrl.Call(m, "EditDataUser", id, req)
-        ret0, _ := ret[0].(*account.CreateResponse)
+        ret0, _ := ret[0].(*account.MessageResponse)
         ret1, _ := ret[1].(error)
         return ret0, ret1
 }
@@ -95,10 +95,10 @@ func (mr *MockControllerInterfaceMockRecorder) EditDataUser(id, req interface{})
 }
 
 // EditPassword mocks base method.
-func (m *MockControllerInterface) EditPassword(id, code string, req *account.EditDataUserRequest) (*account.CreateResponse, error) {   
+func (m *MockControllerInterface) EditPassword(id, code string, req *account.EditDataUserRequest) (*account.MessageResponse, error) {   
         m.ctrl.T.Helper()
         ret := m.ctrl.Call(m, "EditPassword", id, code, req)
-        ret0, _ := ret[0].(*account.CreateResponse)
+        ret0, _ := ret[0].(*account.MessageResponse)
         ret1, _ := ret[1].(error)
         return ret0, ret1
 }
@@ -110,10 +110,10 @@ func (mr *MockControllerInterfaceMockRecorder) EditPassword(id, code, req interf
 }
 
 // GetDataUser mocks base method.
-func (m *MockControllerInterface) GetDataUser() (*account.ReadResponse, error) {
+func (m *MockControllerInterface) GetDataUser() (*account.MessageResponse, error) {
         m.ctrl.T.Helper()
         ret := m.ctrl.Call(m, "GetDataUser")
-        ret0, _ := ret[0].(*account.ReadResponse)
+        ret0, _ := ret[0].(*account.MessageResponse)
         ret1, _ := ret[1].(error)
         return ret0, ret1
 }
@@ -125,10 +125,10 @@ func (mr *MockControllerInterfaceMockRecorder) GetDataUser() *gomock.Call {
 }
 
 // GetDataUserById mocks base method.
-func (m *MockControllerInterface) GetDataUserById(id string) (*account.ReadResponse, error) {
+func (m *MockControllerInterface) GetDataUserById(id string) (*account.MessageResponse, error) {
         m.ctrl.T.Helper()
         ret := m.ctrl.Call(m, "GetDataUserById", id)
-        ret0, _ := ret[0].(*account.ReadResponse)
+        ret0, _ := ret[0].(*account.MessageResponse)
         ret1, _ := ret[1].(error)
         return ret0, ret1
 }
@@ -156,10 +156,10 @@ func (mr *MockControllerInterfaceMockRecorder) Login(req interface{}) *gomock.Ca
 }
 
 // SendEmail mocks base method.
-func (m *MockControllerInterface) SendEmail(email string) (*account.CreateResponse, error) {
+func (m *MockControllerInterface) SendEmail(email string) (*account.MessageResponse, error) {
         m.ctrl.T.Helper()
         ret := m.ctrl.Call(m, "SendEmail", email)
-        ret0, _ := ret[0].(*account.CreateResponse)
+        ret0, _ := ret[0].(*account.MessageResponse)
         ret1, _ := ret[1].(error)
         return ret0, ret1
 }
@@ -171,10 +171,10 @@ func (mr *MockControllerInterfaceMockRecorder) SendEmail(email interface{}) *gom
 }
 
 // SendEmailRegister mocks base method.
-func (m *MockControllerInterface) SendEmailRegister(email string) (*account.CreateResponse, error) {
+func (m *MockControllerInterface) SendEmailRegister(email string) (*account.MessageResponse, error) {
         m.ctrl.T.Helper()
         ret := m.ctrl.Call(m, "SendEmailRegister", email)
-        ret0, _ := ret[0].(*account.CreateResponse)
+        ret0, _ := ret[0].(*account.MessageResponse)
         ret1, _ := ret[1].(error)
         return ret0, ret1
 }

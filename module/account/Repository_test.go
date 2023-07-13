@@ -1,7 +1,8 @@
-package unitTest
+package account
 
 import (
-	"golang/module/account"
+	"golang/module/account/dto"
+	"golang/module/account/entities"
 	"golang/module/account/mocks"
 	"reflect"
 	"testing"
@@ -19,16 +20,16 @@ func TestRepository_GetDataUser(t *testing.T) {
 
 	tests := []struct {
 		name    string
-		r       account.Repository
-		want    []account.Account
+		r       Repository
+		want    []entities.Account
 		wantErr bool
 	}{
 		{
 			name: "success",
-			r: account.Repository{
+			r: Repository{
 				Db: mockDb,
 			},
-			want: []account.Account{{
+			want: []entities.Account{{
 				Id:       1,
 				Name:     "Vincen",
 				Phone:    "213",
@@ -66,20 +67,20 @@ func TestRepository_GetDataUserById(t *testing.T) {
 	}
 	tests := []struct {
 		name    string
-		r       account.Repository
+		r       Repository
 		args    args
-		want    account.Account
+		want    entities.Account
 		wantErr bool
 	}{
 		{
 			name: "success",
-			r: account.Repository{
+			r: Repository{
 				Db: mockDb,
 			},
 			args: args{
 				id: "1",
 			},
-			want: account.Account{
+			want: entities.Account{
 				Id:       1,
 				Name:     "Vincen",
 				Phone:    "213",
@@ -106,31 +107,35 @@ func TestRepository_GetDataUserById(t *testing.T) {
 
 func TestRepository_EditDataUser(t *testing.T) {
 	mockQuery, mockDb := mocks.NewMockQueryDb(t)
-	query := "UPDATE account SET name=?, phone=?,role=?,password=?,email=? WHERE id = ?"
+	queryUpdate := "UPDATE account SET name=?,phone=?,role=?,password=? WHERE id = ?"
+	queryFind := "SELECT * FROM account WHERE id = ?"
 
-	mockQuery.ExpectQuery(query).WillReturnRows(
+	mockQuery.ExpectQuery(queryUpdate).WillReturnRows(
+		sqlmock.NewRows([]string{"name", "phone", "role", "password", "email", "id"}).AddRow("Vincen", "213", "Admin", "123", "admin@mail.com", 1),
+	)
+	mockQuery.ExpectQuery(queryFind).WillReturnRows(
 		sqlmock.NewRows([]string{"name", "phone", "role", "password", "email", "id"}).AddRow("Vincen", "213", "Admin", "123", "admin@mail.com", 1),
 	)
 
 	type args struct {
 		id  string
-		req *account.Account
+		req *entities.Account
 	}
 	tests := []struct {
 		name    string
-		r       account.Repository
+		r       Repository
 		args    args
-		want    account.Account
+		want    entities.Account
 		wantErr bool
 	}{
 		{
 			name: "success",
-			r: account.Repository{
+			r: Repository{
 				Db: mockDb,
 			},
 			args: args{
 				id: "1",
-				req: &account.Account{
+				req: &entities.Account{
 					Id:       1,
 					Name:     "Vincen",
 					Phone:    "213",
@@ -139,7 +144,7 @@ func TestRepository_EditDataUser(t *testing.T) {
 					Email:    "admin@mail.com",
 				},
 			},
-			want: account.Account{
+			want: entities.Account{
 				Id:       1,
 				Name:     "Vincen",
 				Phone:    "213",
@@ -174,20 +179,20 @@ func TestRepository_DeleteDataUser(t *testing.T) {
 	}
 	tests := []struct {
 		name    string
-		r       account.Repository
+		r       Repository
 		args    args
-		want    account.Account
+		want    entities.Account
 		wantErr bool
 	}{
 		{
 			name: "success",
-			r: account.Repository{
+			r: Repository{
 				Db: mockDb,
 			},
 			args: args{
 				id: "1",
 			},
-			want:    account.Account{},
+			want:    entities.Account{},
 			wantErr: false,
 		},
 	}
@@ -214,22 +219,22 @@ func TestRepository_CreateAccount(t *testing.T) {
 	)
 
 	type args struct {
-		req *account.Account
+		req *entities.Account
 	}
 	tests := []struct {
 		name    string
-		r       account.Repository
+		r       Repository
 		args    args
-		want    account.Account
+		want    entities.Account
 		wantErr bool
 	}{
 		{
 			name: "success",
-			r: account.Repository{
+			r: Repository{
 				Db: mockDb,
 			},
 			args: args{
-				req: &account.Account{
+				req: &entities.Account{
 					Name:     "Vincen",
 					Phone:    "213",
 					Role:     "Admin",
@@ -237,7 +242,7 @@ func TestRepository_CreateAccount(t *testing.T) {
 					Email:    "admin@mail.com",
 				},
 			},
-			want: account.Account{
+			want: entities.Account{
 				Name:     "Vincen",
 				Phone:    "213",
 				Role:     "Admin",
@@ -268,27 +273,27 @@ func TestRepository_Login(t *testing.T) {
 		sqlmock.NewRows([]string{"id", "name", "phone", "Role", "password", "email"}).AddRow(1, "Vincen", "213", "Admin", "123", "admin@mail.com"),
 	)
 	type args struct {
-		req *account.Account
+		req *entities.Account
 	}
 	tests := []struct {
 		name    string
-		r       account.Repository
+		r       Repository
 		args    args
-		want1   account.Account
+		want1   entities.Account
 		wantErr bool
 	}{
 		{
 			name: "success",
-			r: account.Repository{
+			r: Repository{
 				Db: mockDb,
 			},
 			args: args{
-				req: &account.Account{
+				req: &entities.Account{
 					Password: "123456",
 					Email:    "admin@mail.com",
 				},
 			},
-			want1: account.Account{
+			want1: entities.Account{
 				Id:       1,
 				Name:     "Vincen",
 				Phone:    "213",
@@ -324,20 +329,20 @@ func TestRepository_SendEmail(t *testing.T) {
 	}
 	tests := []struct {
 		name    string
-		r       account.Repository
+		r       Repository
 		args    args
-		want    account.Account
+		want    entities.Account
 		wantErr bool
 	}{
 		{
 			name: "success",
-			r: account.Repository{
+			r: Repository{
 				Db: mockDb,
 			},
 			args: args{
 				email: "maxwelvincen@gmail.com",
 			},
-			want: account.Account{
+			want: entities.Account{
 				Id:       1,
 				Name:     "Vincen",
 				Phone:    "213",
@@ -369,27 +374,27 @@ func TestRepository_CompareVerificationCode(t *testing.T) {
 		sqlmock.NewRows([]string{"id", "name", "phone", "role", "password", "email"}).AddRow(1, "Vincen", "213", "Admin", "123", "admin@mail.com"),
 	)
 	type args struct {
-		verificationCode *account.VerificationCodeRequest
+		verificationCode *dto.VerificationCodeRequest
 	}
 	tests := []struct {
 		name    string
-		r       account.Repository
+		r       Repository
 		args    args
-		want    account.Account
+		want    entities.Account
 		wantErr bool
 	}{
 		{
 			name: "success",
-			r: account.Repository{
+			r: Repository{
 				Db: mockDb,
 			},
 			args: args{
-				verificationCode: &account.VerificationCodeRequest{
+				verificationCode: &dto.VerificationCodeRequest{
 					Email: "maxwelvincen@gmail.com",
 					Code:  "1234",
 				},
 			},
-			want: account.Account{
+			want: entities.Account{
 				Id:       1,
 				Name:     "Vincen",
 				Phone:    "213",
@@ -426,23 +431,23 @@ func TestRepository_EditPassword(t *testing.T) {
 	)
 	type args struct {
 		id  string
-		req *account.Account
+		req *entities.Account
 	}
 	tests := []struct {
 		name    string
-		r       account.Repository
+		r       Repository
 		args    args
-		want    account.Account
+		want    entities.Account
 		wantErr bool
 	}{
 		{
 			name: "success",
-			r: account.Repository{
+			r: Repository{
 				Db: mockDb,
 			},
 			args: args{
 				id: "1",
-				req: &account.Account{
+				req: &entities.Account{
 					Id:       1,
 					Name:     "Vincen",
 					Phone:    "213",
@@ -451,7 +456,7 @@ func TestRepository_EditPassword(t *testing.T) {
 					Email:    "admin@mail.com",
 				},
 			},
-			want: account.Account{
+			want: entities.Account{
 				Id:       1,
 				Name:     "Vincen",
 				Phone:    "213",

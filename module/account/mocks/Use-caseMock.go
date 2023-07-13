@@ -5,7 +5,8 @@
 package mocks
 
 import (
-        account "golang/module/account"
+        account "golang/module/account/dto"
+        "golang/module/account/entities"
         reflect "reflect"
 
         gomock "github.com/golang/mock/gomock"
@@ -35,10 +36,10 @@ func (m *MockUseCaseInterface) EXPECT() *MockUseCaseInterfaceMockRecorder {
 }
 
 // CompareVerificationCode mocks base method.
-func (m *MockUseCaseInterface) CompareVerificationCode(verificationCode *account.VerificationCodeRequest) (account.Account, error) {   
+func (m *MockUseCaseInterface) CompareVerificationCode(verificationCode *account.VerificationCodeRequest) (entities.Account, error) {
         m.ctrl.T.Helper()
         ret := m.ctrl.Call(m, "CompareVerificationCode", verificationCode)
-        ret0, _ := ret[0].(account.Account)
+        ret0, _ := ret[0].(entities.Account)
         ret1, _ := ret[1].(error)
         return ret0, ret1
 }
@@ -50,10 +51,10 @@ func (mr *MockUseCaseInterfaceMockRecorder) CompareVerificationCode(verification
 }
 
 // CreateAccount mocks base method.
-func (m *MockUseCaseInterface) CreateAccount(req *account.Account) (account.Account, error) {
+func (m *MockUseCaseInterface) CreateAccount(req *entities.Account) (entities.Account, error) {
         m.ctrl.T.Helper()
         ret := m.ctrl.Call(m, "CreateAccount", req)
-        ret0, _ := ret[0].(account.Account)
+        ret0, _ := ret[0].(entities.Account)
         ret1, _ := ret[1].(error)
         return ret0, ret1
 }
@@ -65,10 +66,10 @@ func (mr *MockUseCaseInterfaceMockRecorder) CreateAccount(req interface{}) *gomo
 }
 
 // DeleteDataUser mocks base method.
-func (m *MockUseCaseInterface) DeleteDataUser(id string) (account.Account, error) {
+func (m *MockUseCaseInterface) DeleteDataUser(id string) (entities.Account, error) {
         m.ctrl.T.Helper()
         ret := m.ctrl.Call(m, "DeleteDataUser", id)
-        ret0, _ := ret[0].(account.Account)
+        ret0, _ := ret[0].(entities.Account)
         ret1, _ := ret[1].(error)
         return ret0, ret1
 }
@@ -80,10 +81,10 @@ func (mr *MockUseCaseInterfaceMockRecorder) DeleteDataUser(id interface{}) *gomo
 }
 
 // EditDataUser mocks base method.
-func (m *MockUseCaseInterface) EditDataUser(id string, req *account.Account) (account.Account, error) {
+func (m *MockUseCaseInterface) EditDataUser(id string, req *entities.Account) (entities.Account, error) {
         m.ctrl.T.Helper()
         ret := m.ctrl.Call(m, "EditDataUser", id, req)
-        ret0, _ := ret[0].(account.Account)
+        ret0, _ := ret[0].(entities.Account)
         ret1, _ := ret[1].(error)
         return ret0, ret1
 }
@@ -95,10 +96,10 @@ func (mr *MockUseCaseInterfaceMockRecorder) EditDataUser(id, req interface{}) *g
 }
 
 // EditPassword mocks base method.
-func (m *MockUseCaseInterface) EditPassword(code string, req *account.Account) (account.Account, error) {
+func (m *MockUseCaseInterface) EditPassword(code string, req *entities.Account) (entities.Account, error) {
         m.ctrl.T.Helper()
         ret := m.ctrl.Call(m, "EditPassword", code, req)
-        ret0, _ := ret[0].(account.Account)
+        ret0, _ := ret[0].(entities.Account)
         ret1, _ := ret[1].(error)
         return ret0, ret1
 }
@@ -110,10 +111,10 @@ func (mr *MockUseCaseInterfaceMockRecorder) EditPassword(code, req interface{}) 
 }
 
 // GetDataUser mocks base method.
-func (m *MockUseCaseInterface) GetDataUser() ([]account.Account, error) {
+func (m *MockUseCaseInterface) GetDataUser() ([]entities.Account, error) {
         m.ctrl.T.Helper()
         ret := m.ctrl.Call(m, "GetDataUser")
-        ret0, _ := ret[0].([]account.Account)
+        ret0, _ := ret[0].([]entities.Account)
         ret1, _ := ret[1].(error)
         return ret0, ret1
 }
@@ -121,14 +122,14 @@ func (m *MockUseCaseInterface) GetDataUser() ([]account.Account, error) {
 // GetDataUser indicates an expected call of GetDataUser.
 func (mr *MockUseCaseInterfaceMockRecorder) GetDataUser() *gomock.Call {
         mr.mock.ctrl.T.Helper()
-        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDataUser", reflect.TypeOf((*MockUseCaseInterface)(nil).GetDataUser)) 
+        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDataUser", reflect.TypeOf((*MockUseCaseInterface)(nil).GetDataUser))
 }
 
 // GetDataUserById mocks base method.
-func (m *MockUseCaseInterface) GetDataUserById(id string) (account.Account, error) {
+func (m *MockUseCaseInterface) GetDataUserById(id string) (entities.Account, error) {
         m.ctrl.T.Helper()
         ret := m.ctrl.Call(m, "GetDataUserById", id)
-        ret0, _ := ret[0].(account.Account)
+        ret0, _ := ret[0].(entities.Account)
         ret1, _ := ret[1].(error)
         return ret0, ret1
 }
@@ -140,11 +141,11 @@ func (mr *MockUseCaseInterfaceMockRecorder) GetDataUserById(id interface{}) *gom
 }
 
 // Login mocks base method.
-func (m *MockUseCaseInterface) Login(req *account.Account) (string, account.Account, error) {
+func (m *MockUseCaseInterface) Login(req *entities.Account) (string, entities.Account, error) {
         m.ctrl.T.Helper()
         ret := m.ctrl.Call(m, "Login", req)
         ret0, _ := ret[0].(string)
-        ret1, _ := ret[1].(account.Account)
+        ret1, _ := ret[1].(entities.Account)
         ret2, _ := ret[2].(error)
         return ret0, ret1, ret2
 }
@@ -152,14 +153,14 @@ func (m *MockUseCaseInterface) Login(req *account.Account) (string, account.Acco
 // Login indicates an expected call of Login.
 func (mr *MockUseCaseInterfaceMockRecorder) Login(req interface{}) *gomock.Call {
         mr.mock.ctrl.T.Helper()
-        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Login", reflect.TypeOf((*MockUseCaseInterface)(nil).Login), req)        
+        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Login", reflect.TypeOf((*MockUseCaseInterface)(nil).Login), req)
 }
 
 // SendEmail mocks base method.
-func (m *MockUseCaseInterface) SendEmail(email string) (account.Account, error) {
+func (m *MockUseCaseInterface) SendEmail(email string) (entities.Account, error) {
         m.ctrl.T.Helper()
         ret := m.ctrl.Call(m, "SendEmail", email)
-        ret0, _ := ret[0].(account.Account)
+        ret0, _ := ret[0].(entities.Account)
         ret1, _ := ret[1].(error)
         return ret0, ret1
 }

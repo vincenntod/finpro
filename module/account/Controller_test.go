@@ -1,7 +1,8 @@
-package unitTest
+package account
 
 import (
-	"golang/module/account"
+	"golang/module/account/dto"
+	"golang/module/account/entities"
 	"golang/module/account/mocks"
 	"reflect"
 	"testing"
@@ -12,7 +13,7 @@ import (
 func TestController_GetDataUser(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockery := mocks.NewMockUseCaseInterface(ctrl)
-	mockery.EXPECT().GetDataUser().Return([]account.Account{{
+	mockery.EXPECT().GetDataUser().Return([]entities.Account{{
 		Id:    1,
 		Name:  "Vincen",
 		Role:  "Admin",
@@ -22,20 +23,20 @@ func TestController_GetDataUser(t *testing.T) {
 
 	tests := []struct {
 		name    string
-		c       account.Controller
-		want    *account.ReadResponse
+		c       Controller
+		want    *dto.MessageResponse
 		wantErr bool
 	}{
 		{
 			name: "success",
-			c: account.Controller{
+			c: Controller{
 				UseCase: mockery,
 			},
-			want: &account.ReadResponse{
+			want: &dto.MessageResponse{
 				Message: "Success Get Data",
 				Code:    200,
 				Status:  "OK",
-				Data: []account.AccountItemResponse{{
+				Data: []dto.AccountItemResponse{{
 					Id:    1,
 					Name:  "Vincen",
 					Role:  "Admin",
@@ -63,7 +64,7 @@ func TestController_GetDataUser(t *testing.T) {
 func TestController_GetDataUserById(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockery := mocks.NewMockUseCaseInterface(ctrl)
-	mockery.EXPECT().GetDataUserById("1").Return(account.Account{
+	mockery.EXPECT().GetDataUserById("1").Return(entities.Account{
 		Id:    1,
 		Name:  "Vincen",
 		Role:  "Admin",
@@ -76,24 +77,24 @@ func TestController_GetDataUserById(t *testing.T) {
 	}
 	tests := []struct {
 		name    string
-		c       account.Controller
+		c       Controller
 		args    args
-		want    *account.ReadResponse
+		want    *dto.MessageResponse
 		wantErr bool
 	}{
 		{
 			name: "success",
-			c: account.Controller{
+			c: Controller{
 				UseCase: mockery,
 			},
 			args: args{
 				id: "1",
 			},
-			want: &account.ReadResponse{
+			want: &dto.MessageResponse{
 				Message: "Success Get Data",
 				Code:    200,
 				Status:  "OK",
-				Data: []account.AccountItemResponse{{
+				Data: []dto.AccountItemResponse{{
 					Id:    1,
 					Name:  "Vincen",
 					Role:  "Admin",
@@ -120,7 +121,7 @@ func TestController_GetDataUserById(t *testing.T) {
 func TestController_CreateAccount(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockery := mocks.NewMockUseCaseInterface(ctrl)
-	mockery.EXPECT().CreateAccount(gomock.Any()).Return(account.Account{
+	mockery.EXPECT().CreateAccount(gomock.Any()).Return(entities.Account{
 		Id:    0,
 		Name:  "Vincen",
 		Role:  "Admin",
@@ -129,22 +130,22 @@ func TestController_CreateAccount(t *testing.T) {
 	}, nil).Times(1)
 
 	type args struct {
-		req *account.CreateRequest
+		req *dto.CreateRequest
 	}
 	tests := []struct {
 		name    string
-		c       account.Controller
+		c       Controller
 		args    args
-		want    *account.CreateResponse
+		want    *dto.MessageResponse
 		wantErr bool
 	}{
 		{
 			name: "success",
-			c: account.Controller{
+			c: Controller{
 				UseCase: mockery,
 			},
 			args: args{
-				req: &account.CreateRequest{
+				req: &dto.CreateRequest{
 					Name:     "Vincen",
 					Phone:    "123",
 					Role:     "admin",
@@ -152,11 +153,11 @@ func TestController_CreateAccount(t *testing.T) {
 					Email:    "maxwel@gmail.com",
 				},
 			},
-			want: &account.CreateResponse{
+			want: &dto.MessageResponse{
 				Code:    200,
 				Status:  "OK",
 				Message: "Success Save Data",
-				Data: []account.AccountItemResponse{{
+				Data: []dto.AccountItemResponse{{
 					Id:    0,
 					Name:  "Vincen",
 					Role:  "admin",
@@ -185,7 +186,7 @@ func TestController_CreateAccount(t *testing.T) {
 func TestController_EditDataUser(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockery := mocks.NewMockUseCaseInterface(ctrl)
-	mockery.EXPECT().EditDataUser("1", gomock.Any()).Return(account.Account{
+	mockery.EXPECT().EditDataUser("1", gomock.Any()).Return(entities.Account{
 		Name:     "Vincen",
 		Password: "123456",
 		Role:     "Admin",
@@ -194,37 +195,36 @@ func TestController_EditDataUser(t *testing.T) {
 	}, nil).Times(1)
 	type args struct {
 		id  string
-		req *account.EditDataUserRequest
+		req *dto.EditDataUserRequest
 	}
 	tests := []struct {
 		name    string
-		c       account.Controller
+		c       Controller
 		args    args
-		want    *account.CreateResponse
+		want    *dto.MessageResponse
 		wantErr bool
 	}{
 		{
 			name: "success",
-			c: account.Controller{
+			c: Controller{
 				UseCase: mockery,
 			},
 			args: args{
 				id: "1",
-				req: &account.EditDataUserRequest{
+				req: &dto.EditDataUserRequest{
 					Name:     "Vincen",
 					Phone:    "123",
-					Role:     "admin",
+					Role:     "Admin",
 					Password: "123456",
-					Email:    "maxwel@gmail.com",
 				},
 			},
-			want: &account.CreateResponse{
+			want: &dto.MessageResponse{
 				Code:    200,
 				Status:  "OK",
 				Message: "Success Edit Data",
-				Data: []account.AccountItemResponse{{
+				Data: []dto.AccountItemResponse{{
 					Name:  "Vincen",
-					Role:  "admin",
+					Role:  "Admin",
 					Email: "maxwel@gmail.com",
 					Phone: "123",
 				},
@@ -251,7 +251,7 @@ func TestController_EditDataUser(t *testing.T) {
 func TestController_DeleteDataUser(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockery := mocks.NewMockUseCaseInterface(ctrl)
-	mockery.EXPECT().DeleteDataUser("1").Return(account.Account{
+	mockery.EXPECT().DeleteDataUser("1").Return(entities.Account{
 		Id:    1,
 		Name:  "Vincen",
 		Role:  "Admin",
@@ -263,20 +263,20 @@ func TestController_DeleteDataUser(t *testing.T) {
 	}
 	tests := []struct {
 		name    string
-		c       account.Controller
+		c       Controller
 		args    args
-		want    *account.CreateResponse
+		want    *dto.MessageResponse
 		wantErr bool
 	}{
 		{
 			name: "success",
-			c: account.Controller{
+			c: Controller{
 				UseCase: mockery,
 			},
 			args: args{
 				id: "1",
 			},
-			want: &account.CreateResponse{
+			want: &dto.MessageResponse{
 				Code:    200,
 				Status:  "OK",
 				Message: "Success Delete Data",
@@ -301,13 +301,13 @@ func TestController_DeleteDataUser(t *testing.T) {
 func TestController_Login(t *testing.T) {
 
 	type args struct {
-		req *account.LoginResponseRequest
+		req *dto.LoginResponseRequest
 	}
 	tests := []struct {
 		name    string
-		c       account.Controller
+		c       Controller
 		args    args
-		want    *account.LoginResponse
+		want    *dto.LoginResponse
 		wantErr bool
 	}{}
 	for _, tt := range tests {
@@ -327,7 +327,7 @@ func TestController_Login(t *testing.T) {
 func TestController_SendEmail(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockery := mocks.NewMockUseCaseInterface(ctrl)
-	mockery.EXPECT().SendEmail("maxwelvincen@gmail.com").Return(account.Account{
+	mockery.EXPECT().SendEmail("maxwelvincen@gmail.com").Return(entities.Account{
 		Id:    1,
 		Name:  "Vincen",
 		Role:  "Admin",
@@ -339,24 +339,24 @@ func TestController_SendEmail(t *testing.T) {
 	}
 	tests := []struct {
 		name    string
-		c       account.Controller
+		c       Controller
 		args    args
-		want    *account.CreateResponse
+		want    *dto.MessageResponse
 		wantErr bool
 	}{
 		{
 			name: "success",
-			c: account.Controller{
+			c: Controller{
 				UseCase: mockery,
 			},
 			args: args{
 				email: "maxwelvincen@gmail.com",
 			},
-			want: &account.CreateResponse{
+			want: &dto.MessageResponse{
 				Code:    200,
 				Status:  "OK",
 				Message: "Success Send Email",
-				Data: []account.AccountItemResponse{{
+				Data: []dto.AccountItemResponse{{
 					Id:    1,
 					Name:  "Vincen",
 					Role:  "Admin",
@@ -384,26 +384,26 @@ func TestController_SendEmail(t *testing.T) {
 func TestController_SendEmailRegister(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockery := mocks.NewMockUseCaseInterface(ctrl)
-	mockery.EXPECT().SendEmail("maxwelvincen@gmail.com").Return(account.Account{}, nil).Times(1)
+	mockery.EXPECT().SendEmail("maxwelvincen@gmail.com").Return(entities.Account{}, nil).Times(1)
 	type args struct {
 		email string
 	}
 	tests := []struct {
 		name    string
-		c       account.Controller
+		c       Controller
 		args    args
-		want    *account.CreateResponse
+		want    *dto.MessageResponse
 		wantErr bool
 	}{
 		{
 			name: "success",
-			c: account.Controller{
+			c: Controller{
 				UseCase: mockery,
 			},
 			args: args{
 				email: "maxwelvincen@gmail.com",
 			},
-			want: &account.CreateResponse{
+			want: &dto.MessageResponse{
 				Code:    200,
 				Status:  "OK",
 				Message: "Success Send Email",
@@ -427,12 +427,12 @@ func TestController_SendEmailRegister(t *testing.T) {
 
 func TestController_CompareVerificationCode(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	account.VerificationCodes["maxwelvincen@gmail.com"] = "123456"
+	entities.VerificationCodes["maxwelvincen@gmail.com"] = "123456"
 	mockery := mocks.NewMockUseCaseInterface(ctrl)
-	mockery.EXPECT().CompareVerificationCode(&account.VerificationCodeRequest{
+	mockery.EXPECT().CompareVerificationCode(&dto.VerificationCodeRequest{
 		Email: "maxwelvincen@gmail.com",
 		Code:  "123456",
-	}).Return(account.Account{
+	}).Return(entities.Account{
 		Id:    1,
 		Name:  "Vincen",
 		Role:  "Admin",
@@ -440,31 +440,31 @@ func TestController_CompareVerificationCode(t *testing.T) {
 		Phone: "123",
 	}, nil).Times(1)
 	type args struct {
-		verificationCode *account.VerificationCodeRequest
+		verificationCode *dto.VerificationCodeRequest
 	}
 	tests := []struct {
 		name    string
-		c       account.Controller
+		c       Controller
 		args    args
-		want    *account.CreateResponse
+		want    *dto.MessageResponse
 		wantErr bool
 	}{
 		{
 			name: "success",
-			c: account.Controller{
+			c: Controller{
 				UseCase: mockery,
 			},
 			args: args{
-				verificationCode: &account.VerificationCodeRequest{
+				verificationCode: &dto.VerificationCodeRequest{
 					Email: "maxwelvincen@gmail.com",
 					Code:  "123456",
 				},
 			},
-			want: &account.CreateResponse{
+			want: &dto.MessageResponse{
 				Code:    200,
 				Status:  "OK",
 				Message: "Success Verification Code",
-				Data: []account.AccountItemResponse{{
+				Data: []dto.AccountItemResponse{{
 					Id:    1,
 					Name:  "Vincen",
 					Role:  "Admin",
@@ -492,15 +492,15 @@ func TestController_CompareVerificationCode(t *testing.T) {
 func TestController_EditPassword(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockery := mocks.NewMockUseCaseInterface(ctrl)
-	account.VerificationCodes["maxwelvincen@gmail.com"] = "123456"
-	mockery.EXPECT().EditPassword("1", gomock.Any()).Return(account.Account{
+	entities.VerificationCodes["maxwelvincen@gmail.com"] = "123456"
+	mockery.EXPECT().EditPassword("1", gomock.Any()).Return(entities.Account{
 		Id:    1,
 		Name:  "Vincen",
 		Role:  "Admin",
 		Email: "maxwelvincen@gmail.com",
 		Phone: "123",
 	}, nil).Times(1)
-	mockery.EXPECT().GetDataUserById("1").Return(account.Account{
+	mockery.EXPECT().GetDataUserById("1").Return(entities.Account{
 		Id:    1,
 		Name:  "Vincen",
 		Role:  "Admin",
@@ -510,36 +510,35 @@ func TestController_EditPassword(t *testing.T) {
 	type args struct {
 		id   string
 		code string
-		req  *account.EditDataUserRequest
+		req  *dto.EditDataUserRequest
 	}
 	tests := []struct {
 		name    string
-		c       account.Controller
+		c       Controller
 		args    args
-		want    *account.CreateResponse
+		want    *dto.MessageResponse
 		wantErr bool
 	}{
 		{name: "success",
-			c: account.Controller{
+			c: Controller{
 				UseCase: mockery,
 			},
 			args: args{
 				id:   "1",
 				code: "123456",
-				req: &account.EditDataUserRequest{
+				req: &dto.EditDataUserRequest{
 					Id:       1,
 					Password: "123456",
 					Name:     "Vincen",
 					Role:     "Admin",
-					Email:    "maxwelvincen@gmail.com",
 					Phone:    "123",
 				},
 			},
-			want: &account.CreateResponse{
+			want: &dto.MessageResponse{
 				Code:    200,
 				Status:  "OK",
 				Message: "Success Update Password",
-				Data: []account.AccountItemResponse{{
+				Data: []dto.AccountItemResponse{{
 					Id:    1,
 					Name:  "Vincen",
 					Role:  "Admin",
