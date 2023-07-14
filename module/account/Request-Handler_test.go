@@ -465,7 +465,7 @@ func TestRequestHandler_Login(t *testing.T) {
 	}
 }
 
-func TestRequestHandler_SendEmail(t *testing.T) {
+func TestRequestHandler_SendEmailForgotPassword(t *testing.T) {
 
 	tests := []struct {
 		name               string
@@ -478,14 +478,14 @@ func TestRequestHandler_SendEmail(t *testing.T) {
 			name:               "Success",
 			expectedStatusCode: 200,
 			makeRequest: func() *http.Request {
-				request, _ := http.NewRequest(http.MethodPost, "/send-email/maxwelvincen@gmail.com", nil)
+				request, _ := http.NewRequest(http.MethodPost, "/send-email-forgot-password/maxwelvincen@gmail.com", nil)
 				return request
 			},
 			makeFields: func() RequestHandler {
 				ctrl := gomock.NewController(t)
 				mockController := mocks.NewMockControllerInterface(ctrl)
 				mockController.EXPECT().
-					SendEmail("").
+					SendEmailForgotPassword("").
 					Return(&dto.MessageResponse{
 						Code:    200,
 						Status:  "OK",
@@ -526,7 +526,7 @@ func TestRequestHandler_SendEmail(t *testing.T) {
 				Ctrl: f.Ctrl,
 			}
 			statusCode, body := mocks.CreateTestServer(tt.makeRequest(), func(router *gin.Engine) {
-				router.POST("/send-email/maxwelvincen@gmail.com", h.SendEmail)
+				router.POST("/send-email-forgot-password/maxwelvincen@gmail.com", h.SendEmailForgotPassword)
 			})
 			assert.Equal(t, tt.expectedStatusCode, statusCode)
 			if !tt.assertValue(t, body) {
@@ -556,7 +556,7 @@ func TestRequestHandler_SendEmailRegister(t *testing.T) {
 				ctrl := gomock.NewController(t)
 				mockController := mocks.NewMockControllerInterface(ctrl)
 				mockController.EXPECT().
-					SendEmailRegister("").
+					SendEmailRegistration("").
 					Return(&dto.MessageResponse{
 						Code:    200,
 						Status:  "OK",
@@ -585,7 +585,7 @@ func TestRequestHandler_SendEmailRegister(t *testing.T) {
 				Ctrl: f.Ctrl,
 			}
 			statusCode, body := mocks.CreateTestServer(tt.makeRequest(), func(router *gin.Engine) {
-				router.POST("/send-email-registration/maxwelvincen@gmail.com", h.SendEmailRegister)
+				router.POST("/send-email-registration/maxwelvincen@gmail.com", h.SendEmailRegistration)
 			})
 			assert.Equal(t, tt.expectedStatusCode, statusCode)
 			if !tt.assertValue(t, body) {

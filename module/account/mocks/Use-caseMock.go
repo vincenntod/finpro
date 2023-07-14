@@ -5,8 +5,8 @@
 package mocks
 
 import (
-        account "golang/module/account/dto"
-        "golang/module/account/entities"
+        dto "golang/module/account/dto"
+        entities "golang/module/account/entities"
         reflect "reflect"
 
         gomock "github.com/golang/mock/gomock"
@@ -36,7 +36,7 @@ func (m *MockUseCaseInterface) EXPECT() *MockUseCaseInterfaceMockRecorder {
 }
 
 // CompareVerificationCode mocks base method.
-func (m *MockUseCaseInterface) CompareVerificationCode(verificationCode *account.VerificationCodeRequest) (entities.Account, error) {
+func (m *MockUseCaseInterface) CompareVerificationCode(verificationCode *dto.VerificationCodeRequest) (entities.Account, error) {
         m.ctrl.T.Helper()
         ret := m.ctrl.Call(m, "CompareVerificationCode", verificationCode)
         ret0, _ := ret[0].(entities.Account)
@@ -51,7 +51,7 @@ func (mr *MockUseCaseInterfaceMockRecorder) CompareVerificationCode(verification
 }
 
 // CreateAccount mocks base method.
-func (m *MockUseCaseInterface) CreateAccount(req *entities.Account) (entities.Account, error) {
+func (m *MockUseCaseInterface) CreateAccount(req *dto.CreateRequest) (entities.Account, error) {
         m.ctrl.T.Helper()
         ret := m.ctrl.Call(m, "CreateAccount", req)
         ret0, _ := ret[0].(entities.Account)
@@ -62,7 +62,7 @@ func (m *MockUseCaseInterface) CreateAccount(req *entities.Account) (entities.Ac
 // CreateAccount indicates an expected call of CreateAccount.
 func (mr *MockUseCaseInterfaceMockRecorder) CreateAccount(req interface{}) *gomock.Call {
         mr.mock.ctrl.T.Helper()
-        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAccount", reflect.TypeOf((*MockUseCaseInterface)(nil).CreateAccount), req)
+        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAccount", reflect.TypeOf((*MockUseCaseInterface)(nil).CreateAccount), req)        
 }
 
 // DeleteDataUser mocks base method.
@@ -77,11 +77,11 @@ func (m *MockUseCaseInterface) DeleteDataUser(id string) (entities.Account, erro
 // DeleteDataUser indicates an expected call of DeleteDataUser.
 func (mr *MockUseCaseInterfaceMockRecorder) DeleteDataUser(id interface{}) *gomock.Call {
         mr.mock.ctrl.T.Helper()
-        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteDataUser", reflect.TypeOf((*MockUseCaseInterface)(nil).DeleteDataUser), id)
+        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteDataUser", reflect.TypeOf((*MockUseCaseInterface)(nil).DeleteDataUser), id)       
 }
 
 // EditDataUser mocks base method.
-func (m *MockUseCaseInterface) EditDataUser(id string, req *entities.Account) (entities.Account, error) {
+func (m *MockUseCaseInterface) EditDataUser(id string, req *dto.EditDataUserRequest) (entities.Account, error) {
         m.ctrl.T.Helper()
         ret := m.ctrl.Call(m, "EditDataUser", id, req)
         ret0, _ := ret[0].(entities.Account)
@@ -92,11 +92,11 @@ func (m *MockUseCaseInterface) EditDataUser(id string, req *entities.Account) (e
 // EditDataUser indicates an expected call of EditDataUser.
 func (mr *MockUseCaseInterfaceMockRecorder) EditDataUser(id, req interface{}) *gomock.Call {
         mr.mock.ctrl.T.Helper()
-        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EditDataUser", reflect.TypeOf((*MockUseCaseInterface)(nil).EditDataUser), id, req)
+        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EditDataUser", reflect.TypeOf((*MockUseCaseInterface)(nil).EditDataUser), id, req)      
 }
 
 // EditPassword mocks base method.
-func (m *MockUseCaseInterface) EditPassword(code string, req *entities.Account) (entities.Account, error) {
+func (m *MockUseCaseInterface) EditPassword(code string, req *dto.EditDataUserRequest) (entities.Account, error) {
         m.ctrl.T.Helper()
         ret := m.ctrl.Call(m, "EditPassword", code, req)
         ret0, _ := ret[0].(entities.Account)
@@ -107,7 +107,7 @@ func (m *MockUseCaseInterface) EditPassword(code string, req *entities.Account) 
 // EditPassword indicates an expected call of EditPassword.
 func (mr *MockUseCaseInterfaceMockRecorder) EditPassword(code, req interface{}) *gomock.Call {
         mr.mock.ctrl.T.Helper()
-        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EditPassword", reflect.TypeOf((*MockUseCaseInterface)(nil).EditPassword), code, req)
+        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EditPassword", reflect.TypeOf((*MockUseCaseInterface)(nil).EditPassword), code, req)    
 }
 
 // GetDataUser mocks base method.
@@ -137,11 +137,11 @@ func (m *MockUseCaseInterface) GetDataUserById(id string) (entities.Account, err
 // GetDataUserById indicates an expected call of GetDataUserById.
 func (mr *MockUseCaseInterfaceMockRecorder) GetDataUserById(id interface{}) *gomock.Call {
         mr.mock.ctrl.T.Helper()
-        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDataUserById", reflect.TypeOf((*MockUseCaseInterface)(nil).GetDataUserById), id)
+        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDataUserById", reflect.TypeOf((*MockUseCaseInterface)(nil).GetDataUserById), id)     
 }
 
 // Login mocks base method.
-func (m *MockUseCaseInterface) Login(req *entities.Account) (string, entities.Account, error) {
+func (m *MockUseCaseInterface) Login(req *dto.LoginResponseRequest) (string, entities.Account, error) {
         m.ctrl.T.Helper()
         ret := m.ctrl.Call(m, "Login", req)
         ret0, _ := ret[0].(string)
@@ -156,17 +156,32 @@ func (mr *MockUseCaseInterfaceMockRecorder) Login(req interface{}) *gomock.Call 
         return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Login", reflect.TypeOf((*MockUseCaseInterface)(nil).Login), req)
 }
 
-// SendEmail mocks base method.
-func (m *MockUseCaseInterface) SendEmail(email string) (entities.Account, error) {
+// SendEmailForgotPassword mocks base method.
+func (m *MockUseCaseInterface) SendEmailForgotPassword(email string) (entities.Account, error) {
         m.ctrl.T.Helper()
-        ret := m.ctrl.Call(m, "SendEmail", email)
+        ret := m.ctrl.Call(m, "SendEmailForgotPassword", email)
         ret0, _ := ret[0].(entities.Account)
         ret1, _ := ret[1].(error)
         return ret0, ret1
 }
 
-// SendEmail indicates an expected call of SendEmail.
-func (mr *MockUseCaseInterfaceMockRecorder) SendEmail(email interface{}) *gomock.Call {
+// SendEmailForgotPassword indicates an expected call of SendEmailForgotPassword.
+func (mr *MockUseCaseInterfaceMockRecorder) SendEmailForgotPassword(email interface{}) *gomock.Call {
         mr.mock.ctrl.T.Helper()
-        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendEmail", reflect.TypeOf((*MockUseCaseInterface)(nil).SendEmail), email)
+        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendEmailForgotPassword", reflect.TypeOf((*MockUseCaseInterface)(nil).SendEmailForgotPassword), email)
+}
+
+// SendEmailRegistration mocks base method.
+func (m *MockUseCaseInterface) SendEmailRegistration(email string) (entities.Account, error) {
+        m.ctrl.T.Helper()
+        ret := m.ctrl.Call(m, "SendEmailRegistration", email)
+        ret0, _ := ret[0].(entities.Account)
+        ret1, _ := ret[1].(error)
+        return ret0, ret1
+}
+
+// SendEmailRegistration indicates an expected call of SendEmailRegistration.
+func (mr *MockUseCaseInterfaceMockRecorder) SendEmailRegistration(email interface{}) *gomock.Call {
+        mr.mock.ctrl.T.Helper()
+        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendEmailRegistration", reflect.TypeOf((*MockUseCaseInterface)(nil).SendEmailRegistration), email)
 }

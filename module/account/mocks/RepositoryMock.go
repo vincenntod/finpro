@@ -5,8 +5,8 @@
 package mocks
 
 import (
-        account "golang/module/account/dto"
-        "golang/module/account/entities"
+        dto "golang/module/account/dto"
+        entities "golang/module/account/entities"
         reflect "reflect"
 
         gomock "github.com/golang/mock/gomock"
@@ -36,7 +36,7 @@ func (m *MockRepositoryInterface) EXPECT() *MockRepositoryInterfaceMockRecorder 
 }
 
 // CompareVerificationCode mocks base method.
-func (m *MockRepositoryInterface) CompareVerificationCode(verificationCode *account.VerificationCodeRequest) (entities.Account, error) {
+func (m *MockRepositoryInterface) CompareVerificationCode(verificationCode *dto.VerificationCodeRequest) (entities.Account, error) {
         m.ctrl.T.Helper()
         ret := m.ctrl.Call(m, "CompareVerificationCode", verificationCode)
         ret0, _ := ret[0].(entities.Account)
@@ -51,7 +51,7 @@ func (mr *MockRepositoryInterfaceMockRecorder) CompareVerificationCode(verificat
 }
 
 // CreateAccount mocks base method.
-func (m *MockRepositoryInterface) CreateAccount(req *entities.Account) (entities.Account, error) {
+func (m *MockRepositoryInterface) CreateAccount(req *dto.CreateRequest) (entities.Account, error) {
         m.ctrl.T.Helper()
         ret := m.ctrl.Call(m, "CreateAccount", req)
         ret0, _ := ret[0].(entities.Account)
@@ -62,7 +62,7 @@ func (m *MockRepositoryInterface) CreateAccount(req *entities.Account) (entities
 // CreateAccount indicates an expected call of CreateAccount.
 func (mr *MockRepositoryInterfaceMockRecorder) CreateAccount(req interface{}) *gomock.Call {
         mr.mock.ctrl.T.Helper()
-        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAccount", reflect.TypeOf((*MockRepositoryInterface)(nil).CreateAccount), req)
+        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAccount", reflect.TypeOf((*MockRepositoryInterface)(nil).CreateAccount), req)     
 }
 
 // DeleteDataUser mocks base method.
@@ -77,11 +77,11 @@ func (m *MockRepositoryInterface) DeleteDataUser(id string) (entities.Account, e
 // DeleteDataUser indicates an expected call of DeleteDataUser.
 func (mr *MockRepositoryInterfaceMockRecorder) DeleteDataUser(id interface{}) *gomock.Call {
         mr.mock.ctrl.T.Helper()
-        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteDataUser", reflect.TypeOf((*MockRepositoryInterface)(nil).DeleteDataUser), id)
+        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteDataUser", reflect.TypeOf((*MockRepositoryInterface)(nil).DeleteDataUser), id)    
 }
 
 // EditDataUser mocks base method.
-func (m *MockRepositoryInterface) EditDataUser(id string, req *entities.Account) (entities.Account, error) {
+func (m *MockRepositoryInterface) EditDataUser(id string, req *dto.EditDataUserRequest) (entities.Account, error) {
         m.ctrl.T.Helper()
         ret := m.ctrl.Call(m, "EditDataUser", id, req)
         ret0, _ := ret[0].(entities.Account)
@@ -92,11 +92,11 @@ func (m *MockRepositoryInterface) EditDataUser(id string, req *entities.Account)
 // EditDataUser indicates an expected call of EditDataUser.
 func (mr *MockRepositoryInterfaceMockRecorder) EditDataUser(id, req interface{}) *gomock.Call {
         mr.mock.ctrl.T.Helper()
-        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EditDataUser", reflect.TypeOf((*MockRepositoryInterface)(nil).EditDataUser), id, req)
+        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EditDataUser", reflect.TypeOf((*MockRepositoryInterface)(nil).EditDataUser), id, req)   
 }
 
 // EditPassword mocks base method.
-func (m *MockRepositoryInterface) EditPassword(id string, req *entities.Account) (entities.Account, error) {
+func (m *MockRepositoryInterface) EditPassword(id string, req *dto.EditDataUserRequest) (entities.Account, error) {
         m.ctrl.T.Helper()
         ret := m.ctrl.Call(m, "EditPassword", id, req)
         ret0, _ := ret[0].(entities.Account)
@@ -107,7 +107,7 @@ func (m *MockRepositoryInterface) EditPassword(id string, req *entities.Account)
 // EditPassword indicates an expected call of EditPassword.
 func (mr *MockRepositoryInterfaceMockRecorder) EditPassword(id, req interface{}) *gomock.Call {
         mr.mock.ctrl.T.Helper()
-        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EditPassword", reflect.TypeOf((*MockRepositoryInterface)(nil).EditPassword), id, req)
+        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EditPassword", reflect.TypeOf((*MockRepositoryInterface)(nil).EditPassword), id, req)   
 }
 
 // GetDataUser mocks base method.
@@ -137,17 +137,16 @@ func (m *MockRepositoryInterface) GetDataUserById(id string) (entities.Account, 
 // GetDataUserById indicates an expected call of GetDataUserById.
 func (mr *MockRepositoryInterfaceMockRecorder) GetDataUserById(id interface{}) *gomock.Call {
         mr.mock.ctrl.T.Helper()
-        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDataUserById", reflect.TypeOf((*MockRepositoryInterface)(nil).GetDataUserById), id)
+        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDataUserById", reflect.TypeOf((*MockRepositoryInterface)(nil).GetDataUserById), id)  
 }
 
 // Login mocks base method.
-func (m *MockRepositoryInterface) Login(req *entities.Account) (string, entities.Account, error) {
+func (m *MockRepositoryInterface) Login(req *dto.LoginResponseRequest) (entities.Account, error) {
         m.ctrl.T.Helper()
         ret := m.ctrl.Call(m, "Login", req)
-        ret0, _ := ret[0].(string)
-        ret1, _ := ret[1].(entities.Account)
-        ret2, _ := ret[2].(error)
-        return ret0, ret1, ret2
+        ret0, _ := ret[0].(entities.Account)
+        ret1, _ := ret[1].(error)
+        return ret0, ret1
 }
 
 // Login indicates an expected call of Login.

@@ -121,11 +121,17 @@ func TestController_GetDataUserById(t *testing.T) {
 func TestController_CreateAccount(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockery := mocks.NewMockUseCaseInterface(ctrl)
-	mockery.EXPECT().CreateAccount(gomock.Any()).Return(entities.Account{
+	mockery.EXPECT().CreateAccount(&dto.CreateRequest{
+		Name:     "Vincen",
+		Role:     "Admin",
+		Email:    "maxwelvincen@gmail.com",
+		Phone:    "123",
+		Password: "123456",
+	}).Return(entities.Account{
 		Id:    0,
 		Name:  "Vincen",
 		Role:  "Admin",
-		Email: "maxwel@example.com",
+		Email: "maxwelvincen@gmail.com",
 		Phone: "123",
 	}, nil).Times(1)
 
@@ -148,23 +154,16 @@ func TestController_CreateAccount(t *testing.T) {
 				req: &dto.CreateRequest{
 					Name:     "Vincen",
 					Phone:    "123",
-					Role:     "admin",
+					Role:     "Admin",
 					Password: "123456",
-					Email:    "maxwel@gmail.com",
+					Email:    "maxwelvincen@gmail.com",
 				},
 			},
 			want: &dto.MessageResponse{
 				Code:    200,
 				Status:  "OK",
 				Message: "Success Save Data",
-				Data: []dto.AccountItemResponse{{
-					Id:    0,
-					Name:  "Vincen",
-					Role:  "admin",
-					Email: "maxwel@gmail.com",
-					Phone: "123",
-				},
-				},
+				Data:    nil,
 			},
 			wantErr: false,
 		},
@@ -186,12 +185,17 @@ func TestController_CreateAccount(t *testing.T) {
 func TestController_EditDataUser(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockery := mocks.NewMockUseCaseInterface(ctrl)
-	mockery.EXPECT().EditDataUser("1", gomock.Any()).Return(entities.Account{
+	mockery.EXPECT().EditDataUser("1", &dto.EditDataUserRequest{
 		Name:     "Vincen",
-		Password: "123456",
-		Role:     "Admin",
-		Email:    "maxwel@gmail.com",
 		Phone:    "123",
+		Role:     "Admin",
+		Password: "123456",
+	}).Return(entities.Account{
+		Name:     "Vincen",
+		Phone:    "123",
+		Role:     "Admin",
+		Password: "123456",
+		Email:    "maxwel@gmail.com",
 	}, nil).Times(1)
 	type args struct {
 		id  string
@@ -299,41 +303,120 @@ func TestController_DeleteDataUser(t *testing.T) {
 }
 
 func TestController_Login(t *testing.T) {
-
 	type args struct {
 		req *dto.LoginResponseRequest
 	}
+	ctrl := gomock.NewController(t)
+	mockery := mocks.NewMockUseCaseInterface(ctrl)
+	mockery.EXPECT().Login(&dto.LoginResponseRequest{
+		Email:    "maxwelvincen@gmail.com",
+		Password: "123456",
+	}).Return("123", entities.Account{
+		Id:    1,
+		Name:  "Vincen",
+		Role:  "Admin",
+		Email: "maxwel@example.com",
+	}, nil).Times(1)
 	tests := []struct {
 		name    string
 		c       Controller
 		args    args
-		want    *dto.LoginResponse
+		want1   *dto.LoginResponse
 		wantErr bool
-	}{}
+	}{
+		{
+			name: "success",
+			c: Controller{
+				UseCase: mockery,
+			},
+			args: args{
+				req: &dto.LoginResponseRequest{
+					Email:    "maxwelvincen@gmail.com",
+					Password: "123456",
+				},
+			},
+			want1: &dto.LoginResponse{
+				Message: "Login Success",
+				Code:    200,
+				Status:  "OK",
+				Data: []dto.LoginResponseWithToken{{
+					Id:    1,
+					Name:  "Vincen",
+					Role:  "Admin",
+					Email: "maxwel@example.com",
+					Token: "123",
+				},
+				},
+			},
+			wantErr: false,
+		},
+	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, _, err := tt.c.Login(tt.args.req)
+			_, got1, err := tt.c.Login(tt.args.req)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Controller.Login() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Controller.Login() = %v, want %v", got, tt.want)
+			if !reflect.DeepEqual(got1, tt.want1) {
+				t.Errorf("Controller.Login() got1 = %v, want %v", got1, tt.want1)
 			}
 		})
 	}
 }
 
-func TestController_SendEmail(t *testing.T) {
+func TestController_SendEmailRegistration(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockery := mocks.NewMockUseCaseInterface(ctrl)
-	mockery.EXPECT().SendEmail("maxwelvincen@gmail.com").Return(entities.Account{
-		Id:    1,
+	mockery.EXPECT().SendEmailRegistration("vincenmaxwell@gmail.com").Return(entities.Account{}, nil).Times(1)
+	type args struct {
+		email string
+	}
+	tests := []struct {
+		name    string
+		c       Controller
+		args    args
+		want    *dto.MessageResponse
+		wantErr bool
+	}{
+		{
+			name: "success",
+			c: Controller{
+				UseCase: mockery,
+			},
+			args: args{
+				email: "vincenmaxwell@gmail.com",
+			},
+			want: &dto.MessageResponse{
+				Code:    200,
+				Status:  "OK",
+				Message: "Success Send Email",
+				Data:    nil,
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := tt.c.SendEmailRegistration(tt.args.email)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("Controller.SendEmailRegistration() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Controller.SendEmailRegistration() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestController_SendEmailForgotPassword(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockery := mocks.NewMockUseCaseInterface(ctrl)
+	mockery.EXPECT().SendEmailForgotPassword("maxwelvincen@gmail.com").Return(entities.Account{Id: 1,
 		Name:  "Vincen",
 		Role:  "Admin",
 		Email: "maxwelvincen@gmail.com",
-		Phone: "123",
-	}, nil).Times(1)
+		Phone: "123"}, nil).Times(1)
 	type args struct {
 		email string
 	}
@@ -369,57 +452,13 @@ func TestController_SendEmail(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := tt.c.SendEmail(tt.args.email)
+			got, err := tt.c.SendEmailForgotPassword(tt.args.email)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("Controller.SendEmail() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("Controller.SendEmailForgotPassword() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Controller.SendEmail() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
-func TestController_SendEmailRegister(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	mockery := mocks.NewMockUseCaseInterface(ctrl)
-	mockery.EXPECT().SendEmail("maxwelvincen@gmail.com").Return(entities.Account{}, nil).Times(1)
-	type args struct {
-		email string
-	}
-	tests := []struct {
-		name    string
-		c       Controller
-		args    args
-		want    *dto.MessageResponse
-		wantErr bool
-	}{
-		{
-			name: "success",
-			c: Controller{
-				UseCase: mockery,
-			},
-			args: args{
-				email: "maxwelvincen@gmail.com",
-			},
-			want: &dto.MessageResponse{
-				Code:    200,
-				Status:  "OK",
-				Message: "Success Send Email",
-				Data:    nil,
-			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got, err := tt.c.SendEmailRegister(tt.args.email)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("Controller.SendEmailRegister() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Controller.SendEmailRegister() = %v, want %v", got, tt.want)
+				t.Errorf("Controller.SendEmailForgotPassword() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -493,7 +532,13 @@ func TestController_EditPassword(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockery := mocks.NewMockUseCaseInterface(ctrl)
 	entities.VerificationCodes["maxwelvincen@gmail.com"] = "123456"
-	mockery.EXPECT().EditPassword("1", gomock.Any()).Return(entities.Account{
+	mockery.EXPECT().EditPassword("1", &dto.EditDataUserRequest{
+		Id:       1,
+		Name:     "Vincen",
+		Phone:    "123",
+		Role:     "Admin",
+		Password: "123456",
+	}).Return(entities.Account{
 		Id:    1,
 		Name:  "Vincen",
 		Role:  "Admin",

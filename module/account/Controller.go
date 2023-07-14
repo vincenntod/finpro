@@ -3,9 +3,6 @@ package account
 import (
 	"golang/module/account/dto"
 	"golang/module/account/entities"
-	"net/smtp"
-
-	"golang.org/x/crypto/bcrypt"
 )
 
 type ControllerInterface interface {
@@ -15,8 +12,8 @@ type ControllerInterface interface {
 	EditDataUser(id string, req *dto.EditDataUserRequest) (*dto.MessageResponse, error)
 	DeleteDataUser(id string) (*dto.MessageResponse, error)
 	Login(req *dto.LoginResponseRequest) (string, *dto.LoginResponse, error)
-	SendEmail(email string) (*dto.MessageResponse, error)
-	SendEmailRegister(email string) (*dto.MessageResponse, error)
+	SendEmailForgotPassword(email string) (*dto.MessageResponse, error)
+	SendEmailRegistration(email string) (*dto.MessageResponse, error)
 	CompareVerificationCode(verificationCode *dto.VerificationCodeRequest) (*dto.MessageResponse, error)
 	EditPassword(id string, code string, req *dto.EditDataUserRequest) (*dto.MessageResponse, error)
 }
@@ -101,22 +98,12 @@ func (c Controller) CreateAccount(req *dto.CreateRequest) (*dto.MessageResponse,
 		}
 		return res, nil
 	}
-	HashPassword, _ := bcrypt.GenerateFromPassword([]byte((req.Password)), bcrypt.DefaultCost)
-	req.Password = string(HashPassword)
-
-	request := entities.Account{
-		Name:     req.Name,
-		Email:    req.Email,
-		Phone:    req.Phone,
-		Role:     req.Role,
-		Password: req.Password,
-	}
-	_, err := c.UseCase.CreateAccount(&request)
+	_, err := c.UseCase.CreateAccount(req)
 	if err != nil {
 		res := &dto.MessageResponse{
 			Code:    400,
 			Status:  "Error",
-			Message: "Duplicate account name",
+			Message: "Duplicate account email",
 			Data:    nil,
 		}
 		return res, err
@@ -126,17 +113,9 @@ func (c Controller) CreateAccount(req *dto.CreateRequest) (*dto.MessageResponse,
 		Code:    200,
 		Status:  "OK",
 		Message: "Success Save Data",
-		Data: []dto.AccountItemResponse{{
-			Id:    request.Id,
-			Name:  request.Name,
-			Role:  request.Role,
-			Email: request.Email,
-			Phone: request.Phone,
-		},
-		},
+		Data:    nil,
 	}
 	return res, nil
-
 }
 func (c Controller) EditDataUser(id string, req *dto.EditDataUserRequest) (*dto.MessageResponse, error) {
 	if req.Name == "" || req.Phone == "" || req.Role == "" || req.Password == "" {
@@ -148,16 +127,8 @@ func (c Controller) EditDataUser(id string, req *dto.EditDataUserRequest) (*dto.
 		}
 		return res, nil
 	}
-	HashPassword, _ := bcrypt.GenerateFromPassword([]byte((req.Password)), bcrypt.DefaultCost)
-	req.Password = string(HashPassword)
 
-	request := entities.Account{
-		Name:     req.Name,
-		Phone:    req.Phone,
-		Role:     req.Role,
-		Password: req.Password,
-	}
-	data, err := c.UseCase.EditDataUser(id, &request)
+	data, err := c.UseCase.EditDataUser(id, req)
 	if err != nil {
 		return nil, err
 	}
@@ -190,21 +161,9 @@ func (c Controller) DeleteDataUser(id string) (*dto.MessageResponse, error) {
 	return res, nil
 }
 func (c Controller) Login(req *dto.LoginResponseRequest) (string, *dto.LoginResponse, error) {
-	request := entities.Account{
-		Email:    req.Email,
-		Password: req.Password,
-	}
-	token, data, err := c.UseCase.Login(&request)
+
+	token, data, err := c.UseCase.Login(req)
 	if err != nil {
-		res := &dto.LoginResponse{
-			Code:    401,
-			Status:  "Error",
-			Message: "Email atau Password Salah",
-			Data:    nil,
-		}
-		return "", res, err
-	}
-	if err := bcrypt.CompareHashAndPassword([]byte(data.Password), []byte(request.Password)); err != nil {
 		res := &dto.LoginResponse{
 			Code:    401,
 			Status:  "Error",
@@ -229,8 +188,8 @@ func (c Controller) Login(req *dto.LoginResponseRequest) (string, *dto.LoginResp
 	}
 	return token, res, nil
 }
-func (c Controller) SendEmail(email string) (*dto.MessageResponse, error) {
-	data, _ := c.UseCase.SendEmail(email)
+func (c Controller) SendEmailForgotPassword(email string) (*dto.MessageResponse, error) {
+	data, err := c.UseCase.SendEmailForgotPassword(email)
 	if data.Id == 0 {
 		res := &dto.MessageResponse{
 			Code:    400,
@@ -240,36 +199,15 @@ func (c Controller) SendEmail(email string) (*dto.MessageResponse, error) {
 		}
 		return res, nil
 	}
-
-	smtpHost := "smtp.gmail.com"
-	smtpPort := "587"
-
-	from := "briceria123@gmail.com"
-	password := "fjuyqpqqnrkzaatr"
-	rand := GenerateVerificationCode(email)
-	auth := smtp.PlainAuth("", from, password, smtpHost)
-
-	to := []string{email}
-
-	subject := "Subject: [Verification Code] Forgot Password Account App Dashboard DDB Ceria\n"
-
-	mainMessage1 := "<body marginheight='0' topmargin='0' marginwidth='0' style='margin: 0px; background-color: #f2f3f8;' leftmargin='0'><table cellspacing='0' border='0' cellpadding='0' width='100%' bgcolor='#f2f3f8'style='@import url(https://fonts.googleapis.com/css?family=Rubik:300,400,500,700|Open+Sans:300,400,600,700); font-family: 'Open Sans', sans-serif;'><tr><td><table style='background-color: #f2f3f8; max-width:670px;  margin:0 auto;' width='100%' border='0'align='center' cellpadding='0' cellspacing='0'><tr><td style='height:80px;'>&nbsp;</td></tr><tr><td style='text-align:center;'><a href='https://bri.co.id/web/ceria' title='logo' target='_blank'><img width='60' src='https://play-lh.googleusercontent.com/tpsB_EJ4_p3Ljh7LwhNWg6ysAH8GoDzDIcZwIWTP9SX1HsVjPflGP_iUK4IWGZOulDk=w480-h960-rw' title='logo' alt='logo'></a></td></tr><tr><td style='height:20px;'>&nbsp;</td></tr><tr><td><table width='95%' border='0' align='center' cellpadding='0' cellspacing='0'style='max-width:670px;background:#fff; border-radius:3px; text-align:center;-webkit-box-shadow:0 6px 18px 0 rgba(0,0,0,.06);-moz-box-shadow:0 6px 18px 0 rgba(0,0,0,.06);box-shadow:0 6px 18px 0 rgba(0,0,0,.06);'><tr><td style='height:40px;'>&nbsp;</td></tr><tr><td style='padding:0 35px;'><h1 style='color:#1e1e2d; font-weight:500; margin:0;font-size:32px;font-family:'Rubik',sans-serif;'>You have requested to reset your password</h1><spanstyle='display:inline-block; vertical-align:middle; margin:29px 0 26px; border-bottom:1px solid #cecece; width:100px;'></span><p style='color:#455056; font-size:15px;line-height:24px; margin:0;'>We cannot simply send you your old password. Please copy your verification code. To reset your password</p><a href='javascript:void(0);'style='background:#20e277;text-decoration:none !important; font-weight:500; margin-top:35px; color:#fff;text-transform:uppercase; font-size:14px;padding:10px 24px;display:inline-block;border-radius:50px;'>"
-	mainMessage2 := "</a></td></tr><tr><td style='height:40px;'>&nbsp;</td></tr></table></td><tr><td style='height:20px;'>&nbsp;</td></tr><tr><td style='text-align:center;'><p style='font-size:14px; color:rgba(69, 80, 86, 0.7411764705882353); line-height:18px; margin:0 0 0;'>&copy; <strong>https://bri.co.id/web/ceria</strong></p></td></tr><tr><td style='height:80px;'>&nbsp;</td></tr></table></td></tr></table></body>"
-
-	body := mainMessage1 + rand + mainMessage2
-	mime := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"
-	message := []byte(subject + mime + body)
-
-	if err := smtp.SendMail(smtpHost+":"+smtpPort, auth, from, to, message); err != nil {
+	if err != nil {
 		res := &dto.MessageResponse{
 			Code:    500,
 			Status:  "Error",
 			Message: "Failed Send Email",
 			Data:    nil,
 		}
-		return res, nil
+		return res, err
 	}
-
 	res := &dto.MessageResponse{
 		Code:    200,
 		Status:  "OK",
@@ -285,8 +223,8 @@ func (c Controller) SendEmail(email string) (*dto.MessageResponse, error) {
 	}
 	return res, nil
 }
-func (c Controller) SendEmailRegister(email string) (*dto.MessageResponse, error) {
-	data, _ := c.UseCase.SendEmail(email)
+func (c Controller) SendEmailRegistration(email string) (*dto.MessageResponse, error) {
+	data, err := c.UseCase.SendEmailRegistration(email)
 	if data.Id != 0 {
 		res := &dto.MessageResponse{
 			Code:    400,
@@ -296,36 +234,15 @@ func (c Controller) SendEmailRegister(email string) (*dto.MessageResponse, error
 		}
 		return res, nil
 	}
-
-	smtpHost := "smtp.gmail.com"
-	smtpPort := "587"
-
-	from := "briceria123@gmail.com"
-	password := "fjuyqpqqnrkzaatr"
-	rand := GenerateVerificationCode(email)
-	auth := smtp.PlainAuth("", from, password, smtpHost)
-
-	to := []string{email}
-
-	subject := "Subject: [Verification Code] Registrasion Account App Dashboard DDB Ceria\n"
-
-	mainMessage1 := "<body marginheight='0' topmargin='0' marginwidth='0' style='margin: 0px; background-color: #f2f3f8;' leftmargin='0'><table cellspacing='0' border='0' cellpadding='0' width='100%' bgcolor='#f2f3f8'style='@import url(https://fonts.googleapis.com/css?family=Rubik:300,400,500,700|Open+Sans:300,400,600,700); font-family: 'Open Sans', sans-serif;'><tr><td><table style='background-color: #f2f3f8; max-width:670px;  margin:0 auto;' width='100%' border='0'align='center' cellpadding='0' cellspacing='0'><tr><td style='height:80px;'>&nbsp;</td></tr><tr><td style='text-align:center;'><a href='https://bri.co.id/web/ceria' title='logo' target='_blank'><img width='60' src='https://play-lh.googleusercontent.com/tpsB_EJ4_p3Ljh7LwhNWg6ysAH8GoDzDIcZwIWTP9SX1HsVjPflGP_iUK4IWGZOulDk=w480-h960-rw' title='logo' alt='logo'></a></td></tr><tr><td style='height:20px;'>&nbsp;</td></tr><tr><td><table width='95%' border='0' align='center' cellpadding='0' cellspacing='0'style='max-width:670px;background:#fff; border-radius:3px; text-align:center;-webkit-box-shadow:0 6px 18px 0 rgba(0,0,0,.06);-moz-box-shadow:0 6px 18px 0 rgba(0,0,0,.06);box-shadow:0 6px 18px 0 rgba(0,0,0,.06);'><tr><td style='height:40px;'>&nbsp;</td></tr><tr><td style='padding:0 35px;'><h1 style='color:#1e1e2d; font-weight:500; margin:0;font-size:32px;font-family:'Rubik',sans-serif;'>You have requested to registration your account</h1><spanstyle='display:inline-block; vertical-align:middle; margin:29px 0 26px; border-bottom:1px solid #cecece; width:100px;'></span><p style='color:#455056; font-size:15px;line-height:24px; margin:0;'>Please copy your verification code. To registration your password</p><a href='javascript:void(0);'style='background:#20e277;text-decoration:none !important; font-weight:500; margin-top:35px; color:#fff;text-transform:uppercase; font-size:14px;padding:10px 24px;display:inline-block;border-radius:50px;'>"
-	mainMessage2 := "</a></td></tr><tr><td style='height:40px;'>&nbsp;</td></tr></table></td><tr><td style='height:20px;'>&nbsp;</td></tr><tr><td style='text-align:center;'><p style='font-size:14px; color:rgba(69, 80, 86, 0.7411764705882353); line-height:18px; margin:0 0 0;'>&copy; <strong>https://bri.co.id/web/ceria</strong></p></td></tr><tr><td style='height:80px;'>&nbsp;</td></tr></table></td></tr></table></body>"
-
-	body := mainMessage1 + rand + mainMessage2
-	mime := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"
-	message := []byte(subject + mime + body)
-
-	if err := smtp.SendMail(smtpHost+":"+smtpPort, auth, from, to, message); err != nil {
+	if err != nil {
 		res := &dto.MessageResponse{
 			Code:    500,
 			Status:  "Error",
 			Message: "Failed Send Email",
 			Data:    nil,
 		}
-		return res, nil
+		return res, err
 	}
-
 	res := &dto.MessageResponse{
 		Code:    200,
 		Status:  "OK",
@@ -333,9 +250,10 @@ func (c Controller) SendEmailRegister(email string) (*dto.MessageResponse, error
 		Data:    nil,
 	}
 	return res, nil
+
 }
 func (c Controller) CompareVerificationCode(verificationCode *dto.VerificationCodeRequest) (*dto.MessageResponse, error) {
-	data, _ := c.UseCase.CompareVerificationCode(verificationCode)
+	data, err := c.UseCase.CompareVerificationCode(verificationCode)
 
 	CodeFromMap := entities.VerificationCodes[verificationCode.Email]
 	CodeFromRequest := verificationCode.Code
@@ -344,6 +262,15 @@ func (c Controller) CompareVerificationCode(verificationCode *dto.VerificationCo
 			Code:    400,
 			Status:  "Error",
 			Message: "Invalid Verification Code",
+			Data:    nil,
+		}
+		return res, err
+	}
+	if err != nil {
+		res := &dto.MessageResponse{
+			Code:    500,
+			Status:  "Error",
+			Message: "Internal Server Error",
 			Data:    nil,
 		}
 		return res, nil
@@ -357,6 +284,7 @@ func (c Controller) CompareVerificationCode(verificationCode *dto.VerificationCo
 		}
 		return res, nil
 	}
+
 	res := &dto.MessageResponse{
 		Code:    200,
 		Status:  "OK",
@@ -396,16 +324,8 @@ func (c Controller) EditPassword(id string, code string, req *dto.EditDataUserRe
 		}
 		return res, nil
 	}
-	HashPassword, _ := bcrypt.GenerateFromPassword([]byte((req.Password)), bcrypt.DefaultCost)
-	req.Password = string(HashPassword)
 
-	request := entities.Account{
-		Name:     req.Name,
-		Phone:    req.Phone,
-		Role:     req.Role,
-		Password: req.Password,
-	}
-	data, _ := c.UseCase.EditPassword(id, &request)
+	data, _ := c.UseCase.EditPassword(id, req)
 	if data.Id == 0 {
 		res := &dto.MessageResponse{
 			Code:    400,
