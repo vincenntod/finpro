@@ -52,3 +52,12 @@ func NewMockQueryDb(t *testing.T) (sqlmock.Sqlmock, *gorm.DB) {
 
 	return mockQuery, mockDb
 }
+
+func FormatDate(date string) string {
+	day := string(date[:2])
+	month := string(date[3:5])
+	year := string(date[6:10])
+
+	parseDate := year + "-" + month + "-" + day
+	return parseDate
+}

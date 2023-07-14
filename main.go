@@ -10,8 +10,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-
-
 func main() {
 	model.ConnectDatabase()
 
@@ -33,11 +31,8 @@ func main() {
 		Admin.GET("/export-transaction", export.ExportCSVHandler)
 
 		//transaction table
-		Admin.GET("/get-transactions/", transactionHandler.GetAllTransaction)
-		Admin.GET("/get-transaction-status/:status/", transactionHandler.GetAllTransactionByStatus)
-		Admin.GET("/get-TransactionDate/:start/:end/", transactionHandler.GetAllTransactionByDate)
-		Admin.GET("/get-TransactionStatusDate/:status/:start/:end/", transactionHandler.GetAllTransactionByStatusDate)
-		Admin.GET("/get-transactions-limit/:id", transactionHandler.GetAllLimit)
+		Admin.GET("/get-transaction-by-status", transactionHandler.GetAllTransactionByRequestLimit)
+
 
 	}
 
