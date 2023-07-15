@@ -36,7 +36,7 @@ func (Controller) DataResponse(transaction []entities.Transaction) (*dto.GetAllR
 	if len(transaction) == 0 {
 		res := &dto.GetAllResponseDataTransaction{
 			Code:      http.StatusBadRequest,
-			Message:   "Data Tidak Ditemukan Atau Inputan Salah",
+			Message:   "Data Tidak Ditemukan Atau Kosong",
 			Error:     "Not Success",
 			TotalData: len(transaction),
 		}
@@ -114,6 +114,8 @@ func (c Controller) GetAllTransactionByStatusDate(status string, start string, e
 	return c.DataResponse(transaction)
 }
 
+// Method Transformasi Data Tanpa Pagination Limit
+
 func (c Controller) GetAllTransactionNoLimit() (*dto.GetAllResponseDataTransaction, error) {
 
 	transaction, err := c.UseCase.GetAllTransactionNoLimit()
@@ -158,13 +160,13 @@ func (c Controller) GetAllTransactionByStatusDateNoLimit(status string, start st
 	return c.DataResponse(transaction)
 }
 
-// Method kontroler untuk mengambil data transaksi berdasarkan request
+// Method pengkondisian untuk memilih Method Controller berdasarkan input request
 
 func (c Controller) GetAllTransactionByRequest(req *dto.Request) (*dto.GetAllResponseDataTransaction, error) {
 
 	res := &dto.GetAllResponseDataTransaction{
 		Code:    http.StatusBadRequest,
-		Message: "Inputan Salah",
+		Message: "Inputan Tidak Valid",
 		Error:   "Bad Request",
 		Data:    nil,
 	}

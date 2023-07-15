@@ -27,9 +27,7 @@ func NewRepository(db *gorm.DB) RepositoryInterface {
 
 func (r Repository) GetAllTransaction(page int, size int) ([]entities.Transaction, error) {
 	var transactions []entities.Transaction
-
 	err := r.DB.Offset((page - 1) * size).Limit(size).Find(&transactions).Error
-
 	return transactions, err
 }
 
@@ -53,9 +51,7 @@ func (r Repository) GetAllTransactionByStatusDate(status string, start string, e
 
 func (r Repository) GetAllTransactionNoLimit() ([]entities.Transaction, error) {
 	var transactions []entities.Transaction
-
 	err := r.DB.Find(&transactions).Error
-
 	return transactions, err
 }
 
