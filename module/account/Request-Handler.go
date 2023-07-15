@@ -163,14 +163,6 @@ func (h RequestHandler) EditPassword(c *gin.Context) {
 		})
 		return
 	}
-	if req.Id == 0 {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"code":    400,
-			"status":  "Error",
-			"message": "Bad Request id nil",
-		})
-		return
-	}
 
 	verificationCode := c.Param("verification-code")
 	code := verificationCode
