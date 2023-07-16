@@ -9,7 +9,7 @@ import (
 )
 
 type RequestHandler struct {
-	Ctrl ControllerInterface
+	ctrl ControllerInterface
 }
 
 type RequestHandlerinterface interface {
@@ -18,10 +18,6 @@ type RequestHandlerinterface interface {
 	GetAllTransactionByDate(c *gin.Context)
 	GetAllTransactionByStatusDate(c *gin.Context)
 	GetAllLimit(c *gin.Context)
-}
-
-type MessageResponse struct {
-	Message string `json:"message"`
 }
 
 type GetAllResponseDataTransaction struct {
@@ -59,7 +55,7 @@ func FormatDate(date string) string {
 
 func NewRequestHandler(ctrl ControllerInterface) RequestHandlerinterface {
 	return RequestHandler{
-		Ctrl: ctrl,
+		ctrl: ctrl,
 	}
 }
 
@@ -75,7 +71,8 @@ func DefaultRequestHandler(db *gorm.DB) RequestHandlerinterface {
 
 func (h RequestHandler) GetAllTransaction(c *gin.Context) {
 
-	res, err := h.Ctrl.GetAllTransaction()
+
+	res, err := h.ctrl.GetAllTransaction()
 	if err != nil {
 		c.JSON(500, gin.H{"message": err.Error()})
 		return
@@ -92,7 +89,7 @@ func (h RequestHandler) GetAllTransactionByStatus(c *gin.Context) {
 		return
 	}
 
-	res, err := h.Ctrl.GetAllTransactionByStatus(status)
+	res, err := h.ctrl.GetAllTransactionByStatus(status)
 	if err != nil {
 		c.JSON(500, gin.H{"message": err.Error()})
 		return
@@ -105,7 +102,12 @@ func (h RequestHandler) GetAllTransactionByDate(c *gin.Context) {
 	start := FormatDate(c.Param("start"))
 	end := FormatDate(c.Param("end"))
 
-	res, err := h.Ctrl.GetAllTransactionByDate(start, end)
+	if start == "" || end == "" {
+		c.JSON(http.StatusNotFound, gin.H{"message": "inputan tidak boleh kosong"})
+		return
+	}
+
+	res, err := h.ctrl.GetAllTransactionByDate(start, end)
 	if err != nil {
 		c.JSON(500, gin.H{"message": err.Error()})
 		return
@@ -124,7 +126,7 @@ func (h RequestHandler) GetAllTransactionByStatusDate(c *gin.Context) {
 		return
 	}
 
-	res, err := h.Ctrl.GetAllTransactionByStatusDate(status, start, end)
+	res, err := h.ctrl.GetAllTransactionByStatusDate(status, start, end)
 	if err != nil {
 		c.JSON(500, gin.H{"message": err.Error()})
 		return
@@ -148,10 +150,11 @@ func (h RequestHandler) GetAllLimit(c *gin.Context) {
 		return
 	}
 
-	res, err, _ := h.Ctrl.GetAllLimit(input)
+	res, err, _ := h.ctrl.GetAllLimit(input)
 	if err != nil {
 		c.JSON(500, gin.H{"message": err.Error()})
 		return
 	}
 	c.JSON(200, res)
 }
+

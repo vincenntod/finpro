@@ -198,8 +198,7 @@ func (h RequestHandler) EditPassword(c *gin.Context) {
 		return
 	}
 
-	verificationCode := c.Param("verification-code")
-	code := verificationCode
+	code := c.Request.Header.Get("VerificationCode")
 	if code == "" {
 		c.JSON(400, gin.H{
 			"code":    400,

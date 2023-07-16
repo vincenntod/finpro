@@ -5,7 +5,7 @@ import (
 )
 
 type Controller struct {
-	UseCase UseCaseInterface
+	useCase UseCaseInterface
 }
 
 type ControllerInterface interface {
@@ -26,13 +26,13 @@ type TransactionItemResponse struct {
 
 func NewController(useCase UseCaseInterface) ControllerInterface {
 	return Controller{
-		UseCase: useCase,
+		useCase: useCase,
 	}
 }
 
 func (c Controller) GetAllTransaction() (*GetAllResponseDataTransaction, error) {
 
-	transaction, err := c.UseCase.GetAllTransaction()
+	transaction, err := c.useCase.GetAllTransaction()
 	if err != nil {
 		return nil, err
 	}
@@ -58,7 +58,7 @@ func (c Controller) GetAllTransaction() (*GetAllResponseDataTransaction, error) 
 
 func (c Controller) GetAllTransactionByStatus(status string) (*GetAllResponseDataTransaction, error) {
 
-	transaction, err := c.UseCase.GetAllTransactionByStatus(status)
+	transaction, err := c.useCase.GetAllTransactionByStatus(status)
 	if err != nil {
 		return nil, err
 	}
@@ -83,7 +83,7 @@ func (c Controller) GetAllTransactionByStatus(status string) (*GetAllResponseDat
 }
 
 func (c Controller) GetAllTransactionByDate(start string, end string) (*GetAllResponseDataTransaction, error) {
-	transaction, err := c.UseCase.GetAllTransactionByDate(start, end)
+	transaction, err := c.useCase.GetAllTransactionByDate(start, end)
 	if err != nil {
 		res := &GetAllResponseDataTransaction{
 			Code:      400,
@@ -115,7 +115,7 @@ func (c Controller) GetAllTransactionByDate(start string, end string) (*GetAllRe
 }
 
 func (c Controller) GetAllTransactionByStatusDate(status string, start string, end string) (*GetAllResponseDataTransaction, error) {
-	transaction, err := c.UseCase.GetAllTransactionByStatusDate(status, start, end)
+	transaction, err := c.useCase.GetAllTransactionByStatusDate(status, start, end)
 	if err != nil {
 		return nil, err
 	}
@@ -139,8 +139,9 @@ func (c Controller) GetAllTransactionByStatusDate(status string, start string, e
 	return res, nil
 }
 
+
 func (c Controller) GetAllLimit(input FilterLimit) (*GetAllResponseDataTransaction, error, int64) {
-	transaction, err, total := c.UseCase.GetAllLimit(input)
+	transaction, err, total := c.useCase.GetAllLimit(input)
 	if err != nil {
 		return nil, err, 0
 	}

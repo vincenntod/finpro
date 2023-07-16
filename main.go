@@ -4,7 +4,7 @@ import (
 	"golang/auth"
 	"golang/model"
 	"golang/module/account"
-	"golang/module/exportcsv"
+	"golang/module/exporttransaction"
 	"golang/module/transaction"
 
 	"github.com/gin-gonic/gin"
@@ -14,7 +14,7 @@ func main() {
 	model.ConnectDatabase()
 	r := gin.Default()
 	r.Use(auth.CORSMiddleware())
-	export := exportcsv.DefaultRequestHandler(model.DB)
+	export := exporttransaction.DefaultRequestHandler(model.DB)
 	accountHandler := account.DefaultRequestHandler(model.DB)
 	transactionHandler := transaction.DefaultRequestHandler(model.DB)
 
@@ -27,7 +27,7 @@ func main() {
 		Admin.DELETE("/data-user/:id", accountHandler.DeleteDataUser)
 
 		//export csv file
-		Admin.GET("/export-transaction/:type", export.ExportCSVHandler)
+		Admin.GET("/export-transaction/csv", export.ExportTransactionHandler)
 
 		//transaction table
 		Admin.GET("/get-transactions/", transactionHandler.GetAllTransaction)
@@ -44,7 +44,7 @@ func main() {
 	//forgot password
 	r.POST("/send-email/:email", accountHandler.SendEmail)
 	r.POST("/compare-verification-code", accountHandler.CompareVerificationCode)
-	r.PUT("/edit-password/:verification-code", accountHandler.EditPassword)
+	r.PUT("/edit-password/", accountHandler.EditPassword)
 
 	r.POST("/login", accountHandler.Login)
 	r.Run()

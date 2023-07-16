@@ -1,7 +1,7 @@
 package transaction
 
 type UseCase struct {
-	Repo RepositoryInterface
+	repo RepositoryInterface
 }
 
 type UseCaseInterface interface {
@@ -15,28 +15,28 @@ type UseCaseInterface interface {
 
 func NewUseCase(repo RepositoryInterface) UseCaseInterface {
 	return UseCase{
-		Repo: repo,
+		repo: repo,
 	}
 }
 
 func (u UseCase) GetAllTransaction() ([]Transaction, error) {
-	return u.Repo.GetAllTransaction()
+	return u.repo.GetAllTransaction()
 
 }
 
 func (u UseCase) GetAllTransactionByStatus(status string) ([]Transaction, error) {
-	return u.Repo.GetAllTransactionByStatus(status)
+	return u.repo.GetAllTransactionByStatus(status)
 }
 
 func (u UseCase) GetAllTransactionByDate(start string, end string) ([]Transaction, error) {
-	return u.Repo.GetAllTransactionByDate(start, end)
+	return u.repo.GetAllTransactionByDate(start, end)
 }
 
 func (u UseCase) GetAllTransactionByStatusDate(status string, start string, end string) ([]Transaction, error) {
-	return u.Repo.GetAllTransactionByStatusDate(status, start, end)
+	return u.repo.GetAllTransactionByStatusDate(status, start, end)
 }
 
 func (u UseCase) GetAllLimit(input FilterLimit) ([]Transaction, error, int64) {
-	return u.Repo.GetAllLimit(input)
+	return u.repo.GetAllLimit(input)
 }
 
