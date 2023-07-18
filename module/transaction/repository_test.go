@@ -1,8 +1,8 @@
 package transaction
 
 import (
-	"golang/helper"
 	"golang/module/transaction/entities"
+	"golang/module/transaction/helper"
 	"reflect"
 	"testing"
 
