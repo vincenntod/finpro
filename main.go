@@ -37,12 +37,12 @@ func main() {
 		Admin.GET("/get-transactions-limit/:id", transactionHandler.GetAllLimit)
 
 	}
-
+	//create new user
 	r.POST("/create-user", accountHandler.CreateAccount)
-	r.POST("/send-email-registration/:email", accountHandler.SendEmailRegister)
+	r.POST("/send-email-registration/:email", accountHandler.SendEmailRegistration)
 
 	//forgot password
-	r.POST("/send-email/:email", accountHandler.SendEmail)
+	r.POST("/send-email-forgot-password/:email", accountHandler.SendEmailForgotPassword)
 	r.POST("/compare-verification-code", accountHandler.CompareVerificationCode)
 	r.PUT("/edit-password/", accountHandler.EditPassword)
 

@@ -15,8 +15,8 @@ type RequestHandlerInterface interface {
 	EditDataUser(c *gin.Context)
 	DeleteDataUser(c *gin.Context)
 	Login(c *gin.Context)
-	SendEmail(c *gin.Context)
-	SendEmailRegister(c *gin.Context)
+	SendEmailForgotPassword(c *gin.Context)
+	SendEmailRegistration(c *gin.Context)
 	CompareVerificationCode(c *gin.Context)
 	EditPassword(c *gin.Context)
 }
@@ -108,18 +108,18 @@ func (h RequestHandler) Login(c *gin.Context) {
 	c.JSON(http.StatusOK, res)
 }
 
-func (h RequestHandler) SendEmail(c *gin.Context) {
+func (h RequestHandler) SendEmailForgotPassword(c *gin.Context) {
 	email := c.Param("email")
-	res, err := h.Ctrl.SendEmail(email)
+	res, err := h.Ctrl.SendEmailForgotPassword(email)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, res)
 	}
 	c.JSON(http.StatusOK, res)
 }
 
-func (h RequestHandler) SendEmailRegister(c *gin.Context) {
+func (h RequestHandler) SendEmailRegistration(c *gin.Context) {
 	email := c.Param("email")
-	res, err := h.Ctrl.SendEmailRegister(email)
+	res, err := h.Ctrl.SendEmailRegistration(email)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, res)
 	}
@@ -160,14 +160,6 @@ func (h RequestHandler) EditPassword(c *gin.Context) {
 			"code":    500,
 			"status":  "Error",
 			"message": "Internal Server Error",
-		})
-		return
-	}
-	if req.Id == 0 {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"code":    400,
-			"status":  "Error",
-			"message": "Bad Request id nil",
 		})
 		return
 	}

@@ -111,15 +111,15 @@ func TestRepository_EditDataUser(t *testing.T) {
 	queryFind := "SELECT * FROM account WHERE id = ?"
 
 	mockQuery.ExpectQuery(queryUpdate).WillReturnRows(
-		sqlmock.NewRows([]string{"name", "phone", "role", "password", "email", "id"}).AddRow("Vincen", "213", "Admin", "123", "admin@mail.com", 1),
+		sqlmock.NewRows([]string{"name", "phone", "role", "password", "id"}).AddRow("Vincen", "213", "Admin", "123", 1),
 	)
 	mockQuery.ExpectQuery(queryFind).WillReturnRows(
-		sqlmock.NewRows([]string{"name", "phone", "role", "password", "email", "id"}).AddRow("Vincen", "213", "Admin", "123", "admin@mail.com", 1),
+		sqlmock.NewRows([]string{"name", "phone", "role", "password", "id"}).AddRow("Vincen", "213", "Admin", "123", 1),
 	)
 
 	type args struct {
 		id  string
-		req *entities.Account
+		req *dto.EditDataUserRequest
 	}
 	tests := []struct {
 		name    string
@@ -135,13 +135,12 @@ func TestRepository_EditDataUser(t *testing.T) {
 			},
 			args: args{
 				id: "1",
-				req: &entities.Account{
+				req: &dto.EditDataUserRequest{
 					Id:       1,
 					Name:     "Vincen",
 					Phone:    "213",
 					Role:     "Admin",
 					Password: "123",
-					Email:    "admin@mail.com",
 				},
 			},
 			want: entities.Account{
@@ -150,7 +149,6 @@ func TestRepository_EditDataUser(t *testing.T) {
 				Phone:    "213",
 				Role:     "Admin",
 				Password: "123",
-				Email:    "admin@mail.com",
 			},
 			wantErr: false,
 		},
@@ -219,7 +217,7 @@ func TestRepository_CreateAccount(t *testing.T) {
 	)
 
 	type args struct {
-		req *entities.Account
+		req *dto.CreateRequest
 	}
 	tests := []struct {
 		name    string
@@ -234,7 +232,7 @@ func TestRepository_CreateAccount(t *testing.T) {
 				Db: mockDb,
 			},
 			args: args{
-				req: &entities.Account{
+				req: &dto.CreateRequest{
 					Name:     "Vincen",
 					Phone:    "213",
 					Role:     "Admin",
@@ -270,10 +268,10 @@ func TestRepository_Login(t *testing.T) {
 	mockQuery, mockDb := mocks.NewMockQueryDb(t)
 	query := "SELECT * FROM account WHERE email = ? ORDER BY account.id LIMIT 1"
 	mockQuery.ExpectQuery(query).WillReturnRows(
-		sqlmock.NewRows([]string{"id", "name", "phone", "Role", "password", "email"}).AddRow(1, "Vincen", "213", "Admin", "123", "admin@mail.com"),
+		sqlmock.NewRows([]string{"id", "name", "phone", "Role", "email"}).AddRow(1, "Vincen", "213", "Admin", "admin@mail.com"),
 	)
 	type args struct {
-		req *entities.Account
+		req *dto.LoginResponseRequest
 	}
 	tests := []struct {
 		name    string
@@ -288,25 +286,24 @@ func TestRepository_Login(t *testing.T) {
 				Db: mockDb,
 			},
 			args: args{
-				req: &entities.Account{
+				req: &dto.LoginResponseRequest{
 					Password: "123456",
 					Email:    "admin@mail.com",
 				},
 			},
 			want1: entities.Account{
-				Id:       1,
-				Name:     "Vincen",
-				Phone:    "213",
-				Role:     "Admin",
-				Password: "123",
-				Email:    "admin@mail.com",
+				Id:    1,
+				Name:  "Vincen",
+				Phone: "213",
+				Role:  "Admin",
+				Email: "admin@mail.com",
 			},
 			wantErr: false,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			_, got1, err := tt.r.Login(tt.args.req)
+			got1, err := tt.r.Login(tt.args.req)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Repository.Login() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -431,7 +428,7 @@ func TestRepository_EditPassword(t *testing.T) {
 	)
 	type args struct {
 		id  string
-		req *entities.Account
+		req *dto.EditDataUserRequest
 	}
 	tests := []struct {
 		name    string
@@ -447,13 +444,9 @@ func TestRepository_EditPassword(t *testing.T) {
 			},
 			args: args{
 				id: "1",
-				req: &entities.Account{
+				req: &dto.EditDataUserRequest{
 					Id:       1,
-					Name:     "Vincen",
-					Phone:    "213",
-					Role:     "Admin",
 					Password: "123",
-					Email:    "admin@mail.com",
 				},
 			},
 			want: entities.Account{

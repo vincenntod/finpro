@@ -5,7 +5,7 @@
 package mocks
 
 import (
-        account "golang/module/account/dto"
+        dto "golang/module/account/dto"
         reflect "reflect"
 
         gomock "github.com/golang/mock/gomock"
@@ -35,10 +35,10 @@ func (m *MockControllerInterface) EXPECT() *MockControllerInterfaceMockRecorder 
 }
 
 // CompareVerificationCode mocks base method.
-func (m *MockControllerInterface) CompareVerificationCode(verificationCode *account.VerificationCodeRequest) (*account.MessageResponse, error) {
+func (m *MockControllerInterface) CompareVerificationCode(verificationCode *dto.VerificationCodeRequest) (*dto.MessageResponse, error) {
         m.ctrl.T.Helper()
         ret := m.ctrl.Call(m, "CompareVerificationCode", verificationCode)
-        ret0, _ := ret[0].(*account.MessageResponse)
+        ret0, _ := ret[0].(*dto.MessageResponse)
         ret1, _ := ret[1].(error)
         return ret0, ret1
 }
@@ -50,10 +50,10 @@ func (mr *MockControllerInterfaceMockRecorder) CompareVerificationCode(verificat
 }
 
 // CreateAccount mocks base method.
-func (m *MockControllerInterface) CreateAccount(req *account.CreateRequest) (*account.MessageResponse, error) {
+func (m *MockControllerInterface) CreateAccount(req *dto.CreateRequest) (*dto.MessageResponse, error) {
         m.ctrl.T.Helper()
         ret := m.ctrl.Call(m, "CreateAccount", req)
-        ret0, _ := ret[0].(*account.MessageResponse)
+        ret0, _ := ret[0].(*dto.MessageResponse)
         ret1, _ := ret[1].(error)
         return ret0, ret1
 }
@@ -61,14 +61,14 @@ func (m *MockControllerInterface) CreateAccount(req *account.CreateRequest) (*ac
 // CreateAccount indicates an expected call of CreateAccount.
 func (mr *MockControllerInterfaceMockRecorder) CreateAccount(req interface{}) *gomock.Call {
         mr.mock.ctrl.T.Helper()
-        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAccount", reflect.TypeOf((*MockControllerInterface)(nil).CreateAccount), req)
+        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAccount", reflect.TypeOf((*MockControllerInterface)(nil).CreateAccount), req)     
 }
 
 // DeleteDataUser mocks base method.
-func (m *MockControllerInterface) DeleteDataUser(id string) (*account.MessageResponse, error) {
+func (m *MockControllerInterface) DeleteDataUser(id string) (*dto.MessageResponse, error) {
         m.ctrl.T.Helper()
         ret := m.ctrl.Call(m, "DeleteDataUser", id)
-        ret0, _ := ret[0].(*account.MessageResponse)
+        ret0, _ := ret[0].(*dto.MessageResponse)
         ret1, _ := ret[1].(error)
         return ret0, ret1
 }
@@ -76,14 +76,14 @@ func (m *MockControllerInterface) DeleteDataUser(id string) (*account.MessageRes
 // DeleteDataUser indicates an expected call of DeleteDataUser.
 func (mr *MockControllerInterfaceMockRecorder) DeleteDataUser(id interface{}) *gomock.Call {
         mr.mock.ctrl.T.Helper()
-        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteDataUser", reflect.TypeOf((*MockControllerInterface)(nil).DeleteDataUser), id)
+        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteDataUser", reflect.TypeOf((*MockControllerInterface)(nil).DeleteDataUser), id)    
 }
 
 // EditDataUser mocks base method.
-func (m *MockControllerInterface) EditDataUser(id string, req *account.EditDataUserRequest) (*account.MessageResponse, error) {
+func (m *MockControllerInterface) EditDataUser(id string, req *dto.EditDataUserRequest) (*dto.MessageResponse, error) {
         m.ctrl.T.Helper()
         ret := m.ctrl.Call(m, "EditDataUser", id, req)
-        ret0, _ := ret[0].(*account.MessageResponse)
+        ret0, _ := ret[0].(*dto.MessageResponse)
         ret1, _ := ret[1].(error)
         return ret0, ret1
 }
@@ -91,14 +91,14 @@ func (m *MockControllerInterface) EditDataUser(id string, req *account.EditDataU
 // EditDataUser indicates an expected call of EditDataUser.
 func (mr *MockControllerInterfaceMockRecorder) EditDataUser(id, req interface{}) *gomock.Call {
         mr.mock.ctrl.T.Helper()
-        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EditDataUser", reflect.TypeOf((*MockControllerInterface)(nil).EditDataUser), id, req)
+        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EditDataUser", reflect.TypeOf((*MockControllerInterface)(nil).EditDataUser), id, req)   
 }
 
 // EditPassword mocks base method.
-func (m *MockControllerInterface) EditPassword(id, code string, req *account.EditDataUserRequest) (*account.MessageResponse, error) {   
+func (m *MockControllerInterface) EditPassword(id, code string, req *dto.EditDataUserRequest) (*dto.MessageResponse, error) {
         m.ctrl.T.Helper()
         ret := m.ctrl.Call(m, "EditPassword", id, code, req)
-        ret0, _ := ret[0].(*account.MessageResponse)
+        ret0, _ := ret[0].(*dto.MessageResponse)
         ret1, _ := ret[1].(error)
         return ret0, ret1
 }
@@ -110,10 +110,10 @@ func (mr *MockControllerInterfaceMockRecorder) EditPassword(id, code, req interf
 }
 
 // GetDataUser mocks base method.
-func (m *MockControllerInterface) GetDataUser() (*account.MessageResponse, error) {
+func (m *MockControllerInterface) GetDataUser() (*dto.MessageResponse, error) {
         m.ctrl.T.Helper()
         ret := m.ctrl.Call(m, "GetDataUser")
-        ret0, _ := ret[0].(*account.MessageResponse)
+        ret0, _ := ret[0].(*dto.MessageResponse)
         ret1, _ := ret[1].(error)
         return ret0, ret1
 }
@@ -125,10 +125,10 @@ func (mr *MockControllerInterfaceMockRecorder) GetDataUser() *gomock.Call {
 }
 
 // GetDataUserById mocks base method.
-func (m *MockControllerInterface) GetDataUserById(id string) (*account.MessageResponse, error) {
+func (m *MockControllerInterface) GetDataUserById(id string) (*dto.MessageResponse, error) {
         m.ctrl.T.Helper()
         ret := m.ctrl.Call(m, "GetDataUserById", id)
-        ret0, _ := ret[0].(*account.MessageResponse)
+        ret0, _ := ret[0].(*dto.MessageResponse)
         ret1, _ := ret[1].(error)
         return ret0, ret1
 }
@@ -136,15 +136,15 @@ func (m *MockControllerInterface) GetDataUserById(id string) (*account.MessageRe
 // GetDataUserById indicates an expected call of GetDataUserById.
 func (mr *MockControllerInterfaceMockRecorder) GetDataUserById(id interface{}) *gomock.Call {
         mr.mock.ctrl.T.Helper()
-        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDataUserById", reflect.TypeOf((*MockControllerInterface)(nil).GetDataUserById), id)
+        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDataUserById", reflect.TypeOf((*MockControllerInterface)(nil).GetDataUserById), id)  
 }
 
 // Login mocks base method.
-func (m *MockControllerInterface) Login(req *account.LoginResponseRequest) (string, *account.LoginResponse, error) {
+func (m *MockControllerInterface) Login(req *dto.LoginResponseRequest) (string, *dto.LoginResponse, error) {
         m.ctrl.T.Helper()
         ret := m.ctrl.Call(m, "Login", req)
         ret0, _ := ret[0].(string)
-        ret1, _ := ret[1].(*account.LoginResponse)
+        ret1, _ := ret[1].(*dto.LoginResponse)
         ret2, _ := ret[2].(error)
         return ret0, ret1, ret2
 }
@@ -152,35 +152,35 @@ func (m *MockControllerInterface) Login(req *account.LoginResponseRequest) (stri
 // Login indicates an expected call of Login.
 func (mr *MockControllerInterfaceMockRecorder) Login(req interface{}) *gomock.Call {
         mr.mock.ctrl.T.Helper()
-        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Login", reflect.TypeOf((*MockControllerInterface)(nil).Login), req)     
+        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Login", reflect.TypeOf((*MockControllerInterface)(nil).Login), req)
 }
 
-// SendEmail mocks base method.
-func (m *MockControllerInterface) SendEmail(email string) (*account.MessageResponse, error) {
+// SendEmailForgotPassword mocks base method.
+func (m *MockControllerInterface) SendEmailForgotPassword(email string) (*dto.MessageResponse, error) {
         m.ctrl.T.Helper()
-        ret := m.ctrl.Call(m, "SendEmail", email)
-        ret0, _ := ret[0].(*account.MessageResponse)
+        ret := m.ctrl.Call(m, "SendEmailForgotPassword", email)
+        ret0, _ := ret[0].(*dto.MessageResponse)
         ret1, _ := ret[1].(error)
         return ret0, ret1
 }
 
-// SendEmail indicates an expected call of SendEmail.
-func (mr *MockControllerInterfaceMockRecorder) SendEmail(email interface{}) *gomock.Call {
+// SendEmailForgotPassword indicates an expected call of SendEmailForgotPassword.
+func (mr *MockControllerInterfaceMockRecorder) SendEmailForgotPassword(email interface{}) *gomock.Call {
         mr.mock.ctrl.T.Helper()
-        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendEmail", reflect.TypeOf((*MockControllerInterface)(nil).SendEmail), email)
+        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendEmailForgotPassword", reflect.TypeOf((*MockControllerInterface)(nil).SendEmailForgotPassword), email)
 }
 
-// SendEmailRegister mocks base method.
-func (m *MockControllerInterface) SendEmailRegister(email string) (*account.MessageResponse, error) {
+// SendEmailRegistration mocks base method.
+func (m *MockControllerInterface) SendEmailRegistration(email string) (*dto.MessageResponse, error) {
         m.ctrl.T.Helper()
-        ret := m.ctrl.Call(m, "SendEmailRegister", email)
-        ret0, _ := ret[0].(*account.MessageResponse)
+        ret := m.ctrl.Call(m, "SendEmailRegistration", email)
+        ret0, _ := ret[0].(*dto.MessageResponse)
         ret1, _ := ret[1].(error)
         return ret0, ret1
 }
 
-// SendEmailRegister indicates an expected call of SendEmailRegister.
-func (mr *MockControllerInterfaceMockRecorder) SendEmailRegister(email interface{}) *gomock.Call {
+// SendEmailRegistration indicates an expected call of SendEmailRegistration.
+func (mr *MockControllerInterfaceMockRecorder) SendEmailRegistration(email interface{}) *gomock.Call {
         mr.mock.ctrl.T.Helper()
-        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendEmailRegister", reflect.TypeOf((*MockControllerInterface)(nil).SendEmailRegister), email)
+        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendEmailRegistration", reflect.TypeOf((*MockControllerInterface)(nil).SendEmailRegistration), email)
 }

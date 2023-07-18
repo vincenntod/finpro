@@ -2,7 +2,6 @@ package auth
 
 import (
 	"fmt"
-	"golang/model"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -30,13 +29,6 @@ func MiddlewareAdmin(c *gin.Context) {
 			c.AbortWithStatus(401)
 			return
 		}
-		var account Account
-		model.DB.First(&account, claims["Id"])
-		if account.Id == 0 {
-			c.AbortWithStatus(401)
-			return
-		}
-		c.Set("account", account)
 		c.Next()
 	} else {
 		c.AbortWithStatus(401)
