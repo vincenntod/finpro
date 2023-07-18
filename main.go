@@ -12,6 +12,7 @@ import (
 
 func main() {
 	model.ConnectDatabase()
+
 	r := gin.Default()
 	r.Use(auth.CORSMiddleware())
 	export := exporttransaction.DefaultRequestHandler(model.DB)
@@ -30,11 +31,8 @@ func main() {
 		Admin.GET("/export-transaction/csv", export.ExportTransactionHandler)
 
 		//transaction table
-		Admin.GET("/get-transactions/", transactionHandler.GetAllTransaction)
-		Admin.GET("/get-transaction-status/:status/", transactionHandler.GetAllTransactionByStatus)
-		Admin.GET("/get-TransactionDate/:start/:end/", transactionHandler.GetAllTransactionByDate)
-		Admin.GET("/get-TransactionStatusDate/:status/:start/:end/", transactionHandler.GetAllTransactionByStatusDate)
-		Admin.GET("/get-transactions-limit/:id", transactionHandler.GetAllLimit)
+		Admin.GET("/get-transaction-by-status", transactionHandler.GetAllTransactionByRequestLimit)
+
 
 	}
 	//create new user

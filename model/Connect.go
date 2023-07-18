@@ -15,6 +15,7 @@ func ConnectDatabase() {
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{NamingStrategy: schema.NamingStrategy{
 		SingularTable: true,
 	}})
+
 	if err != nil {
 		fmt.Printf("Error")
 		return
